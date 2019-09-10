@@ -67,7 +67,7 @@ const BucketRef = struct({
  */
 var libUplink = ffi.Library("./libuplinkc.so",
     {
-    	new_uplink			  : [ UplinkRef , [ UplinkConfig, stringPtrPtr ] ] ,
+    	uplink_custom		  : [ UplinkRef , [ UplinkConfig, stringPtrPtr ] ] ,
     	parse_api_key		  : [ APIKeyRef, [ "char*" , stringPtrPtr ] ],
     	open_project		  : [ ProjectRef, [ UplinkRef, "char*", APIKeyRef, stringPtrPtr ] ],
         encryption_key_custom : [ EncryptionAccessRef ,[ ProjectRef,"char*", stringPtrPtr ] ],
@@ -77,7 +77,7 @@ var libUplink = ffi.Library("./libuplinkc.so",
         close_uplink		  : [ "void" , [ UplinkRef, stringPtrPtr ] ],
         close_project		  : [ "void" , [ ProjectRef, stringPtrPtr ] ],
         close_bucket 		  : [ "void" , [ BucketRef, stringPtrPtr ] ],
-        create_bucket_custom  : [ "void" , [ ProjectRef, "char*",stringPtrPtr ] ] 
+        create_bucket_custom  : [ "void" , [ ProjectRef, "char*", stringPtrPtr ] ] 
     });
 
 
@@ -92,19 +92,19 @@ var libUplink = ffi.Library("./libuplinkc.so",
 // output: uplinkRef with a long type _handle property
 // NOTE: output is correct, if its _handle poperty is a positive integer
 function new_uplink() {
-	console.log("\n1. Setting-up New Uplink...\n");
+	console.log("\nSetting-up New Uplink...");
 	//
 	// set-up uplink configuration
 	lO_uplinkConfig = new UplinkConfig();
 	lO_uplinkConfig.Volatile.tls.skip_peer_ca_whitelist = true;
 	//
 	// create new uplink by calling the exported golang function
-	var uplinkRef = libUplink.new_uplink(lO_uplinkConfig, gs_error.ref());
+	var uplinkRef = libUplink.uplink_custom(lO_uplinkConfig, gs_error.ref());
 	uplinkRef.type = UplinkRef;
 	//
 	// if error occurred
 	if (uplinkRef._handle <= 0) {
-		console.error("1. FAILed to set-up new uplink!\n");
+		console.error("FAILed to set-up new uplink!\n");
 	}
 	//
 	return uplinkRef;
@@ -116,7 +116,7 @@ function new_uplink() {
 // output: APIKeyRef
 // NOTE: output is correct, if its _handle poperty is a positive integer
 function parse_api_key(ps_apiKey) {
-	console.log("\n2. Parsing the API Key: ", ps_apiKey);
+	console.log("\nParsing the API Key: ", ps_apiKey);
 	//
 	// prepare the input for the function, by converting it into char*
 	var lc_apiKeyPtr = ref.allocCString(ps_apiKey);
@@ -127,7 +127,7 @@ function parse_api_key(ps_apiKey) {
 	//
 	// if error occurred
 	if (parsedAPIKeyRef._handle <= 0) {
-		console.error("2. FAILed to parse the API!\n")
+		console.error("FAILed to parse the API!\n")
 	}
 	//
 	return parsedAPIKeyRef;
@@ -139,7 +139,7 @@ function parse_api_key(ps_apiKey) {
 // output: ProjectRef
 // NOTE: output is correct, if its _handle poperty is a positive integer
 function open_project(pO_uplinkRef, ps_satellite, pO_apiKeyRef) {
-	console.log("\n3. Opening project from satellite: ", ps_satellite);
+	console.log("\nOpening project from satellite: ", ps_satellite);
 	//
 	// prepare the input for the function, by converting it into char*
 	var lc_satellitePtr = ref.allocCString(ps_satellite);
@@ -150,7 +150,7 @@ function open_project(pO_uplinkRef, ps_satellite, pO_apiKeyRef) {
 	//
 	// if error occurred
 	if (projectRef._handle <= 0) {
-		console.error("3. FAILed to open the project!\n")
+		console.error("FAILed to open the project!\n")
 	}
 	//
 	return projectRef;
@@ -162,7 +162,7 @@ function open_project(pO_uplinkRef, ps_satellite, pO_apiKeyRef) {
 // output: EncryptionAccessRef
 // NOTE: output is correct, if its _handle poperty is a positive integer
 function encryption_key_custom(pO_projectRef,ps_encryptionpassphrase) {
-        console.log("\n4. Creating Encryption key!\n");
+        console.log("\nCreating Encryption key...");
         //
         // prepare the input for the function, by converting it into char*
         var encryptionpassphrasePtr = ref.allocCString(ps_encryptionpassphrase);
@@ -173,7 +173,7 @@ function encryption_key_custom(pO_projectRef,ps_encryptionpassphrase) {
         //
 		// if error occurred
 		if (encryptionAccessRef._handle <= 0) {
-			console.error("4. FAILed to parse the encryption pass phrase!\n")
+			console.error("FAILed to parse the encryption pass phrase!\n")
 		}
 		//
 		return encryptionAccessRef;
@@ -185,7 +185,7 @@ function encryption_key_custom(pO_projectRef,ps_encryptionpassphrase) {
 // output: bucketRef
 // NOTE: output is correct, if its _handle poperty is a positive integer
  function open_bucket_custom(pO_ProjectRef,ps_BucketName,pO_Encryption_AccessRef) {
-        console.log("\n5. Opening '", ps_BucketName,"' bucket...\n");
+        console.log("\nOpening '", ps_BucketName,"' bucket...");
         //
         // prepare the input for the function, by converting it into char*
         var bucketNamePtr = ref.allocCString(ps_BucketName);
@@ -196,7 +196,7 @@ function encryption_key_custom(pO_projectRef,ps_encryptionpassphrase) {
         //
 		// if error occurred
 		if (bucketRef._handle <= 0) {
-			console.error("5. FAILed to open the bucket!\n")
+			console.error("FAILed to open the bucket!\n")
 		}
 		//
 		return bucketRef;
@@ -207,7 +207,7 @@ function encryption_key_custom(pO_projectRef,ps_encryptionpassphrase) {
 // inputs: Storj Path/File Name (string) , Source Full File Name(string)
 // output: None
  function upload_custom(pO_bucketRef, ps_uploadPath, ps_uploadPathFull ) {
-        console.log("\n6. Uploading Data.....\n");
+        console.log("\nUploading Data...");
         //
         // prepare the input for the function, by converting it into char*
         uploadPathPtr = ref.allocCString( ps_uploadPath );
@@ -223,7 +223,7 @@ function encryption_key_custom(pO_projectRef,ps_encryptionpassphrase) {
 // inputs: bucketRef , Storj Path/File Name (string) , Destination Full File Name(string)
 // output: None
  function download_custom(pO_bucketRef, ps_downloadPath, ps_downloadPathFull ) {
-        console.log("\n7. Downloading Data.....\n");
+        console.log("\nDownloading Data...");
         //
         // prepare the input for the function, by converting it into char*
         downloadPathPtr = ref.allocCString( ps_downloadPath );
@@ -238,7 +238,7 @@ function encryption_key_custom(pO_projectRef,ps_encryptionpassphrase) {
 // inputs: bucketRef , Bucket Name (string)
 // output: None
 function create_bucket_custom( pO_projectRef, ps_bucketName ) {
-        console.log("\n5. Creating '", ps_bucketName, "' bucket...\n");
+        console.log("\nCreating '", ps_bucketName, "' bucket...");
         //
         // prepare the input for the function, by converting it into char*
         bucketNamePtr = ref.allocCString( ps_bucketName );
@@ -252,7 +252,7 @@ function create_bucket_custom( pO_projectRef, ps_bucketName ) {
 // inputs: UplinkRef
 // output: None
 function close_uplink( p_UplinkRef ) {
-       console.log("\n8. Close Uplink.....\n");
+       console.log("\nClosing the established uplink.");
         //
         //  by calling the exported golang function
         libUplink.close_uplink(p_UplinkRef, gs_error.ref() );
@@ -263,7 +263,7 @@ function close_uplink( p_UplinkRef ) {
 // inputs: ProjectRef
 // output: None 
 function close_project(p_projectRef) {
-         console.log("\n9. Close Project.....\n");
+         console.log("\nClosing the opened project...");
         //
         //  by calling the exported golang function
         libUplink.close_project(p_projectRef, gs_error.ref() );       
@@ -274,7 +274,7 @@ function close_project(p_projectRef) {
 // inputs: bucketRef
 // output: None
 function close_bucket(p_bucketRef) {
-         console.log("\n10. Close Bucket.....\n");
+         console.log("\nClosing the opened bucket...");
         //
         //  by calling the exported golang function
         libUplink.close_bucket(p_bucketRef, gs_error.ref() );       

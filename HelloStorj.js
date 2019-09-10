@@ -6,10 +6,10 @@ var libUplinkNode = require("./libUplinkNode.js");
 // demo Storj (V3) configuration
 var storjConfig = {
     apiKey              : "13Yqf9SJhb9ApNZQdY2H4h47pacMyQeAtGafLUygWhTuugCU17P5BffEZveFnP8ivv2dsrWFaKPZJnRupHHgkw9abTw3hzxpHt2td5Y",
-    satelliteURL        : "mars.tardigrade.io:7777",
+    satelliteURL        : "us-central-1.tardigrade.io:7777",
     encryptionPassphrase: "test",
     bucketName          : "partnertest01",
-    uploadPath          : "path01/sample.txt",
+    uploadPath          : "sample.txt",
 };
 
 var srcFullFileName = "sample.txt";
@@ -46,7 +46,7 @@ if (uplinkRef._handle > 0) {
                     libUplinkNode.upload_custom(bucketRef, storjConfig.uploadPath, srcFullFileName); 
                     //
                     // Download the uploaded file for verification
-                    libUplinkNode.download_custom(bucketRef, downloadPath, srcFullFileName);
+                    libUplinkNode.download_custom(bucketRef, srcFullFileName, downloadPath);
                     //
                     // close the bucket
                     libUplinkNode.close_bucket(bucketRef); 

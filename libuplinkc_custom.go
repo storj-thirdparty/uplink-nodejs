@@ -7,12 +7,10 @@ package main
 import "C"
 
 import (
-	"context"
 	"bytes"
 	"fmt"
 	"io/ioutil"
 	"storj.io/storj/lib/uplink"
-
 )
 
 // open_bucket opens a given valid bucket at Storj (V3) project
@@ -184,37 +182,16 @@ func uplink_custom(cfg C.UplinkConfig, cerr **C.char) C.UplinkRef {
 	return C.UplinkRef{universe.Add(&Uplink{scope, lib})}
 }
 
-//export createbucket_custom
-func createbucket_custom(uplinkHandle C.UplinkRef,satelliteAddress *C.char,apiKey *C.char,name *C.char,cerr **C.char) C.BucketInfo {
-	var cfg uplink.Config
-    ctx := context.Background()
-    cfg.Volatile.TLS.SkipPeerCAWhitelist = true
-    uplinkstorj, err := uplink.NewUplink(ctx, &cfg)
-    if err != nil {
-        *cerr = C.CString("invalid uplink")
-		return C.BucketInfo{}
-    }
-    defer uplinkstorj.Close()
-
-	// uplink, ok := universe.Get(uplinkHandle._handle).(*Uplink)
-	// if !ok {
-	// 	*cerr = C.CString("invalid uplink")
-	// 	return C.BucketInfo{}
-	// }
-
-	apiKeyparse, err := uplink.ParseAPIKey(C.GoString(apiKey))
-
-	project, err := uplinkstorj.OpenProject(ctx, C.GoString(satelliteAddress), apiKeyparse)
-    if err != nil {
-        return C.BucketInfo{}
-    }
-
-	bucket, err := project.CreateBucket(ctx, C.GoString(name), nil)
-	if err != nil {
-		*cerr = C.CString(fmt.Sprintf("%+v", err))
-		return C.BucketInfo{}
+//export create_bucket_custom
+func create_bucket_custom(projectHandle C.ProjectRef, name *C.char, cerr **C.char) {
+	project, ok := universe.Get(projectHandle._handle).(*Project)
+	if !ok {
+		*cerr = C.CString("invalid project")
+		return
 	}
 
-	return newBucketInfo(&bucket)
-
+	_, err := project.CreateBucket(project.scope.ctx, C.GoString(name), nil)
+	if err != nil {
+		*cerr = C.CString(err.Error())
+	}
 }
