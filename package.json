@@ -1,0 +1,29 @@
+{
+  "name": "storj-nodejs",
+  "version": "0.8.1",
+  "description": "Storj-NodeJS bindings package",
+  "main": "HelloStorj.js",
+  "dependencies": {
+    "ffi-napi": "^2.4.5",
+    "fs": "0.0.1-security",
+    "ref-napi": "^1.4.2",
+    "ref-struct": "^1.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/utropicmedia/storj-nodejs.git"
+  },
+  "keywords": [
+    "bindings",
+    "node",
+    "storj",
+    "tardigrade",
+    "uplink"
+  ],
+  "author": "Utropicmedia",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/utropicmedia/storj-nodejs/issues"
+  },
+  "homepage": "https://github.com/utropicmedia/storj-nodejs#readme"
+}

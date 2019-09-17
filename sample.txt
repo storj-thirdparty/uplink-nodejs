@@ -1,2 +1,4 @@
-Hello Storj!
-- Node.js
+================
+| Hello Storj! |
+| - Node.js    |
+================
