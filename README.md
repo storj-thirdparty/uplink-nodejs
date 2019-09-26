@@ -56,41 +56,54 @@ The sample *HelloStorj.js* code calls the *libUplinkNode.js* binding module to d
     * inputs: None
     * output: valid UplinkRef, else error in catch
 
-### parse_api_key(string)(APIKeyRef)
+### close_uplink(UplinkRef)
+    * function to close currently established uplink
+    * pre-requisites: new_uplink() function has been already called
+    * inputs: UplinkRef
+    * output: None, else error in catch
+
+### parse_api_key(string) (APIKeyRef)
     * function to parse API key, to be used by Storj
     * pre-requisites: None
     * inputs: API key (string)
     * output: valid APIKeyRef, else error in catch
 
-### open_project(UplinkRef,string,APIKeyRef)(ProjectRef)
+### open_project(UplinkRef, string, APIKeyRef) (ProjectRef)
     * function to open a Storj project
     * pre-requisites: new_uplink() and parse_api_key() functions have been already called
     * inputs: valid UplinkRef, Satellite Address (string), valid APIKeyRef
     * output: valid ProjectRef, else error in catch
 
-### encryption_key(ProjectRef,string) (EncryptionAccessRef)
-    * function to get encryption access to upload and/or download data to/from Storj
-    * pre-requisites: open_project() function has been already called
-    * inputs: valid ProjectRef, Encryption Pass Phrase (string)
-    * output: serialized EncryptionAccess (string), else error in catch
-
-### create_bucket(ProjectRef,string)
-    * function to create new bucket in Storj project
-    * pre-requisites: open_project() function has been already called
-    * inputs: bucketRef , Bucket Name (string)
-    * output: None
-
-### close_uplink(UplinkRef)
-    * function to close currently opened uplink
-    * pre-requisites: new_uplink() function has been already called
-    * inputs: UplinkRef
-    * output: None
-
 ### close_project(ProjectRef)
     * function to close currently opened Storj project
     * pre-requisites: open_project() function has been already called
     * inputs: ProjectRef
-    * output: None
+    * output: None, else error in catch
+
+
+### list_buckets(ProjectRef)
+    * function to fetch a list of buckets, available in the Storj project
+    * pre-requisites: open_project() function has been already called
+    * inputs: valid ProjectRef
+    * output: BucketList, else error in catch
+
+### create_bucket(ProjectRef, string)
+    * function to create new bucket in Storj project
+    * pre-requisites: open_project() function has been already called, successfully
+    * inputs: valid ProjectRef, Bucket Name (string)
+    * output: None, else error in catch
+
+### delete_bucket(ProjectRef, string)
+    * function to delete a bucket 
+    * pre-requisites: open_project() function has been already called, successfully
+    * inputs: valid ProjectRef, Bucket Name (string)
+    * output: None, else Error (string) in catch
+
+### encryption_key(ProjectRef, string) (EncryptionAccessRef)
+    * function to get encryption access to upload and/or download data to/from Storj
+    * pre-requisites: open_project() function has been already called
+    * inputs: valid ProjectRef, Encryption Pass Phrase (string)
+    * output: serialized EncryptionAccess (string), else error in catch
 
 ### open_bucket(ProjectRef, string, string) (BucketRef)
     * function to open an already existing bucket in Storj project
@@ -98,11 +111,11 @@ The sample *HelloStorj.js* code calls the *libUplinkNode.js* binding module to d
     * inputs: ProjectRef, Bucket Name (string), serialized EncryptionAccess (string)
     * output: valid BucketRef, else error in catch
 
-### close_bucket(BucketRef)
-    * function to close currently open Bucket
-    * pre-requisites: open_bucket() function has been already called
-    * inputs: valid BucketRef
-    * output: None, else error in catch
+### delete_object(BucketRef, string)
+    * function to delete an object in a bucket
+    * pre-requisites: open_bucket() function has been already called, successfully
+    * inputs: valid BucketRef, Object Path (string)
+    * output: Error (string) if any else None
 
 ### upload_file(BucketRef, string, string)
     * function to upload data from a file at local system to a Storj (V3) bucket's path
@@ -114,4 +127,47 @@ The sample *HelloStorj.js* code calls the *libUplinkNode.js* binding module to d
     * function to download Storj (V3) object's data and store it into given file at local system
     * pre-requisites: open_bucket() function has been already called
     * inputs: valid BucketRef, Storj Path/File Name (string), Destination Full File Name (string)
+    * output: None, else error in catch
+
+### upload(BucketRef, string, obj)
+    * function to get uploader reference used to upload data to Storj (V3) bucket's path
+    * pre-requisites: open_bucket() function has been already called
+    * inputs: Bucket Reference (BucketRef), Storj Path/File Name (string) within the opened bucket, Upload Options (obj)
+    * output: Uploader reference (uploaderRef), Error (string) if any else None
+    
+### upload_write(uploaderRef, buffer, int)
+    * function to write data to Storj (V3) bucket's path
+    * pre-requisites: upload() function has been already called
+    * inputs: Uploader reference (uploaderRef), Data to upload (buffer), Size of data to upload (int)
+    * output: Size of data uploaded (long), Error (string) if any else None
+   * **Note:** The Data to upload (buffer) passed to function should be a uint8 pointer only. 
+    
+### upload_commit(uploaderRef)
+    * function to commit and finalize file for uploaded data to Storj (V3) bucket's path
+    * pre-requisites: upload() function has been already called
+    * inputs: Uploader reference (uploaderRef)
+    * output: Error (string) if any else None
+    
+### download(BucketRef, string)
+    * function to get downloader reference to download Storj (V3) object's data and store it on local computer
+    * pre-requisites: open_bucket() function has been already called
+    * inputs: Bucket reference (BucketRef), Storj Path/File Name (string) within the opened bucket
+    * output: Downloader reference (downloaderRef), Error (string) if any else None
+
+### download_read(downloaderRef, int)
+    * function to read Storj (V3) object's data and return the data
+    * pre-requisites: download() function has been already called
+    * inputs: Downloader Reference (downloaderRef), Length of data to download (int)
+    * output: Data downloaded (buffer), Size of data downloaded (int), Error (string) if any else None
+
+### download_close(downloaderRef)
+    * function to close downloader after completing the data read process
+    * pre-requisites: download() function has been already called
+    * inputs: Downloader Reference (downloaderRef)
+    * output: Error (string) if any else None
+
+### close_bucket(BucketRef)
+    * function to close currently open Bucket
+    * pre-requisites: open_bucket() function has been already called
+    * inputs: valid BucketRef
     * output: None, else error in catch
