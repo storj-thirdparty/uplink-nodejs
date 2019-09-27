@@ -38,7 +38,10 @@ $ npm install storj-nodejs
 $ go build -o libuplinkc.so -buildmode=c-shared 
 ```
 
-* Copy *libuplinkc.so* file into the folder, where the sample *HelloStorj.js* file is copied
+* Either set a *.env* file (similar to *.env.example*), with full path to the shared object, as follows:
+```LIB_UPLINKC_PATH=/home/username/go/src/storj.io/storj/lib/uplinkc/libuplinkc.so```
+
+* OR copy *libuplinkc.so* file into the folder, where the sample *HelloStorj.js* file is copied
 
 
 ## Sample Hello Storj!

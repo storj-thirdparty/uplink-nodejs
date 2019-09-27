@@ -160,7 +160,17 @@ function createErrorPtrPtr() {
  * Include the golang exported libuplinkc library functions, and
  * declare types of arguments and response of each of these functions
  */
-var libUplink = ffi.Library("./libuplinkc.so",
+
+// import the config.js module and
+// destructure to access environment variables
+var { LIB_UPLINKC_PATH } = require('./config');
+//
+if ((typeof LIB_UPLINKC_PATH == "undefined") || (!LIB_UPLINKC_PATH)) {
+    // set default path
+    LIB_UPLINKC_PATH = "./libuplinkc.so";
+}
+//
+var libUplink = ffi.Library(LIB_UPLINKC_PATH,
     {
     	new_uplink   : [ UplinkRef,  [ UplinkConfig,    stringPtr_t ] ],
     	close_uplink : [ "void" ,    [ UplinkRef,       stringPtr_t ] ],

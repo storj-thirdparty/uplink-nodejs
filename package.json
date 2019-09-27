@@ -1,9 +1,10 @@
 {
   "name": "storj-nodejs",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "description": "Storj-NodeJS bindings package",
   "main": "HelloStorj.js",
   "dependencies": {
+    "dotenv": "^8.1.0",
     "ffi-napi": "^2.4.5",
     "fs": "0.0.1-security",
     "ref-napi": "^1.4.2",
