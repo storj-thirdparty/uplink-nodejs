@@ -762,24 +762,46 @@ let upload_commit = function(uploaderRef) {
 // output: Downloader reference (downloaderRef), else Error (string) in catch
 let download = function(pO_bucketRef, ps_downloadPathStorj) {
        
-    return new Promise(function(resolve, reject) {  
-        // prepare to download the file
-        var downloadOptions = ref.allocCString(ref.NULL);
-        //
-        // Define char* type local variable, to store error when a function is called
-        var errorPtrPtr = createErrorPtrPtr();
-        //
-        var downloaderRef = libUplink.download(pO_bucketRef, ref.allocCString(ps_downloadPathStorj), downloadOptions, errorPtrPtr);
-        downloaderRef.type = DownloaderRef;
-        //
-        // check for any possible error after closing the uplink
-        var ls_error = ref.readCString(errorPtrPtr.deref(), 0);
-        //
-        if (ls_error != NO_ERROR) {
-            reject(ls_error);
-        } else {
-            resolve(downloaderRef);
-        }
+    return new Promise(function(resolve, reject) {
+        // check if the given path exists in the Storj bucket
+        list_objects(pO_bucketRef)
+        .then(function (objectsList) {
+            var lb_objectFound = false;
+            //
+            for (let i = (objectsList.length - 1); i > -1; i--) {
+                if (ps_downloadPathStorj == objectsList.items[i].path) {
+                    lb_objectFound = true;
+
+                    // prepare to download the file
+                    var downloadOptions = ref.allocCString(ref.NULL);
+                    //
+                    // Define char* type local variable, to store error when a function is called
+                    var errorPtrPtr = createErrorPtrPtr();
+                    //
+                    var downloaderRef = libUplink.download(pO_bucketRef, ref.allocCString(ps_downloadPathStorj), downloadOptions, errorPtrPtr);
+                    downloaderRef.type = DownloaderRef;
+                    
+                    //
+                    // check for any possible error after closing the uplink
+                    var ls_error = ref.readCString(errorPtrPtr.deref(), 0);
+                    //
+                    if (ls_error != NO_ERROR) {
+                        reject(ls_error);
+                    } else {
+                        resolve(downloaderRef);
+                    }
+
+                    break;
+                }
+            }
+            //
+            if (lb_objectFound == false) {
+                reject("object not found in the Storj bucket");
+            }    
+        })
+        .catch(function (error) {
+            reject(error);
+        });
     });
 };
 //
