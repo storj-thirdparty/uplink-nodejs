@@ -145,17 +145,6 @@ const ObjectList = struct({
 });
 
 
-// to create pointer-to-pointer-to-char,
-// to get error message from a C function
-const NO_ERROR = "0";
-//
-function createErrorPtrPtr() {
-    var lc_dummyErrorPtr = ref.allocCString(NO_ERROR);
-    //
-    return (lc_dummyErrorPtr.ref());
-}
-
-
 /* 
  * Include the golang exported libuplinkc library functions, and
  * declare types of arguments and response of each of these functions
@@ -222,8 +211,8 @@ let new_uplink = function() {
         lO_uplinkConfig = new UplinkConfig();
         lO_uplinkConfig.Volatile.tls.skip_peer_ca_whitelist = true;
         //
-        // Define char* type local variable, to store error when a function is called
-        var errorPtrPtr = createErrorPtrPtr();
+        // Define a null pointer local variable, to store error when a function is called
+        var errorPtrPtr = ref.NULL.ref();
         //
         // create new uplink by calling the exported golang function
         var uplinkRef = libUplink.new_uplink(lO_uplinkConfig, errorPtrPtr);
@@ -234,6 +223,9 @@ let new_uplink = function() {
             resolve(uplinkRef);
         } else {
             var ls_error = ref.readCString(errorPtrPtr.deref(), 0);
+            //
+            errorPtrPtr = null;
+            //
             reject(ls_error);
         }   
     });
@@ -247,15 +239,17 @@ let close_uplink = function(pO_uplinkRef) {
     
     return new Promise(function(resolve, reject) {
         // Define char* type local variable, to store error when a function is called
-        var errorPtrPtr = createErrorPtrPtr();     
+        var errorPtrPtr = ref.NULL.ref();     
         //
         //  by calling the exported golang function
         libUplink.close_uplink(pO_uplinkRef, errorPtrPtr);
         //
         // check for any possible error after closing the uplink
-        var ls_error = ref.readCString(errorPtrPtr.deref(), 0);
-        //
-        if (ls_error != NO_ERROR) {
+        if (errorPtrPtr.deref().isNull() == false) {
+            var ls_error = ref.readCString(errorPtrPtr.deref(), 0);
+            //
+            errorPtrPtr = null;
+            //
             reject(ls_error);
         } else {
             resolve(true);
@@ -275,7 +269,7 @@ let parse_api_key = function(ps_apiKey) {
         var lc_apiKeyPtr = ref.allocCString(ps_apiKey);
         //
         // Define char* type local variable, to store error when a function is called
-        var errorPtrPtr = createErrorPtrPtr();
+        var errorPtrPtr = ref.NULL.ref();
         //
         // parse the API key by calling the exported golang function
         var parsedAPIKeyRef = libUplink.parse_api_key(lc_apiKeyPtr, errorPtrPtr);
@@ -286,6 +280,9 @@ let parse_api_key = function(ps_apiKey) {
             resolve(parsedAPIKeyRef);
         } else {
             var ls_error = ref.readCString(errorPtrPtr.deref(), 0);
+            //
+            errorPtrPtr = null;
+            //
             reject(ls_error);
         }
     });
@@ -302,7 +299,7 @@ let open_project = function(pO_uplinkRef, ps_satellite, pO_apiKeyRef) {
         var lc_satellitePtr = ref.allocCString(ps_satellite);
         //
         // Define char* type local variable, to store error when a function is called
-        var errorPtrPtr = createErrorPtrPtr();
+        var errorPtrPtr = ref.NULL.ref();
         //
         // open project by calling the exported golang function
         var projectRef = libUplink.open_project(pO_uplinkRef, lc_satellitePtr, pO_apiKeyRef, errorPtrPtr);
@@ -314,6 +311,9 @@ let open_project = function(pO_uplinkRef, ps_satellite, pO_apiKeyRef) {
         }
         else {
             var ls_error = ref.readCString(errorPtrPtr.deref(), 0);
+            //
+            errorPtrPtr = null;
+            //
             reject(ls_error);
         }
     });
@@ -327,15 +327,17 @@ let close_project = function(pO_projectRef) {
 
     return new Promise(function(resolve, reject) {
         // Define char* type local variable, to store error when a function is called
-        var errorPtrPtr = createErrorPtrPtr();   
+        var errorPtrPtr = ref.NULL.ref();   
         //
         //  by calling the exported golang function
         libUplink.close_project(pO_projectRef, errorPtrPtr);
         //
         // check for any possible error after closing the uplink
-        var ls_error = ref.readCString(errorPtrPtr.deref(), 0);
-        //
-        if (ls_error != NO_ERROR) {
+        if (errorPtrPtr.deref().isNull() == false) {
+            var ls_error = ref.readCString(errorPtrPtr.deref(), 0);
+            //
+            errorPtrPtr = null;
+            //
             reject(ls_error);
         } else {
             resolve(true);
@@ -352,15 +354,17 @@ let list_buckets = function(pO_projectRef) {
 
     return new Promise(function(resolve, reject) {
         // Define char* type local variable, to store error when a function is called
-        var errorPtrPtr = createErrorPtrPtr();   
+        var errorPtrPtr = ref.NULL.ref();   
         //
         // get buckets' list, by calling the exported golang function
         var bucketList = libUplink.list_buckets(pO_projectRef, null, errorPtrPtr);
         //
         // check for any possible error while listing buckets
-        var ls_error = ref.readCString(errorPtrPtr.deref(), 0);
-        //
-        if (ls_error != NO_ERROR) {
+        if (errorPtrPtr.deref().isNull() == false) {
+            var ls_error = ref.readCString(errorPtrPtr.deref(), 0);
+            //
+            errorPtrPtr = null;
+            //
             reject(ls_error);
         } else {
             // parse the list, as per the defined structure
@@ -484,15 +488,17 @@ let create_bucket = function(pO_projectRef, ps_bucketName) {
         var bucketOptions = ref.allocCString(ref.NULL);
         //
         // Define char* type local variable, to store error when a function is called
-        var errorPtrPtr = createErrorPtrPtr();   
+        var errorPtrPtr = ref.NULL.ref();   
         //
         // create a new by calling the exported golang function
         var bucketInfo = libUplink.create_bucket(pO_projectRef, bucketNamePtr, bucketOptions, errorPtrPtr);
         //
         // check for any possible error after creating the bucket
-        var ls_error = ref.readCString(errorPtrPtr.deref(), 0);
-        //
-        if (ls_error != NO_ERROR) {
+        if (errorPtrPtr.deref().isNull() == false) {
+            var ls_error = ref.readCString(errorPtrPtr.deref(), 0);
+            //
+            errorPtrPtr = null;
+            //
             reject(ls_error);
         } else {
             resolve(bucketInfo);
@@ -508,13 +514,15 @@ let delete_bucket = function(projectRef, ps_bucketName) {
       
     return new Promise(function(resolve, reject) { 
         // Define char* type local variable, to store error when a function is called
-        var errorPtrPtr = createErrorPtrPtr();
+        var errorPtrPtr = ref.NULL.ref();
 
         libUplink.delete_bucket(projectRef, ref.allocCString(ps_bucketName), errorPtrPtr);
         //
-        var ls_error = ref.readCString(errorPtrPtr.deref(), 0);
-        //
-        if (ls_error != NO_ERROR) {
+        if (errorPtrPtr.deref().isNull() == false) {
+            var ls_error = ref.readCString(errorPtrPtr.deref(), 0);
+            //
+            errorPtrPtr = null;
+            //
             reject(ls_error);
         } else {
             resolve(true);
@@ -533,7 +541,7 @@ let encryption_key = function(pO_projectRef, ps_encryptionPassphrase) {
         var encryptionPassphrasePtr = ref.allocCString(ps_encryptionPassphrase);
         //
         // Define char* type local variable, to store error when a function is called
-        var errorPtrPtr = createErrorPtrPtr();
+        var errorPtrPtr = ref.NULL.ref();
         //
         //  by calling the exported golang function
         var saltedKeyPtr = libUplink.project_salted_key_from_passphrase(pO_projectRef, encryptionPassphrasePtr, errorPtrPtr);
@@ -541,9 +549,11 @@ let encryption_key = function(pO_projectRef, ps_encryptionPassphrase) {
         saltedKeyPtr.type = uint8Ptr_t;
         //
         // check for any possible error after download
-        var ls_error = ref.readCString(errorPtrPtr.deref(), 0);
-        //
-        if (ls_error != NO_ERROR) {
+        if (errorPtrPtr.deref().isNull() == false) {
+            var ls_error = ref.readCString(errorPtrPtr.deref(), 0);
+            //
+            errorPtrPtr = null;
+            //
             reject(ls_error);
         } else {
             var encryptionAccessRef = libUplink.new_encryption_access_with_default_key(saltedKeyPtr);
@@ -555,9 +565,11 @@ let encryption_key = function(pO_projectRef, ps_encryptionPassphrase) {
                 serializedEncryptionAccessPtr.type = string_t;
                 //
                 // check for any possible error after download
-                ls_error = ref.readCString(errorPtrPtr.deref(), 0);
-                //
-                if (ls_error != NO_ERROR) {
+                if (errorPtrPtr.deref().isNull() == false) {
+                    var ls_error = ref.readCString(errorPtrPtr.deref(), 0);
+                    //
+                    errorPtrPtr = null;
+                    //
                     reject(ls_error);
                 } else {
                     resolve(serializedEncryptionAccessPtr);
@@ -580,7 +592,7 @@ let open_bucket = function(pO_projectRef, ps_BucketName, pc_serializedEncryption
         var bucketNamePtr = ref.allocCString(ps_BucketName);
         //
         // Define char* type local variable, to store error when a function is called
-        var errorPtrPtr = createErrorPtrPtr();
+        var errorPtrPtr = ref.NULL.ref();
         //
         //  by calling the exported golang function
         var bucketRef = libUplink.open_bucket(pO_projectRef, bucketNamePtr, pc_serializedEncryptionAccessPtr, errorPtrPtr);
@@ -591,6 +603,9 @@ let open_bucket = function(pO_projectRef, ps_BucketName, pc_serializedEncryption
             resolve(bucketRef);
         } else {
             var ls_error = ref.readCString(errorPtrPtr.deref(), 0);
+            //
+            errorPtrPtr = null;
+            //
             reject(ls_error);
         }
     });
@@ -604,15 +619,17 @@ let close_bucket = function(pO_bucketRef) {
     
     return new Promise(function(resolve, reject) {
         // Define char* type local variable, to store error when a function is called
-        var errorPtrPtr = createErrorPtrPtr();  
+        var errorPtrPtr = ref.NULL.ref();  
         //
         //  by calling the exported golang function
         libUplink.close_bucket(pO_bucketRef, errorPtrPtr);
         //
         // check for any possible error after closing the uplink
-        var ls_error = ref.readCString(errorPtrPtr.deref(), 0);
-        //
-        if (ls_error != NO_ERROR) {
+        if (errorPtrPtr.deref().isNull() == false) {
+            var ls_error = ref.readCString(errorPtrPtr.deref(), 0);
+            //
+            errorPtrPtr = null;
+            //
             reject(ls_error);
         } else {
             resolve(true);
@@ -628,15 +645,17 @@ let list_objects = function(pO_bucketRef) {
 
     return new Promise(function(resolve, reject) {
         // Define char* type local variable, to store error when a function is called
-        var errorPtrPtr = createErrorPtrPtr();   
+        var errorPtrPtr = ref.NULL.ref();   
         //
         // get objects' list, by calling the exported golang function
         var objectList = libUplink.list_objects(pO_bucketRef, null, errorPtrPtr);
         //
         // check for any possible error while listing objects
-        var ls_error = ref.readCString(errorPtrPtr.deref(), 0);
-        //
-        if (ls_error != NO_ERROR) {
+        if (errorPtrPtr.deref().isNull() == false) {
+            var ls_error = ref.readCString(errorPtrPtr.deref(), 0);
+            //
+            errorPtrPtr = null;
+            //
             reject(ls_error);
         } else {
             // parse the list, as per the defined structure
@@ -694,15 +713,17 @@ let upload = function(pO_bucketRef, ps_uploadPathStorj) {
         var uploadOptions = ref.allocCString(ref.NULL);
         //
         // Define char* type local variable, to store error when a function is called
-        var errorPtrPtr = createErrorPtrPtr();
+        var errorPtrPtr = ref.NULL.ref();
         //
         var uploaderRef = libUplink.upload(pO_bucketRef, ref.allocCString(ps_uploadPathStorj), uploadOptions, errorPtrPtr);
         uploaderRef.type = UploaderRef; 
         //
         // check for any possible error after closing the uplink
-        var ls_error = ref.readCString(errorPtrPtr.deref(), 0);
-        //
-        if (ls_error != NO_ERROR) {
+        if (errorPtrPtr.deref().isNull() == false) {
+            var ls_error = ref.readCString(errorPtrPtr.deref(), 0);
+            //
+            errorPtrPtr = null;
+            //
             reject(ls_error);
         } else {
             resolve(uploaderRef);
@@ -718,18 +739,16 @@ let upload = function(pO_bucketRef, ps_uploadPathStorj) {
 let upload_write = function(uploaderRef, buffer, bytesRead) {
          
     // Define char* type local variable, to store error when a function is called
-    var errorPtrPtr = createErrorPtrPtr();
+    var errorPtrPtr = ref.NULL.ref();
     //
     bytesRead.type = ref.types.size_t;
     //
     // write them to the buffer
     var actuallyWritten = libUplink.upload_write(uploaderRef, buffer, bytesRead, errorPtrPtr);
     //
-    ls_error = ref.readCString(errorPtrPtr.deref(), 0);
-    //
     return {
         size: actuallyWritten,
-        error: (ls_error != NO_ERROR) ? ls_error : ""
+        error: (errorPtrPtr.deref().isNull() == false) ? ref.readCString(errorPtrPtr.deref(), 0) : ""
     };
 };
 //
@@ -742,13 +761,15 @@ let upload_commit = function(uploaderRef) {
     return new Promise(function(resolve, reject) { 
 
         // Define char* type local variable, to store error when a function is called
-        var errorPtrPtr = createErrorPtrPtr();
+        var errorPtrPtr = ref.NULL.ref();
         //
         libUplink.upload_commit(uploaderRef, errorPtrPtr);
         //
-        ls_error = ref.readCString(errorPtrPtr.deref(), 0);
-        //
-        if (ls_error != NO_ERROR) {
+        if (errorPtrPtr.deref().isNull() == false) {
+            var ls_error = ref.readCString(errorPtrPtr.deref(), 0);
+            //
+            errorPtrPtr = null;
+            //
             reject(ls_error);
         } else {
             resolve(true);
@@ -776,16 +797,17 @@ let download = function(pO_bucketRef, ps_downloadPathStorj) {
                     var downloadOptions = ref.allocCString(ref.NULL);
                     //
                     // Define char* type local variable, to store error when a function is called
-                    var errorPtrPtr = createErrorPtrPtr();
+                    var errorPtrPtr = ref.NULL.ref();
                     //
                     var downloaderRef = libUplink.download(pO_bucketRef, ref.allocCString(ps_downloadPathStorj), downloadOptions, errorPtrPtr);
                     downloaderRef.type = DownloaderRef;
-                    
                     //
                     // check for any possible error after closing the uplink
-                    var ls_error = ref.readCString(errorPtrPtr.deref(), 0);
-                    //
-                    if (ls_error != NO_ERROR) {
+                    if (errorPtrPtr.deref().isNull() == false) {
+                        var ls_error = ref.readCString(errorPtrPtr.deref(), 0);
+                        //
+                        errorPtrPtr = null;
+                        //
                         reject(ls_error);
                     } else {
                         resolve(downloaderRef);
@@ -813,16 +835,14 @@ let download = function(pO_bucketRef, ps_downloadPathStorj) {
 let download_read = function(downloaderRef, buffer, BUFFER_SIZE) {
         
     // Define char* type local variable, to store error when a function is called
-    var errorPtrPtr = createErrorPtrPtr();
+    var errorPtrPtr = ref.NULL.ref();
     //
     // write them to the buffer
     var downloadedSize = libUplink.download_read(downloaderRef, buffer, BUFFER_SIZE, errorPtrPtr);
     //
-    ls_error = ref.readCString(errorPtrPtr.deref(), 0);
-    //
     return {
         size: downloadedSize,
-        error: (ls_error != NO_ERROR) ? ls_error : ""
+        error: (errorPtrPtr.deref().isNull() == false) ? ref.readCString(errorPtrPtr.deref(), 0) : ""
     };
 };
 //
@@ -835,13 +855,15 @@ let download_close = function(downloaderRef) {
     return new Promise(function(resolve, reject) { 
 
         // Define char* type local variable, to store error when a function is called
-        var errorPtrPtr = createErrorPtrPtr();
+        var errorPtrPtr = ref.NULL.ref();
         //
         libUplink.download_close(downloaderRef, errorPtrPtr);
         //
-        ls_error = ref.readCString(errorPtrPtr.deref(), 0);
-        //
-        if (ls_error != NO_ERROR) {
+        if (errorPtrPtr.deref().isNull() == false) {
+            var ls_error = ref.readCString(errorPtrPtr.deref(), 0);
+            //
+            errorPtrPtr = null;
+            //
             reject(ls_error);
         } else {
             resolve(true);
@@ -858,13 +880,15 @@ let delete_object = function(pO_bucketRef, ps_objectPath) {
        
     return new Promise(function(resolve, reject) { 
         // Define char* type local variable, to store error when a function is called
-        var errorPtrPtr = createErrorPtrPtr();
+        var errorPtrPtr = ref.NULL.ref();
 
         libUplink.delete_object(pO_bucketRef, ref.allocCString(ps_objectPath), errorPtrPtr);
         //
-        var ls_error = ref.readCString(errorPtrPtr.deref(), 0);
-        //
-        if (ls_error != NO_ERROR) {
+        if (errorPtrPtr.deref().isNull() == false) {
+            var ls_error = ref.readCString(errorPtrPtr.deref(), 0);
+            //
+            errorPtrPtr = null;
+            //
             reject(ls_error);
         } else {
             resolve(true);
@@ -888,15 +912,19 @@ let upload_file = function(pO_bucketRef, ps_uploadPathStorj, ps_uploadPathLocal)
         var uploadOptions = ref.allocCString(ref.NULL);
         //
         // Define char* type local variable, to store error when a function is called
-        var errorPtrPtr = createErrorPtrPtr();
+        var errorPtrPtr = ref.NULL.ref();
         //
         var uploaderRef = libUplink.upload(pO_bucketRef, ref.allocCString(ps_uploadPathStorj), uploadOptions, errorPtrPtr);
         uploaderRef.type = UploaderRef;
         //
-        // ensure there was no error
-        var ls_error = ref.readCString(errorPtrPtr.deref(), 0);
+        var ls_error = "";
         //
-        if (ls_error != NO_ERROR) {
+        // ensure there was no error
+        if (errorPtrPtr.deref().isNull() == false) {
+            ls_error = ref.readCString(errorPtrPtr.deref(), 0);
+            //
+            errorPtrPtr = null;
+            //
             reject(ls_error);
         } else {
             // open desired local file and get its size
@@ -943,16 +971,18 @@ let upload_file = function(pO_bucketRef, ps_uploadPathStorj, ps_uploadPathLocal)
                 }
                 //
                 bytesRead.type = ref.types.size_t;
-            
+                
                 do {
                     // write them to the buffer
                     size.actuallyWritten = libUplink.upload_write(uploaderRef, buffer, bytesRead, errorPtrPtr);
                     //
-                    ls_error = ref.readCString(errorPtrPtr.deref(), 0);
+                    if (errorPtrPtr.deref().isNull() == false) {
+                        ls_error = ref.readCString(errorPtrPtr.deref(), 0);
+                    }                    
                     //
-                } while ((ls_error != NO_ERROR) && (--li_retryCount > 0));
+                } while ((errorPtrPtr.deref().isNull() == false) && (--li_retryCount > 0));
                 //
-                if (ls_error != NO_ERROR) {
+                if (errorPtrPtr.deref().isNull() == false) {
                     break;
                 }
                 
@@ -972,14 +1002,18 @@ let upload_file = function(pO_bucketRef, ps_uploadPathStorj, ps_uploadPathLocal)
 
             var ls_dataUploaded = "\n " + ((size.totalWritten * 100.0)/size.file).toString() + "% uploaded!";
             if (li_retryCount <= 0) {
+                errorPtrPtr = null;
+                //
                 reject(ls_error + ls_dataUploaded);
             } else if (li_retryCount > 0) {
                 // upload to Storj bucket
                 libUplink.upload_commit(uploaderRef, errorPtrPtr);
                 //
-                ls_error = ref.readCString(errorPtrPtr.deref(), 0);
-                //
-                if (ls_error != NO_ERROR) {
+                if (errorPtrPtr.deref().isNull() == false) {
+                    ls_error = ref.readCString(errorPtrPtr.deref(), 0);
+                    //
+                    errorPtrPtr = null;
+                    //
                     reject(ls_error + ls_dataUploaded);
                 } else {
                     resolve(true);
@@ -999,16 +1033,20 @@ let download_file = function(pO_bucketRef, ps_downloadPathStorj, ps_downloadPath
         var downloadOptions = ref.allocCString(ref.NULL);
         //
         // Define char* type local variable, to store error when a function is called
-        var errorPtrPtr = createErrorPtrPtr();
+        var errorPtrPtr = ref.NULL.ref();
         //
         // prepare to upload desired Storj object
         var downloaderRef = libUplink.download(pO_bucketRef, ref.allocCString(ps_downloadPathStorj), downloadOptions, errorPtrPtr);
         downloaderRef.type = DownloaderRef;
         //
-        // ensure there was no error
-        var ls_error = ref.readCString(errorPtrPtr.deref(), 0);
+        var ls_error = "";
         //
-        if (ls_error != NO_ERROR) {
+        // ensure there was no error
+        if (errorPtrPtr.deref().isNull() == false) {
+            ls_error = ref.readCString(errorPtrPtr.deref(), 0);
+            //
+            errorPtrPtr = null;
+            //
             reject(ls_error);
         } else {
             var size = {
@@ -1031,11 +1069,13 @@ let download_file = function(pO_bucketRef, ps_downloadPathStorj, ps_downloadPath
                     // download a part of Storj object, as per the buffer size   
                     size.downloaded = libUplink.download_read(downloaderRef, buffer, BUFFER_SIZE, errorPtrPtr);
                     //
-                    ls_error = ref.readCString(errorPtrPtr.deref(), 0);
+                    if (errorPtrPtr.deref().isNull() == false) {
+                        ls_error = ref.readCString(errorPtrPtr.deref(), 0);
+                    }
                     //
-                } while ((ls_error != NO_ERROR) && (--li_retryCount > 0));
+                } while ((errorPtrPtr.deref().isNull() == false) && (--li_retryCount > 0));
                 //
-                if (ls_error != NO_ERROR) {
+                if (errorPtrPtr.deref().isNull() == false) {
                     break;
                 }
                 
@@ -1072,13 +1112,15 @@ let download_file = function(pO_bucketRef, ps_downloadPathStorj, ps_downloadPath
 
             // close download set-up
             libUplink.download_close(downloaderRef, errorPtrPtr);
-            var ls_errorNew = ref.readCString(errorPtrPtr.deref(), 0);
             //
-            if (ls_errorNew != NO_ERROR) {
-                ls_error += "\n" + ls_errorNew;
+            if (errorPtrPtr.deref().isNull() == false) {
+                ls_error += "\n" + ref.readCString(errorPtrPtr.deref(), 0);
             }
             
-            if (ls_error != NO_ERROR) {
+            if (ls_error != "") {
+                //
+                errorPtrPtr = null;
+                //
                 reject(ls_error);
             } else {
                 resolve(true);
