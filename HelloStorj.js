@@ -3,6 +3,8 @@
 // include the Node.js-Storj bindings module
 var libUplinkNode = require("./node_modules/storj-nodejs/libUplinkNode.js");
 
+
+// file names to be uploaded or downloaded as
 // demo Storj (V3) configuration
 var storjConfig = {
 	apiKey				: "change-me-to-the-api-key-created-in-satellite-gui",

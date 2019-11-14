@@ -29,7 +29,11 @@ const tls = struct({
 });
 
 const Volatile = struct({
-    tls : tls
+    tls             : tls,
+    peer_id_version : string_t,
+    max_inline_size : "int32",
+    max_memory      : "int32",
+    dial_timeout    : "int32"
 });
 
 const UplinkConfig = struct({
@@ -152,16 +156,16 @@ const ObjectList = struct({
 
 // import the config.js module and
 // destructure to access environment variables
-var { LIB_UPLINKC_PATH } = require('./config');
+//var { LIB_UPLINKC_PATH } = require('./config');
 //
-if ((typeof LIB_UPLINKC_PATH == "undefined") || (!LIB_UPLINKC_PATH)) {
+//if ((typeof LIB_UPLINKC_PATH == "undefined") || (!LIB_UPLINKC_PATH)) {
     // set default path
     LIB_UPLINKC_PATH = "./libuplinkc.so";
-}
+//}
 //
 var libUplink = ffi.Library(LIB_UPLINKC_PATH,
     {
-    	new_uplink   : [ UplinkRef,  [ UplinkConfig,    stringPtr_t ] ],
+    	new_uplink   : [ UplinkRef,  [ UplinkConfig,    string_t,   stringPtr_t ] ],
     	close_uplink : [ "void" ,    [ UplinkRef,       stringPtr_t ] ],
         
         parse_api_key: [ APIKeyRef,  [ string_t,        stringPtr_t ] ],
@@ -210,12 +214,16 @@ let new_uplink = function() {
         // set-up uplink configuration
         lO_uplinkConfig = new UplinkConfig();
         lO_uplinkConfig.Volatile.tls.skip_peer_ca_whitelist = true;
+        lO_uplinkConfig.Volatile.dial_timeout = 2147483645;
         //
         // Define a null pointer local variable, to store error when a function is called
         var errorPtrPtr = ref.NULL.ref();
         //
         // create new uplink by calling the exported golang function
-        var uplinkRef = libUplink.new_uplink(lO_uplinkConfig, errorPtrPtr);
+        var ls_tempdir = ""
+        var tmpdirPtr = ref.allocCString(ls_tempdir);
+        var uplinkRef = libUplink.new_uplink(lO_uplinkConfig, tmpdirPtr,errorPtrPtr);
+        //
         uplinkRef.type = UplinkRef;
         //
         // if handle is received
@@ -898,7 +906,7 @@ let delete_object = function(pO_bucketRef, ps_objectPath) {
 
 
 /* SAMPLE USAGE OF UPLOAD and DOWNLOAD FUNCTIONS */
-const BUFFER_SIZE = 256;
+const BUFFER_SIZE = 8000;
 const RETRY_MAX = 5;
 
 // function to upload data from a file at local system to a Storj (V3) bucket's path
