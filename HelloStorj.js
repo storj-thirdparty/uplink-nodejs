@@ -8,8 +8,8 @@ var libUplinkNode = require("./node_modules/storj-nodejs/libUplinkNode.js");
 // demo Storj (V3) configuration
 var storjConfig = {
 	apiKey				: "change-me-to-the-api-key-created-in-satellite-gui",
-	satelliteURL		: "us-central-1.tardigrade.io:7777",
-	encryptionPassphrase: "you'll never guess this",
+	satelliteURL			: "us-central-1.tardigrade.io:7777",
+	encryptionPassphrase		: "you'll never guess this",
 	bucketName			: "change-me-to-desired-bucket-name",
 	uploadPath			: "optionalpath/requiredfilename",
 };

@@ -156,12 +156,12 @@ const ObjectList = struct({
 
 // import the config.js module and
 // destructure to access environment variables
-//var { LIB_UPLINKC_PATH } = require('./config');
+var { LIB_UPLINKC_PATH } = require('./config');
 //
-//if ((typeof LIB_UPLINKC_PATH == "undefined") || (!LIB_UPLINKC_PATH)) {
+if ((typeof LIB_UPLINKC_PATH == "undefined") || (!LIB_UPLINKC_PATH)) {
     // set default path
     LIB_UPLINKC_PATH = "./libuplinkc.so";
-//}
+}
 //
 var libUplink = ffi.Library(LIB_UPLINKC_PATH,
     {

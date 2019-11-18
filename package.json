@@ -1,6 +1,6 @@
 {
   "name": "storj-nodejs",
-  "version": "0.8.5",
+  "version": "0.8.7",
   "description": "Storj-NodeJS bindings package",
   "main": "HelloStorj.js",
   "dependencies": {
