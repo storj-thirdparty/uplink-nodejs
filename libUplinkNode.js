@@ -25,7 +25,8 @@ const stringPtr_t = ref.refType(string_t);
 
 // Uplink configuration nested structure
 const tls = struct({
-	skip_peer_ca_whitelist : "bool"
+	skip_peer_ca_whitelist : "bool",
+    peer_ca_whitelist_path : string_t
 });
 
 const Volatile = struct({
@@ -214,13 +215,12 @@ let new_uplink = function() {
         // set-up uplink configuration
         lO_uplinkConfig = new UplinkConfig();
         lO_uplinkConfig.Volatile.tls.skip_peer_ca_whitelist = true;
-        lO_uplinkConfig.Volatile.dial_timeout = 2147483645;
         //
         // Define a null pointer local variable, to store error when a function is called
         var errorPtrPtr = ref.NULL.ref();
         //
         // create new uplink by calling the exported golang function
-        var ls_tempdir = ""
+        var ls_tempdir = "";
         var tmpdirPtr = ref.allocCString(ls_tempdir);
         var uplinkRef = libUplink.new_uplink(lO_uplinkConfig, tmpdirPtr,errorPtrPtr);
         //
@@ -908,235 +908,6 @@ let delete_object = function(pO_bucketRef, ps_objectPath) {
 /* SAMPLE USAGE OF UPLOAD and DOWNLOAD FUNCTIONS */
 const BUFFER_SIZE = 8000;
 const RETRY_MAX = 5;
-
-// function to upload data from a file at local system to a Storj (V3) bucket's path
-// pre-requisites: open_bucket() function has been already called
-// inputs: valid BucketRef, Storj Path/File Name (string), Source Full File Name (string)
-// output: None, else error (string) in catch
-let upload_file = function(pO_bucketRef, ps_uploadPathStorj, ps_uploadPathLocal) {
-    
-    return new Promise(function(resolve, reject) { 
-        // prepare to upload the file
-        var uploadOptions = ref.allocCString(ref.NULL);
-        //
-        // Define char* type local variable, to store error when a function is called
-        var errorPtrPtr = ref.NULL.ref();
-        //
-        var uploaderRef = libUplink.upload(pO_bucketRef, ref.allocCString(ps_uploadPathStorj), uploadOptions, errorPtrPtr);
-        uploaderRef.type = UploaderRef;
-        //
-        var ls_error = "";
-        //
-        // ensure there was no error
-        if (errorPtrPtr.deref().isNull() == false) {
-            ls_error = ref.readCString(errorPtrPtr.deref(), 0);
-            //
-            errorPtrPtr = null;
-            //
-            reject(ls_error);
-        } else {
-            // open desired local file and get its size
-            var fileHandle = fs.openSync(ps_uploadPathLocal, "rs");
-            //
-            var size = {
-                file            : `${fs.statSync(ps_uploadPathLocal).size}`,
-                toWrite         : 0,
-                actuallyWritten : 0,
-                totalWritten    : 0
-            };
-            
-            var li_retryCount = RETRY_MAX;
-
-            // set-up buffer
-            var buffer = new Buffer.alloc(BUFFER_SIZE);
-            buffer.type = uint8Ptr_t;
-            //
-            // fill-up the buffer
-            while (size.totalWritten < size.file) { 
-                size.toWrite = size.file - size.totalWritten;
-                //
-                if (size.toWrite > BUFFER_SIZE) {
-                    size.toWrite = BUFFER_SIZE;
-                } else if (size.toWrite == 0) {
-                    break;
-                }
-
-                do {
-                    // read proper number of bytes from the file
-                    var bytesRead = fs.readSync(fileHandle, buffer, 0, size.toWrite, size.totalWritten);
-                    //
-                } while ((bytesRead <= 0) && (--li_retryCount > 0));
-                //
-                if (bytesRead <= 0) {
-                    // could not read further
-                    ls_error = "ERROR: Read " + size.totalWritten.toString() + " bytes of complete " + size.file.toString() + " bytes from the file. Could not read further.";
-                    //
-                    break;
-                }
-                
-                if (li_retryCount < RETRY_MAX) {
-                    li_retryCount = RETRY_MAX;
-                }
-                //
-                bytesRead.type = ref.types.size_t;
-                
-                do {
-                    // write them to the buffer
-                    size.actuallyWritten = libUplink.upload_write(uploaderRef, buffer, bytesRead, errorPtrPtr);
-                    //
-                    if (errorPtrPtr.deref().isNull() == false) {
-                        ls_error = ref.readCString(errorPtrPtr.deref(), 0);
-                    }                    
-                    //
-                } while ((errorPtrPtr.deref().isNull() == false) && (--li_retryCount > 0));
-                //
-                if (errorPtrPtr.deref().isNull() == false) {
-                    break;
-                }
-                
-                if (li_retryCount < RETRY_MAX) {
-                    li_retryCount = RETRY_MAX;
-                }
-                
-                if (size.actuallyWritten == 0) {
-                    break;
-                }
-                //
-                size.totalWritten += size.actuallyWritten;
-            }
-
-            // close the opened local file
-            fs.closeSync(fileHandle);
-
-            var ls_dataUploaded = "\n " + ((size.totalWritten * 100.0)/size.file).toString() + "% uploaded!";
-            if (li_retryCount <= 0) {
-                errorPtrPtr = null;
-                //
-                reject(ls_error + ls_dataUploaded);
-            } else if (li_retryCount > 0) {
-                // upload to Storj bucket
-                libUplink.upload_commit(uploaderRef, errorPtrPtr);
-                //
-                if (errorPtrPtr.deref().isNull() == false) {
-                    ls_error = ref.readCString(errorPtrPtr.deref(), 0);
-                    //
-                    errorPtrPtr = null;
-                    //
-                    reject(ls_error + ls_dataUploaded);
-                } else {
-                    resolve(true);
-                }
-            }
-        }
-    });
-};
-
-// function to download Storj (V3) object's data and store it into given file at local system
-// pre-requisites: open_bucket() function has been already called
-// inputs: valid BucketRef, Storj Path/File Name (string), Destination Full File Name (string)
-// output: None, else error in catch
-let download_file = function(pO_bucketRef, ps_downloadPathStorj, ps_downloadPathLocal) {
-    return new Promise(function(resolve, reject) {
-        // prepare to download desired Storj object
-        var downloadOptions = ref.allocCString(ref.NULL);
-        //
-        // Define char* type local variable, to store error when a function is called
-        var errorPtrPtr = ref.NULL.ref();
-        //
-        // prepare to upload desired Storj object
-        var downloaderRef = libUplink.download(pO_bucketRef, ref.allocCString(ps_downloadPathStorj), downloadOptions, errorPtrPtr);
-        downloaderRef.type = DownloaderRef;
-        //
-        var ls_error = "";
-        //
-        // ensure there was no error
-        if (errorPtrPtr.deref().isNull() == false) {
-            ls_error = ref.readCString(errorPtrPtr.deref(), 0);
-            //
-            errorPtrPtr = null;
-            //
-            reject(ls_error);
-        } else {
-            var size = {
-                downloaded      : 0,
-                actuallyWritten : 0,
-                totalWritten    : 0
-            };
-    
-            var li_retryCount = RETRY_MAX;
-            
-            // set-up buffer
-            var buffer = new Buffer.alloc(BUFFER_SIZE);
-            buffer.type = uint8Ptr_t;
-    
-            // create/open file, to be written to with downloaded data
-            var fileHandle = fs.openSync(ps_downloadPathLocal, "w");
-             
-            while(true) {
-                do {
-                    // download a part of Storj object, as per the buffer size   
-                    size.downloaded = libUplink.download_read(downloaderRef, buffer, BUFFER_SIZE, errorPtrPtr);
-                    //
-                    if (errorPtrPtr.deref().isNull() == false) {
-                        ls_error = ref.readCString(errorPtrPtr.deref(), 0);
-                    }
-                    //
-                } while ((errorPtrPtr.deref().isNull() == false) && (--li_retryCount > 0));
-                //
-                if (errorPtrPtr.deref().isNull() == false) {
-                    break;
-                }
-                
-                if (li_retryCount < RETRY_MAX) {
-                    li_retryCount = RETRY_MAX;
-                }
-                
-                if (size.downloaded == 0) {
-                    break;
-                }
-    
-                do {
-                    // write the downloaded stuff to the file
-                    size.actuallyWritten = fs.writeSync(fileHandle, buffer, 0, size.downloaded, size.totalWritten);
-                    //
-                } while ((size.downloaded != size.actuallyWritten) && (--li_retryCount > 0));
-                //
-                size.totalWritten += size.actuallyWritten;
-                //
-                if (size.downloaded != size.actuallyWritten) {
-                    // could not write all downloaded bytes
-                    ls_error = "FAILed to all downloaded bytes to the file. Downloaded and written " + size.totalWritten.toString() + " bytes.";
-                    //
-                    break;
-                }
-                //
-                if (li_retryCount < RETRY_MAX) {
-                    li_retryCount = RETRY_MAX;
-                }
-            }
-    
-            // close the opened file
-            fs.closeSync(fileHandle);
-
-            // close download set-up
-            libUplink.download_close(downloaderRef, errorPtrPtr);
-            //
-            if (errorPtrPtr.deref().isNull() == false) {
-                ls_error += "\n" + ref.readCString(errorPtrPtr.deref(), 0);
-            }
-            
-            if (ls_error != "") {
-                //
-                errorPtrPtr = null;
-                //
-                reject(ls_error);
-            } else {
-                resolve(true);
-            }
-        }
-    });
-};
-
 
 // export the functions as part of Node.js module
 module.exports = {

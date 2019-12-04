@@ -6,19 +6,22 @@ var libUplinkNode = require("./node_modules/storj-nodejs/libUplinkNode.js");
 
 // file names to be uploaded or downloaded as
 // demo Storj (V3) configuration
+
+// demo Storj (V3) configuration
 var storjConfig = {
-	apiKey				: "change-me-to-the-api-key-created-in-satellite-gui",
-	satelliteURL			: "us-central-1.tardigrade.io:7777",
-	encryptionPassphrase		: "you'll never guess this",
-	bucketName			: "change-me-to-desired-bucket-name",
-	uploadPath			: "optionalpath/requiredfilename",
+	apiKey    : "change-me-to-the-api-key-created-in-satellite-gui",
+ 	satelliteURL   : "us-central-1.tardigrade.io:7777",
+ 	encryptionPassphrase  : "you'll never guess this",
+ 	bucketName   : "change-me-to-desired-bucket-name",
+ 	uploadPath   : "optionalpath/requiredfilename",
 };
 
 // file names to be uploaded or downloaded as
 var localFullFileName = {
 	src : "change-me-to-source-file-name-at-local-system",
-	dest: "change-me-to-destination-file-name-at-local-system",
+ 	dest: "change-me-to-destination-file-name-at-local-system",
 };
+
 
 
 // [TEST 01] open a Storj project and process its content

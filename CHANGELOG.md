@@ -1,5 +1,9 @@
 # Storj-Nodejs Changelog
 
+## [0.8.8] - 25-11-2019
+### Changelog:
+* Removed download_file and upload_file function from library.
+
 ## [0.8.7] - 18-11-2019
 ### Changelog:
 * Updated new_uplink fucntion parameters
