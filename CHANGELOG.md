@@ -1,5 +1,10 @@
 # Storj-Nodejs Changelog
 
+## [0.8.9] - 27-01-2020
+### Changelog:
+* Automated creation of libuplink.so file.
+* Removed dependency from ref modules
+
 ## [0.8.8] - 25-11-2019
 ### Changelog:
 * Removed download_file and upload_file function from library.
