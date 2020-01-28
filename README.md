@@ -1,5 +1,5 @@
 # storj-nodejs binding
-
+### *Developed using libuplinkc v0.30.7*
 ## Initial Set-up
 
 **NOTE**: for Golang
@@ -109,7 +109,7 @@ The sample *HelloStorj.js* code calls the *libUplinkNode.js* binding module to d
     * inputs: valid ProjectRef, Bucket Name (string)
     * output: error if any else empty string 
 
-### encryption_access(ProjectRef, string)
+### encryption_accessc(ProjectRef, string)
     * function to get encryption access to upload and/or download data to/from Storj
     * pre-requisites: open_projectc() function has been already called
     * inputs: valid ProjectRef, Encryption Pass Phrase (string)
