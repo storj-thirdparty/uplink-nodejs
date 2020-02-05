@@ -194,7 +194,7 @@ if(lO_uplinkRef.error == ""){
                                 console.log(ls_uploadcommit);
                             }
                             var lO_listOptions = storj.ListOptions;
-                            lO_listOptions.prefix = "uploadPath01/data";
+                            lO_listOptions.prefix = "change-to-upload-path";
                             lO_listOptions.cursor = "";
                             lO_listOptions.delimiter = "/";
                             lO_listOptions.direction = 2;
@@ -379,7 +379,7 @@ if(lO_uplinkRef.error == ""){
                     }          
             console.log("Closing Project");
             var lS_closeprojecterror = libUplink.close_projectc(lO_Openproject.data);
-            if(close_uplink_error==""){
+            if(lS_closeprojecterror==""){
                 console.log("Project closed !!");
             }else{
                 console.log("FAILed to close project");
@@ -439,7 +439,7 @@ if(lb_scopeRecieved){
                             console.log("Project Opened with scope !!");
                             console.log("Opening Bucket with scope...");
                             var serialaccessScope = libUplink.serialize_encryption_accessc(lO_ScopeEncAccess.data);
-                            if(serialaccessScope.error=""){
+                            if(serialaccessScope.error==""){
                                 var lO_OpenBucketScope = libUplink.open_bucketc(lO_Openprojectscope.data,storjConfig.bucketName,serialaccessScope.data);
                                  if(lO_OpenBucketScope.error==""){
                                     console.log("Bucket Opened with scope!!");

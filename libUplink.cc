@@ -91,10 +91,10 @@ napi_value createhandle(napi_env env,long handlevalue,char* errorptr){
 }
 
 
-// * function to create new Storj uplink
-// * pre-requisites: None
-// * inputs: UplinkConfig (object) , Temp(string)
-// * output: Object contains error (if any ,else empty string) and data (UplinkRef)
+  // * function to create new Storj uplink
+  // * pre-requisites: None
+  // * inputs: UplinkConfig (UplinkConfig) , Temp(String)
+  // * output: Object contains error (if any ,else empty string) and data (UplinkRef)
 napi_value new_uplinkc(napi_env env, napi_callback_info info) {
   //
   napi_status status;
@@ -108,7 +108,7 @@ napi_value new_uplinkc(napi_env env, napi_callback_info info) {
   
   //
   if (argc < 2) {
-    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!!\n");
+    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!! excepted 2 arguments\n");
     return NULL;
   }
   //
@@ -121,7 +121,7 @@ napi_value new_uplinkc(napi_env env, napi_callback_info info) {
 
   if((checktypeofinput!=napi_object)&&(checktypeofinput!=napi_null)){
 
-    napi_throw_type_error(env,nullptr,"Wrong datatype excepted object");
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! first argument excepted to be object or null type\n");
   }
   //
   
@@ -129,7 +129,7 @@ napi_value new_uplinkc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if(checktypeofinput1!=napi_string){
-    napi_throw_type_error(env,nullptr,"Wrong datatype excepted string");
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! second argument excepted to be string type\n");
   }
   //
   size_t bufsize = 0;
@@ -241,10 +241,10 @@ napi_value new_uplinkc(napi_env env, napi_callback_info info) {
   
 }
 
-// * function to parse API key, to be used by Storj
-// * pre-requisites: None
-// * inputs: API key (string)
-// * output: object contains error (if any ,else empty string) and data (APIKeyRef)
+    // * function to parse API key, to be used by Storj
+    // * pre-requisites: None
+    // * inputs: API key (String)
+    // * output: object contains error (if any ,else empty string) and data (APIKeyRef)
 napi_value parse_api_keyc(napi_env env, napi_callback_info info) {
   //Status type
   napi_status status;
@@ -258,7 +258,7 @@ napi_value parse_api_keyc(napi_env env, napi_callback_info info) {
   
   //Checking number of arguments
   if (argc < 1) {
-    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!!\n");
+    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!! excepted 1 arguments\n");
     return NULL;
   }
 
@@ -268,7 +268,7 @@ napi_value parse_api_keyc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if(checktypeofinput!=napi_string){
-    napi_throw_type_error(env,nullptr,"Wrong datatype excepted object!!");
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! first argument excepted to be string type\n");
   }
   size_t bufsize = 0;
   size_t convertedvalue = 0;
@@ -313,10 +313,10 @@ long getHandleValue(napi_env env,napi_value handleobj){
   return handlelong;
 }
 
-// * function to open a Storj project
-// * pre-requisites: new_uplinkc() and parse_api_keyc() functions have been already called
-// * inputs: valid UplinkRef, Satellite Address (string), valid APIKeyRef
-// * output: object contains error (if any ,else empty string) and data (ProjectRef)
+    // * function to open a Storj project
+    // * pre-requisites: new_uplinkc() and parse_api_keyc() functions have been already called
+    // * inputs: valid UplinkRef, Satellite Address (String), valid APIKeyRef
+    // * output: object contains error (if any ,else empty string) and data (ProjectRef)
 napi_value open_projectc(napi_env env, napi_callback_info info) {
 
   napi_status status;
@@ -328,7 +328,7 @@ napi_value open_projectc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
   
   if (argc < 3) {
-    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!!\n");
+    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!! excepted 3 arguments\n");
     return NULL;
   }
 
@@ -339,21 +339,21 @@ napi_value open_projectc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if(checktypeofinput!=napi_object){
-    napi_throw_type_error(env,nullptr,"Wrong datatype excepted object!!");
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! first argument excepted to be object type\n");
   }
 
   status = napi_typeof(env,args[1],&checktypeofinput);
   assert(status == napi_ok);
 
   if(checktypeofinput!=napi_string){
-    napi_throw_type_error(env,nullptr,"Wrong datatype excepted Stirng!!");
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! second argument excepted to be string type\n");
   }
 
   status = napi_typeof(env,args[2],&checktypeofinput);
   assert(status == napi_ok);
 
   if(checktypeofinput!=napi_object){
-    napi_throw_type_error(env,nullptr,"Wrong datatype excepted object!!");
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! third argument excepted to be object type\n");
   }
 
 
@@ -377,6 +377,11 @@ napi_value open_projectc(napi_env env, napi_callback_info info) {
   return createhandle(env,lO_ProjectRef._handle, _err);
 }
 
+
+    // * function to open an already existing bucket in Storj project
+    // * pre-requisites: encryption_keyc() function has been already called
+    // * inputs: ProjectRef, Bucket Name (String), serialized EncryptionAccess (String)
+    // * output: object contains error (if any ,else empty string) and data (APIKeyRef)
 napi_value open_bucketc(napi_env env, napi_callback_info info) {
   //
   napi_status status;
@@ -388,7 +393,7 @@ napi_value open_bucketc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
   
   if (argc < 3) {
-    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!!\n");
+    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!! excepted 3 arguments\n");
     return NULL;
   }
 
@@ -398,21 +403,21 @@ napi_value open_bucketc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if(checktypeofinput!=napi_object){
-    napi_throw_type_error(env,nullptr,"Wrong datatype excepted Object!!");
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! first argument excepted to be object type\n");
   }
 
   status = napi_typeof(env,args[1],&checktypeofinput);
   assert(status == napi_ok);
 
   if(checktypeofinput!=napi_string){
-    napi_throw_type_error(env,nullptr,"Wrong datatype excepted Stirng!!");
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! second argument excepted to be string type\n");
   }
   //
   status = napi_typeof(env,args[2],&checktypeofinput);
   assert(status == napi_ok);
   //
   if(checktypeofinput!=napi_string){
-    napi_throw_type_error(env,nullptr,"Wrong datatype excepted Stirng!!");
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! third argument excepted to be string type\n");
   }
   //
   size_t bufsize = 0;
@@ -455,7 +460,7 @@ napi_value project_salted_key_from_passphrasec(napi_env env, napi_callback_info 
   assert(status == napi_ok);
   
   if (argc < 2) {
-    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!!\n");
+    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!! excepted 2 arguments\n");
     return NULL;
   }
 
@@ -465,14 +470,14 @@ napi_value project_salted_key_from_passphrasec(napi_env env, napi_callback_info 
   assert(status == napi_ok);
   //
   if(checktypeofinput!=napi_object){
-    napi_throw_type_error(env,nullptr,"Wrong datatype excepted Object!!");
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! first argument excepted to be object type\n");
   }
 
   status = napi_typeof(env,args[1],&checktypeofinput);
   assert(status == napi_ok);
   //
   if(checktypeofinput!=napi_string){
-    napi_throw_type_error(env,nullptr,"Wrong datatype excepted String!!");
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! second argument excepted to be string type\n");
   }
   size_t bufsize = 0;
   size_t convertedvalue = 0;
@@ -513,10 +518,10 @@ napi_value project_salted_key_from_passphrasec(napi_env env, napi_callback_info 
 
 }
 
-// * function to  creates an encryption access context with a default key set
-// * pre-requisites: new_scope() function has been already called
-// * inputs: key(int)
-// * output: object contains error (if any ,else empty string) and data (EncryptionAccessRef)
+    // * function to  creates an encryption access context with a default key set
+    // * pre-requisites: new_scope() function has been already called
+    // * inputs: key(int)
+    // * output: object contains error (if any ,else empty string) and data (EncryptionAccessRef)
 napi_value new_encryption_access_with_default_keyc(napi_env env, napi_callback_info info) {
   //
   napi_status status;
@@ -530,7 +535,7 @@ napi_value new_encryption_access_with_default_keyc(napi_env env, napi_callback_i
   assert(status == napi_ok);
   
   if (argc < 1) {
-    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!!\n");
+    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!! excepted 1 arguments\n");
     return NULL;
   }
   //
@@ -540,7 +545,7 @@ napi_value new_encryption_access_with_default_keyc(napi_env env, napi_callback_i
   assert(status == napi_ok);
   //
   if(checktypeofinput!=napi_number){
-    napi_throw_type_error(env,nullptr,"\nWrong datatype excepted number!!\n");
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! first argument excepted to be number type\n");
   }
   //
   char *_err = "";
@@ -570,7 +575,7 @@ napi_value serialize_encryption_accessc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
   
   if (argc < 1) {
-    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!!\n");
+    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!! excepted 1 arguments\n");
     return NULL;
   }
 
@@ -580,7 +585,7 @@ napi_value serialize_encryption_accessc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
   //
   if(checktypeofinput!=napi_object){
-    napi_throw_type_error(env,nullptr,"Wrong datatype excepted Object!!");
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! first argument excepted to be object type\n");
   }
   //
   char *_err = "";
@@ -621,7 +626,7 @@ napi_value encryption_accessc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
   
   if (argc < 2) {
-    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!!\n");
+    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!! excepted 2 arguments\n");
     return NULL;
   }
 
@@ -631,7 +636,7 @@ napi_value encryption_accessc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if(checktypeofinput!=napi_string){
-    napi_throw_type_error(env,nullptr,"Wrong datatype excepted String!!");
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! second argument excepted to be string type\n");
   }
   size_t bufsize = 0;
   size_t convertedvalue = 0;
@@ -683,7 +688,7 @@ napi_value uploadc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
   
   if (argc < 3) {
-    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!!\n");
+    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!! excepted 3 arguments\n");
     return NULL;
   }
 
@@ -693,14 +698,14 @@ napi_value uploadc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if(checktypeofinput!=napi_object){
-    napi_throw_type_error(env,nullptr,"Wrong datatype excepted Object!!");
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! first argument excepted to be object type\n");
   }
 
   status = napi_typeof(env,args[1],&checktypeofinput);
   assert(status == napi_ok);
 
   if(checktypeofinput!=napi_string){
-    napi_throw_type_error(env,nullptr,"Wrong datatype excepted String!!");
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! second argument excepted to be string type\n");
   }
 
   //
@@ -752,7 +757,7 @@ napi_value uploadc(napi_env env, napi_callback_info info) {
   }else if(checktypeofinput==napi_null){
     lO_UploaderRef = upload(lO_BucketRef,storjobjectpath,NULL,err);
   }else{
-    napi_throw_type_error(env,nullptr,"Wrong datatype excepted Object!!");
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! third argument excepted to be object type\n");
   }
 
   //free_upload_opts(&lO_UploadOptions);
@@ -761,9 +766,8 @@ napi_value uploadc(napi_env env, napi_callback_info info) {
 
 //  * function to write data to Storj (V3) bucket's path
 //  * pre-requisites: upload() function has been already called
-//  * inputs: Uploader reference (uploaderRef), Data to upload (buffer), Size of data to upload (int)
-//  * output: object contains error (if any ,else empty string) and data (APIKeyRef)
-// * **Note:** The Data to upload (buffer) passed to function should be a uint8 pointer only. 
+//  * inputs: Uploader reference (uploaderRef), Data to upload (Buffer), Size of data to upload (Int)
+//  * output: object contains error (if any ,else empty string) and data (int)
 napi_value upload_writec(napi_env env, napi_callback_info info) {
   //
   napi_status status;
@@ -776,7 +780,7 @@ napi_value upload_writec(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
   
   if (argc < 3) {
-    napi_throw_type_error(env, nullptr, "Wrong number of arguments excepted 3 arguments");
+    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!! excepted 3 arguments\n");
     return NULL;
   }
 
@@ -785,19 +789,19 @@ napi_value upload_writec(napi_env env, napi_callback_info info) {
   status = napi_typeof(env,args[0],&checktypeofinput);
   assert(status == napi_ok);
   if(checktypeofinput!=napi_object){
-    napi_throw_type_error(env,nullptr,"Wrong datatype excepted Object!!");
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! first argument excepted to be object type\n");
   }
 
   status = napi_typeof(env,args[1],&checktypeofinput);
   assert(status == napi_ok);
   if(checktypeofinput!=napi_object){
-    napi_throw_type_error(env,nullptr,"Wrong datatype excepted Object!!");
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! second argument excepted to be object type\n");
   }
 
   status = napi_typeof(env,args[2],&checktypeofinput);
   assert(status == napi_ok);
   if(checktypeofinput!=napi_number){
-    napi_throw_type_error(env,nullptr,"Wrong datatype excepted number!!");
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! third argument excepted to be number type\n");
   }
   //
   char *_err = "";
@@ -856,7 +860,7 @@ napi_value upload_commitc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
   //
   if (argc < 1) {
-    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!!\n");
+    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!! excepted 1 arguments\n");
     return NULL;
   }
 
@@ -866,7 +870,7 @@ napi_value upload_commitc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
   //
   if(checktypeofinput!=napi_object){
-    napi_throw_type_error(env,nullptr,"Wrong datatype Object!!");
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! first argument excepted to be object type\n");
   }
   //
   char *_err = "";
@@ -881,10 +885,10 @@ napi_value upload_commitc(napi_env env, napi_callback_info info) {
   return errorvalue;
 }
 
-// * function to close currently established uplink
-// * pre-requisites: new_uplinkc() function has been already called
-// * inputs: Uplink Reference(UplinkRef)
-// * output: Error if any else empty string
+    // * function to close currently established uplink
+    // * pre-requisites: new_uplinkc() function has been already called
+    // * inputs: Uplink Reference(UplinkRef)
+    // * output: Error if any else empty string
 napi_value close_uplinkc(napi_env env, napi_callback_info info){
   
   napi_status status;
@@ -896,8 +900,17 @@ napi_value close_uplinkc(napi_env env, napi_callback_info info){
   assert(status == napi_ok);
   
   if (argc < 1) {
-    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!!\n");
+    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!! excepted 1 arguments\n");
     return NULL;
+  }
+
+  napi_valuetype checktypeofinput;
+
+  status = napi_typeof(env,args[0],&checktypeofinput);
+  assert(status == napi_ok);
+  
+  if(checktypeofinput!=napi_object){
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! first argument excepted to be object type\n");
   }
 
   UplinkRef lO_UplinkRef;
@@ -913,10 +926,10 @@ napi_value close_uplinkc(napi_env env, napi_callback_info info){
   return errorString;
 }
 
-// * function to get downloader reference to download Storj (V3) object's data and store it on local computer
-// * pre-requisites: open_bucket() function has been already called
-// * inputs: Bucket reference (BucketRef), Storj Path/File Name (string) within the opened bucket
-// * output: Downloader reference (downloaderRef), Error (string) if any else None
+    // * function to get downloader reference to download Storj (V3) object's data and store it on local computer
+    // * pre-requisites: open_bucket() function has been already called
+    // * inputs: Bucket reference (BucketRef), Storj Path/File Name (String) within the opened bucket
+    // * output: Downloader reference (downloaderRef), Error (string) if any else None
 napi_value downloadc(napi_env env, napi_callback_info info) {
   //
   napi_status status;
@@ -930,7 +943,7 @@ napi_value downloadc(napi_env env, napi_callback_info info) {
   
   //Checking number of arguments
   if (argc < 2) {
-    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!!\n");
+    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!! excepted 2 arguments\n");
     return NULL;
   }
 
@@ -940,14 +953,14 @@ napi_value downloadc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if(checktypeofinput!=napi_object){
-    napi_throw_type_error(env,nullptr,"\nWrong datatype excepted object!!\n");
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! first argument excepted to be object type\n");
   }
 
   status = napi_typeof(env,args[1],&checktypeofinput);
   assert(status == napi_ok);
 
   if(checktypeofinput!=napi_string){
-    napi_throw_type_error(env,nullptr,"\nWrong datatype excepted string!!\n");
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! second argument excepted to be string type\n");
   }
   //
   size_t bufsize = 0;
@@ -970,10 +983,10 @@ napi_value downloadc(napi_env env, napi_callback_info info) {
   
 }
 
-// * function to read Storj (V3) object's data and return the data
-// * pre-requisites: download() function has been already called
-// * inputs: Downloader Reference (downloaderRef), Length of data to download (int)
-// * output: object contains error (if any ,else empty string) and data (int)
+   // * function to read Storj (V3) object's data and return the data
+   //  * pre-requisites: download() function has been already called
+   //  * inputs: Downloader Reference (DownloaderRef), Buffer,Length of data to download (int)
+   //  * output: object contains error (if any ,else empty string) and data (int)
 napi_value download_readc(napi_env env, napi_callback_info info) {
   //
   napi_status status;
@@ -985,7 +998,7 @@ napi_value download_readc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
   //
   if (argc < 3) {
-    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!!\n");
+    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!! excepted 3 arguments\n");
     return NULL;
   }
 
@@ -995,21 +1008,21 @@ napi_value download_readc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
   //
   if(checktypeofinput!=napi_object){
-    napi_throw_type_error(env,nullptr,"\nWrong datatype excepted object!!\n");
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! first argument excepted to be object type\n");
   }
 
   status = napi_typeof(env,args[1],&checktypeofinput);
   assert(status == napi_ok);
   //
   if(checktypeofinput!=napi_object){
-    napi_throw_type_error(env,nullptr,"\nWrong datatype excepted object!!\n");
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! second argument excepted to be object type\n");
   }
 
   status = napi_typeof(env,args[2],&checktypeofinput);
   assert(status == napi_ok);
   //
   if(checktypeofinput!=napi_number){
-    napi_throw_type_error(env,nullptr,"\nWrong datatype excepted number!!\n");
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! third argument excepted to be number type\n");
   }
   //
   char *_err = "";
@@ -1050,10 +1063,10 @@ napi_value download_readc(napi_env env, napi_callback_info info) {
   return returnObject;
 }
 
-// * function to close downloader after completing the data read process
-// * pre-requisites: downloadc() function has been already called
-// * inputs: Downloader Reference (downloaderRef)
-// * output: Error (string) if any else None
+    // * function to close downloader after completing the data read process
+    // * pre-requisites: downloadc() function has been already called
+    // * inputs: Downloader Reference (DownloaderRef)
+    // * output: Error (string) if any else None
 napi_value download_closec(napi_env env, napi_callback_info info) {
   //
   napi_status status;
@@ -1065,7 +1078,7 @@ napi_value download_closec(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
   //
   if (argc < 1) {
-    napi_throw_type_error(env, nullptr, "\nWrong datatype excepted object!!\n");
+    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!! excepted 1 arguments\n");
     return NULL;
   }
 
@@ -1074,6 +1087,10 @@ napi_value download_closec(napi_env env, napi_callback_info info) {
   status = napi_typeof(env,args[0],&checktypeofinput);
   assert(status == napi_ok);
   
+  if(checktypeofinput!=napi_object){
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! first argument excepted to be object type\n");
+  }
+
   char *_err = "";
   char **err = &_err;
   DownloaderRef lO_DownloaderRef;
@@ -1084,10 +1101,10 @@ napi_value download_closec(napi_env env, napi_callback_info info) {
   status = napi_create_string_utf8(env,_err,NAPI_AUTO_LENGTH,&errorvalue);
   return errorvalue;
 }
-// * function to create new bucket in Storj project
-// * pre-requisites: open_projectc() function has been already called, successfully
-// * inputs: valid ProjectRef, Bucket Name (string)
-// * output: object contains error (if any ,else empty string) and data (BucketInfo)
+    // * function to create new bucket in Storj project
+    // * pre-requisites: open_projectc() function has been already called, successfully
+    // * inputs: valid ProjectRef, Bucket Name (String),BucketConfig
+    // * output: object contains error (if any ,else empty string) and data (BucketInfo)
 napi_value create_bucketc(napi_env env, napi_callback_info info) {
   //
   napi_status status;
@@ -1100,7 +1117,7 @@ napi_value create_bucketc(napi_env env, napi_callback_info info) {
   
   //Checking number of arguments
   if (argc < 3) {
-    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!!\n");
+    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!! excepted 3 arguments\n");
     return NULL;
   }
 
@@ -1109,11 +1126,15 @@ napi_value create_bucketc(napi_env env, napi_callback_info info) {
   status = napi_typeof(env,args[0],&checktypeofinput);
   assert(status == napi_ok);
 
+  if(checktypeofinput!=napi_object){
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! first argument excepted to be object type\n");
+  }
+
   status = napi_typeof(env,args[1],&checktypeofinput);
   assert(status == napi_ok);
 
   if(checktypeofinput!=napi_string){
-    napi_throw_type_error(env,nullptr,"\nWrong datatype excepted object!!\n");
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! second argument excepted to be string type\n");
   }
 
   size_t bufsize = 0;
@@ -1384,11 +1405,9 @@ napi_value create_bucketc(napi_env env, napi_callback_info info) {
     status = napi_set_named_property(env,redundancy_schemeObj,"total_shares",total_sharesNAPI);
     assert(status == napi_ok);
     //
-  
     status = napi_set_named_property(env,bucketInfoObj,"redundancy_scheme",redundancy_schemeObj);
     assert(status == napi_ok);
-    //XXXXXXXX
-    //Create Bucket Info Project
+    //
     napi_value segment_size;
     //
     status = napi_create_int64(env, lO_BucketInfo.segment_size, &segment_size);
@@ -1408,23 +1427,20 @@ napi_value create_bucketc(napi_env env, napi_callback_info info) {
     status = napi_set_named_property(env,returnObject,"data",emptyNAPI);
     assert(status == napi_ok);
   }
-  //Erro Stirng
-  
-  
-  
+  //
   free_bucket_info(&lO_BucketInfo);
   return returnObject;
 }
 
-// * function to delete a bucket 
-// * pre-requisites: open_projectc() function has been already called, successfully
-// * inputs: valid ProjectRef, Bucket Name (string)
-// * output: error if any else empty string 
+    // * function to delete a bucket 
+    // * pre-requisites: open_projectc() function has been already called, successfully
+    // * inputs: valid ProjectRef, Bucket Name (String)
+    // * output: error if any else empty string 
 napi_value delete_bucketc(napi_env env, napi_callback_info info) {
   //Status type
   napi_status status;
   
-  //Number of arguments passed
+  //
   size_t argc = 2;
   napi_value args[2];
 
@@ -1433,17 +1449,24 @@ napi_value delete_bucketc(napi_env env, napi_callback_info info) {
   
   //Checking number of arguments
   if (argc < 2) {
-    napi_throw_type_error(env, nullptr, "Wrong number of arguments excepted 2 arguments");
+    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!! excepted 2 arguments\n");
     return NULL;
   }
 
   napi_valuetype checktypeofinput;
   
+  status = napi_typeof(env,args[0],&checktypeofinput);
+  assert(status == napi_ok);
+
+  if(checktypeofinput!=napi_object){
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! first argument excepted to be object type\n");
+  }
+
   status = napi_typeof(env,args[1],&checktypeofinput);
   assert(status == napi_ok);
 
   if(checktypeofinput!=napi_string){
-    napi_throw_type_error(env,nullptr,"Please enter string value");
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! second argument excepted to be string type\n");
   }
   size_t bufsize = 0;
   size_t convertedvalue = 0;
@@ -1467,10 +1490,10 @@ napi_value delete_bucketc(napi_env env, napi_callback_info info) {
   return errorString;
 }
 
-// * function to delete an object in a bucket
-// * pre-requisites: open_bucket() function has been already called, successfully
-// * inputs: valid BucketRef, Object Path (string)
-// * output: Error (string) if any else None
+    // * function to delete an object in a bucket
+    // * pre-requisites: open_bucket() function has been already called, successfully
+    // * inputs: valid BucketRef, Object Path (String)
+    // * output: Error (string) if any else None
 napi_value delete_objectc(napi_env env, napi_callback_info info) {
   //
   napi_status status;
@@ -1482,11 +1505,18 @@ napi_value delete_objectc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
   //
   if (argc < 2) {
-    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!!\n");
+    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!! excepted 2 arguments\n");
     return NULL;
   }
 
   napi_valuetype checktypeofinput;
+
+  status = napi_typeof(env,args[0],&checktypeofinput);
+  assert(status == napi_ok);
+
+  if(checktypeofinput!=napi_object){
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! first argument excepted to be object type\n");
+  }
 
   status = napi_typeof(env,args[1],&checktypeofinput);
   assert(status == napi_ok);
@@ -1516,10 +1546,10 @@ napi_value delete_objectc(napi_env env, napi_callback_info info) {
   return errorString;
 }
 
-// * function to close currently opened Storj project
-// * pre-requisites: open_bucketc() function has been already called
-// * inputs: Bucket Reference (BucketRef)
-// * output: error if any else empty string
+    // * function to close currently opened Storj project
+    // * pre-requisites: open_bucketc() function has been already called
+    // * inputs: Bucket Reference (BucketRef)
+    // * output: error if any else empty string
 napi_value close_bucketc(napi_env env, napi_callback_info info) {
   //
   napi_status status;
@@ -1531,7 +1561,7 @@ napi_value close_bucketc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
   
   if (argc < 1) {
-    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!!\n");
+    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!! excepted 1 arguments\n");
     return NULL;
   }
 
@@ -1539,6 +1569,10 @@ napi_value close_bucketc(napi_env env, napi_callback_info info) {
 
   status = napi_typeof(env,args[0],&checktypeofinput);
   assert(status == napi_ok);
+  //
+  if(checktypeofinput!=napi_object){
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! first argument excepted to be object type\n");
+  }
   //
   char *_err = "";
   char **err = &_err;
@@ -1551,10 +1585,10 @@ napi_value close_bucketc(napi_env env, napi_callback_info info) {
   return errorString;
 }
 
-// * function to close currently opened Storj project
-// * pre-requisites: open_projectc() function has been already called
-// * inputs: Project Reference (ProjectRef)
-// * output: error if any else empty string
+    // * function to close currently opened Storj project
+    // * pre-requisites: open_projectc() function has been already called
+    // * inputs: Project Reference (ProjectRef)
+    // * output: error if any else empty string
 napi_value close_projectc(napi_env env, napi_callback_info info) {
   //Status type
   napi_status status;
@@ -1568,7 +1602,7 @@ napi_value close_projectc(napi_env env, napi_callback_info info) {
   
   //Checking number of arguments
   if (argc < 1) {
-    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!!\n");
+    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!! excepted 1 arguments\n");
     return NULL;
   }
 
@@ -1576,6 +1610,10 @@ napi_value close_projectc(napi_env env, napi_callback_info info) {
 
   status = napi_typeof(env,args[0],&checktypeofinput);
   assert(status == napi_ok);
+  //
+  if(checktypeofinput!=napi_object){
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! first argument excepted to be object type\n");
+  }
   //
   char *_err = "";
   char **err = &_err;
@@ -1588,10 +1626,10 @@ napi_value close_projectc(napi_env env, napi_callback_info info) {
   return errorString;
 }
 
-// * function to fetch a list of buckets, available in the Storj project
-// * pre-requisites: open_bucketc() function has been already called
-// * inputs: valid BucketRef
-// * output: object contains error (if any ,else empty string) and data (ObjectList)
+    // * function to fetch a list of buckets, available in the Storj project
+    // * pre-requisites: open_bucketc() function has been already called
+    // * inputs: valid BucketRef , ListOptions
+    // * output: object contains error (if any ,else empty string) and data (ObjectList)
 napi_value list_objectsc(napi_env env, napi_callback_info info) {
   //
   napi_status status;
@@ -1603,17 +1641,22 @@ napi_value list_objectsc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
   
   if (argc < 2) {
-    napi_throw_type_error(env, nullptr, "Wrong number of arguments excepted 3 arguments");
+    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!! excepted 2 arguments\n");
     return NULL;
   }
 
   napi_valuetype checktypeofinput;
   
-  BucketRef lO_BucketRef;
-  lO_BucketRef._handle = getHandleValue(env,args[0]);
-
   status = napi_typeof(env,args[0],&checktypeofinput);
   assert(status == napi_ok);
+  //
+  if(checktypeofinput!=napi_object){
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! first argument excepted to be object type\n");
+  }
+  //
+  BucketRef lO_BucketRef;
+  lO_BucketRef._handle = getHandleValue(env,args[0]);
+  //
   char *_err = "";
   char **err = &_err;
   //
@@ -1621,6 +1664,7 @@ napi_value list_objectsc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
   //
 
+  //
   ListOptions lO_ListOptions;
   enum ListDirection lO_direction;
   ObjectList lO_ObjectList;
@@ -1705,6 +1749,10 @@ napi_value list_objectsc(napi_env env, napi_callback_info info) {
     lO_ListOptions.limit = limitc;
     //
     lO_ObjectList = list_objects(lO_BucketRef,&lO_ListOptions,err);
+  }else{
+    if(checktypeofinput!=napi_object){
+      napi_throw_type_error(env,nullptr,"\nWrong datatype !! second argument excepted to be object or null type\n");
+    }
   }
     
   napi_value returnObject;
@@ -1944,10 +1992,10 @@ napi_value list_objectsc(napi_env env, napi_callback_info info) {
   napi_value emptyvalue;
   return emptyvalue;
 }
-// * function to fetch a list of buckets, available in the Storj project
-// * pre-requisites: open_projectc() function has been already called
-// * inputs: valid ProjectRef
-// * output: object contains error (if any ,else empty string) and data (BucketList)
+    // * function to fetch a list of buckets, available in the Storj project
+    // * pre-requisites: open_projectc() function has been already called
+    // * inputs: valid ProjectRef , BucketListOptions
+    // * output: object contains error (if any ,else empty string) and data (BucketList)
 napi_value list_bucketsc(napi_env env, napi_callback_info info) {
   
   napi_status status;
@@ -1959,7 +2007,7 @@ napi_value list_bucketsc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
    
   if (argc < 2) {
-    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!!\n");
+    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!! excepted 2 arguments\n");
     return NULL;
   }
 
@@ -1969,7 +2017,7 @@ napi_value list_bucketsc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
   if(checktypeofinput!=napi_object)
   {
-    napi_throw_type_error(env, nullptr, "\nWrong datatype excepted object\n");
+    napi_throw_type_error(env, nullptr, "\nWrong datatype !! first argument excepted to be object type\n");
   }
   
   status = napi_typeof(env,args[1],&checktypeofinput);
@@ -1987,12 +2035,6 @@ napi_value list_bucketsc(napi_env env, napi_callback_info info) {
   if(checktypeofinput==napi_null){
     lO_bucketlist = list_buckets(lO_ProjectRef,NULL,err);
   }else if(checktypeofinput==napi_object){
-
-
-    lO_bucketlist = list_buckets(lO_ProjectRef,&lO_BucketListOptions,err);
-  }
-  else
-  {
     napi_value cursorNAPI;
     status = napi_get_named_property(env,args[1],"cursor",&cursorNAPI);
     assert(status == napi_ok);
@@ -2032,7 +2074,13 @@ napi_value list_bucketsc(napi_env env, napi_callback_info info) {
     status = napi_get_value_int32(env,limitNAPI,&limit);
     assert(status == napi_ok);
     lO_BucketListOptions.limit = limit;
-    napi_throw_type_error(env, nullptr, "\nWrong datatype excepted object\n");
+
+    lO_bucketlist = list_buckets(lO_ProjectRef,&lO_BucketListOptions,err);
+  }
+  else
+  {
+    
+    napi_throw_type_error(env, nullptr, "\nWrong datatype !! second argument excepted to be object type\n");
   }
   
   
@@ -2195,16 +2243,21 @@ napi_value list_bucketsc(napi_env env, napi_callback_info info) {
   
 }
 
-// * function to creates new Scope 
-// * pre-requisites: parse_api_keyc() and get_encryption_accessc() functions have been already called
-// * inputs: satellite address (string), api key refernce (APIKeyRef),  serialized encryption access (EncryptionAccessRef)
-// * output: object contains error (if any ,else empty string) and data (ScopeRef)
+    // * function to creates new Scope 
+    // * pre-requisites: parse_api_keyc() and get_encryption_accessc() functions have been already called
+    // * inputs: satellite address (string), api key refernce (APIKeyRef),  serialized encryption access (EncryptionAccessRef)
+    // * output: object contains error (if any ,else empty string) and data (ScopeRef)
 napi_value new_scopec(napi_env env, napi_callback_info info) {
   
   napi_status status;
   
   size_t argc = 3;
   napi_value args[3];
+
+  if (argc < 3) {
+    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!! excepted 3 arguments\n");
+    return NULL;
+  }
 
   status = napi_get_cb_info(env, info,&argc,args, nullptr ,nullptr);
   assert(status == napi_ok);
@@ -2215,7 +2268,7 @@ napi_value new_scopec(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if(checktypeofinput!=napi_string){
-    napi_throw_type_error(env,nullptr,"\nWrong datatype excepted string\n");
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! first argument excepted to be string type\n");
   }
   //
   size_t bufsize = 0;
@@ -2238,10 +2291,10 @@ napi_value new_scopec(napi_env env, napi_callback_info info) {
   return createhandle(env,lO_ScopeRef._handle, _err);
 }
 
-// * function to restricts a given scope with the provided caveat and encryption restrictions
-// * pre-requisites: new_scope() function has been already called
-// * inputs: scope reference (ScopeRef) , caveat(object),encryptionRestriction(object),restrictionsLen(number)
-// * output: object contains error (if any ,else empty string) and data (ScopeRef)
+    // * function to restricts a given scope with the provided caveat and encryption restrictions
+    // * pre-requisites: new_scope() function has been already called
+    // * inputs: scope reference (ScopeRef) , caveat(object),encryptionRestriction(object)
+    // * output: object contains error (if any ,else empty string) and data (ScopeRef)
 napi_value restrict_scopec(napi_env env, napi_callback_info info) {
   
   napi_status status;
@@ -2253,7 +2306,7 @@ napi_value restrict_scopec(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
   
   if (argc < 3) {
-    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!!\n");
+    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!! excepted 3 arguments\n");
     return NULL;
   }
   Caveat lO_Caveat;
@@ -2352,7 +2405,7 @@ napi_value restrict_scopec(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if(checktypeofinput!=napi_object){
-    napi_throw_type_error(env,nullptr,"Please Enter Object Type");
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! first argument excepted to be object type\n");
   }
   
   char *_err = "";
@@ -2368,10 +2421,10 @@ napi_value restrict_scopec(napi_env env, napi_callback_info info) {
   return createhandle(env,restrictedScope._handle, _err);
 }
 
-// * function to get Scope APIKey
-// * pre-requisites: new_scopec() function has been already called
-// * inputs: scope Reference (ScopeRef)
-// * output: object contains error (if any ,else empty string) and data (APIKeyRef)
+    // * function to get Scope APIKey
+    // * pre-requisites: new_scopec() function has been already called
+    // * inputs: scope Reference (ScopeRef)
+    // * output: object contains error (if any ,else empty string) and data (APIKeyRef)
 napi_value get_scope_api_keyc(napi_env env, napi_callback_info info) {
   //
   napi_status status;
@@ -2384,7 +2437,7 @@ napi_value get_scope_api_keyc(napi_env env, napi_callback_info info) {
   
   //
   if (argc < 1) {
-    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!!\n");
+    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!! excepted 1 arguments\n");
     return NULL;
   }
 
@@ -2395,7 +2448,7 @@ napi_value get_scope_api_keyc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if(checktypeofinput!=napi_object){
-    napi_throw_type_error(env,nullptr,"\nWrong datatype excepted object\n");
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! first argument excepted to be object type\n");
   }
 
   char *_err = "";
@@ -2407,10 +2460,10 @@ napi_value get_scope_api_keyc(napi_env env, napi_callback_info info) {
   return createhandle(env,lO_APIKeyRef._handle, _err);
 }
 
-// * function to get Scope encryption access
-// * pre-requisites: new_scopec() function has been already called
-// * inputs: Scope Reference (ScopeRef)
-// * output: object contains error (if any ,else empty string) and data (EncryptionAccessRef)
+    // * function to get Scope encryption access
+    // * pre-requisites: new_scopec() function has been already called
+    // * inputs: Scope Reference (ScopeRef)
+    // * output: object contains error (if any ,else empty string) and data (EncryptionAccessRef)
 napi_value get_scope_enc_accessc(napi_env env, napi_callback_info info) {
   
   napi_status status;
@@ -2422,7 +2475,7 @@ napi_value get_scope_enc_accessc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
   
   if (argc < 1) {
-    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!!\n");
+    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!! excepted 1 arguments\n");
     return NULL;
   }
 
@@ -2432,7 +2485,7 @@ napi_value get_scope_enc_accessc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if(checktypeofinput!=napi_object){
-    napi_throw_type_error(env,nullptr,"\nWrong datatype excepted object\n");
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! first argument excepted to be object type\n");
   }
   
   char *_err = "";
@@ -2444,10 +2497,10 @@ napi_value get_scope_enc_accessc(napi_env env, napi_callback_info info) {
   return createhandle(env,lO_EncryptionAccessRef._handle, _err);
 }
 //
-// * function to parses an Scope
-// * pre-requisites: new_scopec() function has been already called
-// * inputs: ScopeRef Reference (ScopeRef)
-// * output: object contains error (if any ,else empty string) and data (ScopeRef)
+    // * function to parses an Scope
+    // * pre-requisites: new_scopec() function has been already called
+    // * inputs: ScopeRef Reference (ScopeRef)
+    // * output: object contains error (if any ,else empty string) and data (ScopeRef)
 napi_value parse_scopec(napi_env env, napi_callback_info info) {
   
   napi_status status;
@@ -2459,7 +2512,7 @@ napi_value parse_scopec(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
   
   if (argc < 1) {
-    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!!\n");
+    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!! excepted 1 arguments\n");
     return NULL;
   }
 
@@ -2469,7 +2522,7 @@ napi_value parse_scopec(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if(checktypeofinput!=napi_string){
-    napi_throw_type_error(env,nullptr,"\nWrong datatype excepted string\n");
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! first argument excepted to be string type\n");
   }
   size_t bufsize = 0;
   size_t convertedvalue = 0;
@@ -2485,10 +2538,10 @@ napi_value parse_scopec(napi_env env, napi_callback_info info) {
   return createhandle(env,lO_ScopeRef._handle, _err);
 }
 
-// * function to serializes the Scope to a string
-// * pre-requisites: new_scopec() function has been already called
-// * inputs: Scope Reference (ScopeRef)
-// * output: object contains error (if any ,else empty string) and data (String)
+    // * function to serializes the Scope to a string
+    // * pre-requisites: new_scopec() function has been already called
+    // * inputs: Scope Reference (ScopeRef)
+    // * output: object contains error (if any ,else empty string) and data (String)
 napi_value serialize_scopec(napi_env env, napi_callback_info info) {
   
   napi_status status;
@@ -2500,7 +2553,7 @@ napi_value serialize_scopec(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
   
   if (argc < 1) {
-    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!!\n");
+    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!! excepted 1 arguments\n");
     return NULL;
   }
 
@@ -2510,7 +2563,7 @@ napi_value serialize_scopec(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if(checktypeofinput!=napi_object){
-    napi_throw_type_error(env,nullptr,"\nWrong datatype excepted object\n");
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! first argument excepted to be object type\n");
   }
   
   char *_err = "";
@@ -2540,10 +2593,10 @@ napi_value serialize_scopec(napi_env env, napi_callback_info info) {
   return returnObject;
 }
 
-// * function to gets Scope satellite address
-// * pre-requisites: new_scopec() function has been already called
-// * inputs: Scope Reference (ScopeRef)
-// * output: object contains error (if any ,else empty string) and data (string)
+    // * function to gets Scope satellite address
+    // * pre-requisites: new_scopec() function has been already called
+    // * inputs: Scope Reference (ScopeRef)
+    // * output: object contains error (if any ,else empty string) and data (string)
 napi_value get_scope_satellite_addressc(napi_env env, napi_callback_info info) {
   
   napi_status status;
@@ -2556,7 +2609,7 @@ napi_value get_scope_satellite_addressc(napi_env env, napi_callback_info info) {
   
   //
   if (argc < 1) {
-    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!!\n");
+    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!! excepted 1 arguments\n");
     return NULL;
   }
 
@@ -2566,7 +2619,7 @@ napi_value get_scope_satellite_addressc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if(checktypeofinput!=napi_object){
-    napi_throw_type_error(env,nullptr,"\nWrong datatype excepted object\n");
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! first argument excepted to be object type\n");
   }
   
   char *_err = "";
@@ -2596,10 +2649,10 @@ napi_value get_scope_satellite_addressc(napi_env env, napi_callback_info info) {
   return returnObject;
 }
 
-// * function to an Object handle, if authorized
-// * pre-requisites: open_bucket() function has been already called
-// * inputs: Bucket Reference (BucketRef),objectPath(string)
-// * output: object contains error (if any ,else empty string) and data (ObjectRef)
+    // * function to an Object handle, if authorized
+    // * pre-requisites: open_bucket() function has been already called
+    // * inputs: Bucket Reference (BucketRef),objectPath(String)
+    // * output: object contains error (if any ,else empty string) and data (ObjectRef)
 napi_value open_objectc(napi_env env, napi_callback_info info) {
   
   napi_status status;
@@ -2611,7 +2664,7 @@ napi_value open_objectc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
   
   if (argc < 2) {
-    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!!\n");
+    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!! excepted 2 arguments\n");
     return NULL;
   }
 
@@ -2621,7 +2674,7 @@ napi_value open_objectc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if(checktypeofinput!=napi_object){
-    napi_throw_type_error(env,nullptr,"\nWrong datatype excepted object\n");
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! first argument excepted to be object type\n");
   }
 
 
@@ -2629,7 +2682,7 @@ napi_value open_objectc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if(checktypeofinput!=napi_string){
-    napi_throw_type_error(env,nullptr,"\nWrong datatype excepted string\n");
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! second argument excepted to be string type\n");
   }
 
   size_t bufsize = 0;
@@ -2650,10 +2703,10 @@ napi_value open_objectc(napi_env env, napi_callback_info info) {
   return createhandle(env,lO_ObjectRef._handle,_err);
 }
 
-// * function to closes the object
-// * pre-requisites: open_objectc() function has been already called
-// * inputs: object Reference (ObjectRef)
-// * output: error if any else empty string
+    // * function to closes the object
+    // * pre-requisites: open_objectc() function has been already called
+    // * inputs: object Reference (ObjectRef)
+    // * output: error if any else empty string
 napi_value close_objectc(napi_env env, napi_callback_info info) {
   
   napi_status status;
@@ -2665,7 +2718,7 @@ napi_value close_objectc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
   
   if (argc < 1) {
-    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!!\n");
+    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!! excepted 1 arguments\n");
     return NULL;
   }
 
@@ -2675,7 +2728,7 @@ napi_value close_objectc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if(checktypeofinput!=napi_object){
-    napi_throw_type_error(env,nullptr,"\nWrong datatype excepted object\n");
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! first argument excepted to be object type\n");
   }
   
   char *_err = "";
@@ -2691,10 +2744,10 @@ napi_value close_objectc(napi_env env, napi_callback_info info) {
   return errorString;
 }
 
-// * function to close downloader after completing the data read process
-// * pre-requisites: open_object() function has been already called
-// * inputs: object Reference (ObjectRef)
-// * output: object contains error (if any ,else empty string) and data (ObjectMeta)
+    // * function to close downloader after completing the data read process
+    // * pre-requisites: open_object() function has been already called
+    // * inputs: object Reference (ObjectRef)
+    // * output: object contains error (if any ,else empty string) and data (ObjectMeta)
 napi_value get_object_metac(napi_env env, napi_callback_info info) {
   //
   napi_status status;
@@ -2706,7 +2759,7 @@ napi_value get_object_metac(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
   //
   if (argc < 1) {
-    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!!\n");
+    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!! excepted 1 arguments\n");
     return NULL;
   }
 
@@ -2716,7 +2769,7 @@ napi_value get_object_metac(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if(checktypeofinput!=napi_object){
-    napi_throw_type_error(env,nullptr,"\nWrong datatype excepted object\n");
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! first argument excepted to be object type\n");
   }
   
   char *_err = "";
@@ -2737,17 +2790,17 @@ napi_value get_object_metac(napi_env env, napi_callback_info info) {
   napi_value bucketname;
   napi_create_string_utf8(env,&lO_ObjectMeta.bucket[0],NAPI_AUTO_LENGTH,&bucketname);
   assert(status == napi_ok);
-  //>>>>>>>
+  //
   status = napi_set_named_property(env,objectMetaNAPI,"bucket",bucketname);
   assert(status == napi_ok);
-  //>>>>>>>
+  //
   napi_value pathAPI;
   napi_create_string_utf8(env,&lO_ObjectMeta.path[0],NAPI_AUTO_LENGTH,&pathAPI);
   assert(status == napi_ok);
   //
   status = napi_set_named_property(env,objectMetaNAPI,"path",pathAPI);
   assert(status == napi_ok);
-  //>>>>>>>
+  //
 
   napi_value is_prefixNAPI;
   if(lO_ObjectMeta.is_prefix)
@@ -2762,14 +2815,14 @@ napi_value get_object_metac(napi_env env, napi_callback_info info) {
   //
   status = napi_set_named_property(env,objectMetaNAPI,"is_prefix",objectMetaNAPI);
   assert(status == napi_ok);
-  //>>>>>>>
+  //
   napi_value content_typeNAPI;
   napi_create_string_utf8(env,&lO_ObjectMeta.content_type[0],NAPI_AUTO_LENGTH,&content_typeNAPI);
   assert(status == napi_ok);
   //
   status = napi_set_named_property(env,objectMetaNAPI,"content_type",content_typeNAPI);
   assert(status == napi_ok);
-  //>>>>>>>
+  //
   napi_value created;
   napi_create_int64(env, lO_ObjectMeta.created, &created);
   assert(status == napi_ok);
@@ -2780,32 +2833,31 @@ napi_value get_object_metac(napi_env env, napi_callback_info info) {
   napi_value modified;
   napi_create_int64(env, lO_ObjectMeta.modified, &modified);
   assert(status == napi_ok);
-  //>>>>>>>
+  //
   status = napi_set_named_property(env,objectMetaNAPI,"modified",modified);
   assert(status == napi_ok);
   //
   napi_value expires;
   napi_create_int64(env, lO_ObjectMeta.expires, &expires);
   assert(status == napi_ok);
-  //>>>>>>>
+  //
   status = napi_set_named_property(env,objectMetaNAPI,"expires",expires);
   assert(status == napi_ok);
   //
   napi_value size;
   napi_create_int64(env, lO_ObjectMeta.size, &size);
   assert(status == napi_ok);
-  //>>>>>>>
+  //
   status = napi_set_named_property(env,objectMetaNAPI,"size",size);
   assert(status == napi_ok);
   //
-  //>>>>>>>
   status = napi_set_named_property(env,objectMetaNAPI,"checksum_bytes",size);
   assert(status == napi_ok);
   //
   napi_value checksum_length;
   napi_create_int64(env, lO_ObjectMeta.checksum_length, &checksum_length);
   assert(status == napi_ok);
-  //>>>>>>>
+  //
   status = napi_set_named_property(env,objectMetaNAPI,"checksum_length",checksum_length);
   assert(status == napi_ok);
   //

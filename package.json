@@ -1,6 +1,6 @@
 {
   "name": "storj-nodejs",
-  "version": "0.9.1",
+  "version": "0.9.2",
   "description": "Storj-NodeJS bindings package",
   "main": "libUplinkNode.js",
   "scripts": {
