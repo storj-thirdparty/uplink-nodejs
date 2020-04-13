@@ -1,16 +1,16 @@
-//
 const fs = require("fs");
 
-// include the Node.js-Storj bindings module
+//include the Node.js-Storj bindings module
 var storj = require("./node_modules/storj-nodejs/libUplinkNode.js");
 // object for all the function for uplink
 var libUplink = storj.storj_nodejs;
 //
-const BUFFER_SIZE = 8000;
+const BUFFER_SIZE = 80000;
 //
 const RETRY_MAX = 5;
 
 // demo Storj (V3) configuration
+
 var storjConfig = {
     apiKey    : "change-me-to-the-api-key-created-in-satellite-gui",
     satelliteURL   : "us-central-1.tardigrade.io:7777",
@@ -25,499 +25,408 @@ var localFullFileName = {
     dest: "change-me-to-destination-file-name-at-local-system",
 };
 
-//
-var temp = "";
-var lO_uplinkconfig = storj.UplinkConfig;
-var lO_ScopeObject;
-var lb_scopeRecieved = false;
-//
-console.log("Setting-up a New Uplink...");
-var lO_uplinkRef = libUplink.new_uplinkc(lO_uplinkconfig,temp);
-//
-if(lO_uplinkRef.error == ""){
-    console.log("New Uplink: SET-UP!");
-    //
-    console.log("\nParsing the API Key: ", storjConfig.apiKey);
-    //
-    var lO_APIkeyRef = libUplink.parse_api_keyc(storjConfig.apiKey);
-    //
-    if(lO_APIkeyRef.error == ""){
-        console.log("API Key: PARSED!");
-        //
-        console.log("\nOpening the Storj Project from Satellite: ", storjConfig.satelliteURL);
-        //
-        var lO_Openproject = libUplink.open_projectc(lO_uplinkRef.data,storjConfig.satelliteURL,lO_APIkeyRef.data);
+var objectsize =0;
+console.log("Getting Access\nSatellite Address : ",storjConfig.satelliteURL,"\nAPI key : ",storjConfig.apiKey,"\nEncryption Passphrase : ",storjConfig.encryptionPassphrase);
+var lO_AccessResult = libUplink.request_access_with_passphrasec(storjConfig.satelliteURL,storjConfig.apiKey,storjConfig.encryptionPassphrase);
+
+if(lO_AccessResult.error.message == ""){
+    console.log("Access : Granted !!");
+    console.log("Opening Storj Project...");
+    var lO_ProjectResult = libUplink.open_projectc(lO_AccessResult.access);
+    if(lO_ProjectResult.error.message == ""){
+        console.log("Desired Storj Project: OPENED!");
+        console.log("Fetching Information About Bucket : ",storjConfig.bucketName);
         
-        if(lO_Openproject.error == ""){
-            console.log("Desired Storj Project: OPENED!");
-            
-            console.log("\nCreating a new bucket with name, ", storjConfig.bucketName, "...");
-            
-            var lO_BucketConfig = storj.BucketConfig;
+        var lO_BucketResult = libUplink.stat_bucketc(lO_ProjectResult.project,storjConfig.bucketName);
+        if(lO_BucketResult.error.message != ""){
+            console.log("\nFAILed to get bucket information !\n","error code : ",lO_BucketResult.error.code,"\t error message : ",lO_BucketResult.error.message);
+        }else{
+            console.log("\nBucket Information : \n Bucket Name : ",lO_BucketResult.bucket.name,"\n Bucket Created : ",getDateTime(lO_BucketResult.bucket.created));
+        }
 
-            lO_BucketConfig.path_cipher = 1;
-            lO_BucketConfig.encryption_parameters.cipher_suite = 1;
-            lO_BucketConfig.encryption_parameters.block_size=7424;
-            lO_BucketConfig.redundancy_scheme.algorithm= 1;
-            lO_BucketConfig.redundancy_scheme.share_size=256;
-            lO_BucketConfig.redundancy_scheme.required_shares=29;
-            lO_BucketConfig.redundancy_scheme.repair_shares=35;
-            lO_BucketConfig.redundancy_scheme.optimal_shares=80;
-            lO_BucketConfig.redundancy_scheme.total_shares=130;
-            
-            var lO_bucketInfo = libUplink.create_bucketc(lO_Openproject.data,storjConfig.bucketName,null);
-            
-            if(lO_bucketInfo.error==""){
-                console.log("New Bucket: CREATED!");
-            }else{
-                console.error("FAILed to create a new bucket!");
-                console.error(lO_bucketInfo.error);
+        console.log("Creating Bucket : ",storjConfig.bucketName);
+        var lO_createBucketResult = libUplink.create_bucketc(lO_ProjectResult.project,storjConfig.bucketName);
+        
+        if(lO_createBucketResult.error.message == ""){
+            console.log("\nBucket created successfully !\n","Bucket Name : ",lO_createBucketResult.bucket.name,"\t Created : ",getDateTime(lO_createBucketResult.bucket.created));
+        }else{
+             console.log("\nFAILed to create bucket !\n","error code : ",lO_createBucketResult.error.code,"\t error message : ",lO_createBucketResult.error.message);
+        }
+        console.log("Listing Buckets ....");
+        
+        var lO_ListBucketsOptions = new storj.ListBucketsOptions();
+        var lO_BucketListObject = libUplink.list_bucketsc(lO_ProjectResult.project,lO_ListBucketsOptions);
+        var i=0;
+        if(lO_BucketListObject.error.message!=""){
+            console.log("FAILed to Get list of bucket !! \n Error Code ",lO_BucketListObject.error.code,"\t Error Message ",lO_BucketListObject.error.message);
+        }else{
+            var bucketList = lO_BucketListObject.bucketList;
+            console.log("S.No. \t Created On \t\t Bucket Name");
+            console.log("===== \t ========== \t\t ===========");
+            for(bucketinfo in bucketList){
+                var num = "0" + (i + 1).toString();
+                console.log(num.substr(-2), "  ", getDateTime(lO_BucketListObject.bucketList[bucketinfo].created), "\t", lO_BucketListObject.bucketList[bucketinfo].name);
+                i++;
             }
+        }
+        
+        console.log("Getting Upload Object....");
+
+        var lO_uploadOptions = new storj.UploadOptions();
+
+        lO_uploadOptions.expires = 0;
+        var lO_uploadObject = libUplink.upload_objectc(lO_ProjectResult.project,storjConfig.bucketName,storjConfig.uploadPath,null);
+
+        if(lO_uploadObject.error.message == ""){
+
+            console.log(localFullFileName.src, " File: UPLOADED as ", storjConfig.uploadPath, "!");
             
-            console.log("\nListing buckets within the Storj project...");
-            //TO DO : Bucket List Options
-            var lO_listbucketconfig = storj.BucketListOptions;
-            var lO_listBucket = libUplink.list_bucketsc(lO_Openproject.data,lO_listbucketconfig);
-            //
-            var bucketsList = lO_listBucket.data;
-            if (bucketsList.length > 0) {
-              console.log("S.No. \t Created On \t\t Bucket Name");
-               console.log("===== \t ========== \t\t ===========");
-            }
-
-            var i=0;
-            for(object in bucketsList.items){
-              var num = "0" + (i + 1).toString();
-              console.log(num.substr(-2), "  ", getDateTime(bucketsList.items[object].created), "\t", bucketsList.items[object].name);
-              i++;
-            }
+            var fileHandle = fs.openSync(localFullFileName.src, "rs");
             
-            var serialaccess = libUplink.encryption_accessc(lO_Openproject.data,storjConfig.encryptionPassphrase);
-
-            if(serialaccess.error == ""){
-                console.log("Encryption Access: RECEIVED!");
-                console.log("\nOpening ", storjConfig.bucketName, " Bucket...");
-                var lO_OpenBucket = libUplink.open_bucketc(lO_Openproject.data,storjConfig.bucketName,serialaccess.data);
-                    
-                    if(lO_OpenBucket.error == ""){
-                        console.log(storjConfig.bucketName, " Bucket: OPENED!");
-                        
-                        var uploadOption = storj.UploadOptions;
-                        uploadOption.expires = 1679928565;
-                        
-                        console.log(localFullFileName.src, " File: UPLOADED as ", storjConfig.uploadPath, "!");
-
-                        var lO_UploaderObject = libUplink.uploadc(lO_OpenBucket.data,storjConfig.uploadPath,uploadOption);
-                        
-                        var uploaderRef = lO_UploaderObject.data;
-                        
-                        var fileHandle = fs.openSync(localFullFileName.src, "rs");
-                        
-                        var size = {
+            var size = {
                             file            : `${fs.statSync(localFullFileName.src).size}`,
                             toWrite         : 0,
                             actuallyWritten : 0,
                             totalWritten    : 0
                         };
-                        
-                        var li_retryCount = RETRY_MAX;
+            var li_retryCount = RETRY_MAX;
                             
-                        var buffer = new Buffer.alloc(BUFFER_SIZE);                       
-                            
-                            while (size.totalWritten < size.file) { 
-                                
-                                size.toWrite = size.file - size.totalWritten;
-                                
-                                if (size.toWrite > BUFFER_SIZE) {
-                                    size.toWrite = BUFFER_SIZE;
-                                } else if (size.toWrite == 0) {
-                                    break;
-                                }
-
-                                // read proper number of bytes from the file
-                                var bytesRead = fs.readSync(fileHandle, buffer, 0, size.toWrite, size.totalWritten);
-                                
-                                while ((bytesRead <= 0) && (--li_retryCount > 0)) {
-                                    //
-                                    bytesRead = fs.readSync(fileHandle, buffer, 0, size.toWrite, size.totalWritten);
-                                }
-                                //
-                                if (bytesRead <= 0) {
-                                    // could not read further
-                                    ls_error = "ERROR: Read " + size.totalWritten.toString() + " bytes of complete " + size.file.toString() + " bytes from the file. Could not read further.";
-                                    break;
-                                }
-                                
-                                if (li_retryCount < RETRY_MAX) {
-                                    li_retryCount = RETRY_MAX;
-                                }
-                
-                                var ls_error = "";               
-                                //
-                                do {
-                                    // upload the buffer's content to the Storj bucket 
-                                    var uploadedInfo = libUplink.upload_writec(uploaderRef, buffer, bytesRead);
-                                    if (uploadedInfo.error != "") {
-                                        ls_error = uploadedInfo.error;
-                                    } else {
-                                        size.actuallyWritten = uploadedInfo.data;
-                                    }
-                                } while ((ls_error != "") && (--li_retryCount > 0));
-                                
-                                if (ls_error != "") {
-                                    break;
-                                }
-                                
-                                if (li_retryCount < RETRY_MAX) {
-                                    li_retryCount = RETRY_MAX;
-                                }
-                                
-                                // if no further data is left to be read from the file and then uploaded
-                                if (size.actuallyWritten == 0) {
-                                    break;
-                                }
-                                //
-                                size.totalWritten += size.actuallyWritten;
-                                console.log("Data written on storj : ",size.totalWritten);
-                            }
-                
-                            fs.closeSync(fileHandle);
-                
-                            var ls_dataUploaded = "\n " + ((size.totalWritten * 100.0)/size.file).toString() + "% uploaded!";
-                            
-                            console.log("Commiting Object on storj...");
-                            var ls_uploadcommit = libUplink.upload_commitc(uploaderRef);
-                            if(ls_uploadcommit==""){
-                                console.log("Object Uploaded On storj");
-                            }else{
-                                console.log("FAILed to upload object on storj");
-                                console.log(ls_uploadcommit);
-                            }
-                            var lO_listOptions = storj.ListOptions;
-                            lO_listOptions.prefix = "change-to-upload-path";
-                            lO_listOptions.cursor = "";
-                            lO_listOptions.delimiter = "/";
-                            lO_listOptions.direction = 2;
-                            lO_listOptions.recursive = false;
-                            lO_listOptions.limit = 0;
-                            //
-                            var listObject = libUplink.list_objectsc(lO_OpenBucket.data,lO_listOptions);
-                            
-                            var objectsList = listObject.data;
-                            
-                            console.log("\nListing objects within the Storj project's bucket...");
-
-                            if (objectsList.length > 0) {
-                                console.log("S.No. \t Created On \t Object Path");
-                                console.log("===== \t ========== \t ===========");
-                            }
-
-                            var i=0;
-                            for(object in objectsList.items){
-                                var num = "0" + (i + 1).toString();
-                                
-                                console.log(num.substr(-2), "  ", getDateTime(objectsList.items[object].created), "\t", objectsList.items[object].prefix);
-                                i++;
-                            }
-                            
-                        
-                            var dataread = new Buffer.alloc(BUFFER_SIZE);
-                
-                            
-                            var objectsize;
-                            console.log("Fetching object meta data from storj : ");
-                            
-                            var lO_ObjectMetaData = libUplink.open_objectc(lO_OpenBucket.data,storjConfig.uploadPath);
-                            if(lO_ObjectMetaData.error==""){
-                                var lO_ObjectMeta = libUplink.get_object_metac(lO_ObjectMetaData.data);
-                                if(lO_ObjectMeta.error==""){
-                                    console.log("Fetched Metadata of Object : ",storjConfig.uploadPath);
-                                    objectsize = lO_ObjectMeta.data.size;
-                                    
-                                }else{
-                                    console.log("FAILed to object meta data");
-                                }
-                                var closeObjectError = libUplink.close_objectc(lO_ObjectMetaData.data);
-                                //
-                            }else{
-                                console.log("FAILed to open object on storj");
-                                console.log(lO_ObjectMetaData.error);
-                            }
-                            //
-                            console.log("\nDownloading ", storjConfig.uploadPath, " Storj Object as ", localFullFileName.dest, " file...");
-                            var lO_downloadbucket = libUplink.downloadc(lO_OpenBucket.data,storjConfig.uploadPath);
-                            var downloaderRef = lO_downloadbucket.data;
-                            if(lO_downloadbucket.error == ""){
-                                
-                                size = {
-                                    downloaded      : 0,
-                                    actuallyWritten : 0,
-                                    totalWritten    : 0
-                                };
-
-                                var li_retryCount = RETRY_MAX;
-                                // set-up buffer
-                                var buffer = new Buffer.alloc(BUFFER_SIZE);
-                                // create/open file, to be written to with downloaded data
-                                var fileHandle = fs.openSync(localFullFileName.dest, "w");
-                                
-                                while(true) {
-                                    var ls_error = "";
-                                    //    
-                                    do {
-                                        // download a part of Storj object, as per the buffer size   
-                                        var downloadedInfo = libUplink.download_readc(downloaderRef, buffer, BUFFER_SIZE);
-                                        if (downloadedInfo.error != "") {
-                                            ls_error = downloadedInfo.error;
-                                        } else {
-                                            size.downloaded = downloadedInfo.data; 
-                                        }
-                                        
-                                    } while((ls_error != "") && (--li_retryCount > 0));
-                                    
-                                    if (ls_error != "") {
-                                        break;
-                                    }
-                                    
-                                    if (li_retryCount < RETRY_MAX) {
-                                        li_retryCount = RETRY_MAX;
-                                    }
-                                    
-                                    
-                                    if (size.totalWritten == objectsize) {
-                                        break;
-                                    }
-                                    
-                                    do {
-                                        // write the downloaded stuff to the file
-                                        size.actuallyWritten = fs.writeSync(fileHandle, buffer, 0, size.downloaded, size.totalWritten);
-                                        //
-                                    } while ((size.downloaded != size.actuallyWritten) && (--li_retryCount > 0));
-                                    //
-                                    size.totalWritten += size.actuallyWritten;
-                                    //
-                                    console.log("Total File Download from the storj : ",size.totalWritten);
-                                    //
-                                    if (size.downloaded != size.actuallyWritten) {
-                                        // could not write all downloaded bytes
-                                        ls_error = "FAILed to write all downloaded bytes to the file. Downloaded and written " + size.totalWritten.toString() + " bytes.";
-                                        //
-                                        break;
-                                    }
-                                    //
-                                    if (li_retryCount < RETRY_MAX) {
-                                        li_retryCount = RETRY_MAX;
-                                    }
-                    
-                                }
-                    
-                                // close the opened file
-                                fs.closeSync(fileHandle);
-                                // close download set-up
-                                var downoloadclose = libUplink.download_closec(downloaderRef);
-                                if(downoloadclose==""){
-                                    console.log("Object Downloaded successfully");
-                                }else{
-                                    console.log("FAILed to download file");
-                                    console.log(downoloadclose);
-                                }
-                              
-                            }else{
-                                console.log("FAILed to download Object from storj v3");
-                                console.log(lO_downloadbucket.error);
-                            }
-
-                            console.log("Creating Salted Key");
-                            var saltedkeyObject = libUplink.project_salted_key_from_passphrasec(lO_Openproject.data,storjConfig.encryptionPassphrase);
-                            if(saltedkeyObject.error == ""){
-                                console.log("Salted Key Received : ",saltedkeyObject.data);
-                                console.log("Creating Encryption Access");
-                                var lO_encryption_access = libUplink.new_encryption_access_with_default_keyc(saltedkeyObject.data);
-                                if(lO_encryption_access.error==""){
-                                    console.log("Encryption Access received !");
-                                    console.log
-                                    lO_ScopeObject = libUplink.new_scopec(storjConfig.satelliteURL,lO_APIkeyRef.data, lO_encryption_access.data);
-                                    if(lO_ScopeObject.error==""){
-                                        console.log("Scope Received !");
-                                        lb_scopeRecieved = true;
-                                    }else{
-                                        console.log("FAILed to create Scope");
-                                        console.log(lO_ScopeObject.error);
-                                    }
-                                }else{
-                                    console.log("FAILed to create encryption access")
-                                }
-                            }else{
-                                console.log("FAILed to create salted key");
-                                console.log(saltedkeyObject.error);
-                            }
-                            console.log("Deleting Object...");
-                            var deletingerror = libUplink.delete_objectc(lO_OpenBucket.data,storjConfig.uploadPath);
-                            if(deletingerror==""){
-                                console.log("Object deleted from storj successfully !!");
-                            }else{
-                                console.log("FAILed to delete object ",storjConfig.uploadPath);
-                            }
-
-                            console.log("Closing Bucket...");
-                            var errorbucket = libUplink.close_bucketc(lO_OpenBucket.data);
-                            if(errorbucket==""){
-                                console.log("Bucket closed !!");
-                            }else{
-                                console.log("FAILed to close bucket");
-                            }
-                            
-   
-                        }else{
-                            console.error("FAILed to open desired bucket!");
-                            console.log(lO_OpenBucket.error);
-                        }
-
-                    }else{
-                        console.error("FAILed to get encryption access from given passphrase!");
-                        console.log(serialaccess.error);
-                    }          
-            console.log("Closing Project");
-            var lS_closeprojecterror = libUplink.close_projectc(lO_Openproject.data);
-            if(lS_closeprojecterror==""){
-                console.log("Project closed !!");
-            }else{
-                console.log("FAILed to close project");
-                console.log(lS_closeprojecterror);
-            }
-            console.log("Closing Uplink");
-            var close_uplink_error = libUplink.close_uplinkc(lO_uplinkRef.data);
-            if(close_uplink_error==""){
-                console.log("Uplink closed !!");
-            }else{
-                console.log("FAILed to close Uplink");
-                console.log(close_uplink_error);
-            }
-
-
-        }else{
-            console.error("FAILed to open desired Storj project!");
-            console.log(lO_Openproject.error);
-        }
-    }else{
-        console.error("FAILed to parse the API key!");
-        console.log(lO_APIkeyRef.error);
-    }
-}else{
-    console.error("FAILed to set-up a new uplink!");
-    console.log(lO_uplinkRef.error);
-}
-
-if(lb_scopeRecieved){
-    console.log("Serilized Scope");
-    var lO_serializedscope = libUplink.serialize_scopec(lO_ScopeObject.data);
-    //
-    if(lO_serializedscope.error==""){
-        
-        console.log("Serilized Scope Received");
-        var lO_SerilizedAddress = libUplink.get_scope_satellite_addressc(lO_ScopeObject.data);
-        
-        if(lO_SerilizedAddress.error==""){
-            console.log("Satellite received !!");
-            console.log("Getting Encryption Access...");
+            var buffer = new Buffer.alloc(BUFFER_SIZE);
             
-            var lO_ScopeEncAccess = libUplink.get_scope_enc_accessc(lO_ScopeObject.data);
-            if(lO_ScopeEncAccess.error==""){
-                //
-                console.log("Encryption Access Received");
-                var lO_APIKeyRefObject = libUplink.get_scope_api_keyc(lO_ScopeObject.data);
-                if(lO_APIKeyRefObject.error==""){
-                    console.log("API Key Received");
-                    console.log("Setting-up a New Uplink...");
-                    var tempScope = "";
-                    var lO_uplinkconfig1 = storj.UplinkConfig;
-                    var lO_uplinkScope = libUplink.new_uplinkc(lO_uplinkconfig1,tempScope);
-                    if(lO_uplinkScope.error==""){
-                        console.log("Opening Project...");
-                        var lO_Openprojectscope = libUplink.open_projectc(lO_uplinkScope.data,lO_SerilizedAddress.data,lO_APIKeyRefObject.data);
-                        if(lO_Openprojectscope.error==""){
-                            console.log("Project Opened with scope !!");
-                            console.log("Opening Bucket with scope...");
-                            var serialaccessScope = libUplink.serialize_encryption_accessc(lO_ScopeEncAccess.data);
-                            if(serialaccessScope.error==""){
-                                var lO_OpenBucketScope = libUplink.open_bucketc(lO_Openprojectscope.data,storjConfig.bucketName,serialaccessScope.data);
-                                 if(lO_OpenBucketScope.error==""){
-                                    console.log("Bucket Opened with scope!!");
-
-                                    console.log("Closing Bucket...");
-                                    var errorbucket = libUplink.close_bucketc(lO_OpenBucketScope.data);
-                                    if(errorbucket==""){
-                                        console.log("Bucket closed !!");
-                                    }else{
-                                        console.log("FAILed to close bucket");
-                                    }
-                                 }else{
-                                    console.log("FAILed to open bucket with scope");
-                                 }
-                                 console.log("Deleting bucket...");
-                                 var deleteBucketError = libUplink.delete_bucketc(lO_Openprojectscope.data,storjConfig.bucketName);
-                                 if(deleteBucketError==""){
-                                    console.log("Bucket deleted !!!");
-
-                                 }else{
-                                    console.log("FAILed to deleted bucket");
-                                    console.log(deleteBucketError);
-                                 }
-                            }else{
-                                console.log("FAILed to received Serilized access of scope");
-                                console.log(serialaccessScope.error);
-                            }
-
-                            console.log("Closing Project");
-                            var lS_closeprojecterrorscope = libUplink.close_projectc(lO_Openprojectscope.data);
-                            if(lS_closeprojecterrorscope==""){
-                                console.log("Project closed !!");
-                            }else{
-                                console.log("FAILed to close project");
-                                console.log(lS_closeprojecterrorscope);
-                            }
-                                 
-                        }else{
-                            console.log("FAILed to open project with scope");
-                            console.log(lO_Openprojectscope.data);
-                        }
-                        console.log("Closing Uplink");
-                        var close_uplink_errorscope = libUplink.close_uplinkc(lO_uplinkScope.data);
-                        if(close_uplink_errorscope==""){
-                            console.log("Uplink closed !!");
-                        }else{
-                            console.log("FAILed to close Uplink");
-                            console.log(close_uplink_errorscope);
-                        }
-
-                    }else{
-                        console.error("FAILed to set-up a new uplink!");
-                        console.log(lO_uplinkScope.error);
-                    }
-                }else{
-                    console.log("FAILed to get APIkey");
-                    console.log(lO_APIKeyRefObject.error);
+            while (size.totalWritten < size.file) { 
+                size.toWrite = size.file - size.totalWritten;
+                
+                if (size.toWrite > BUFFER_SIZE) {
+                    size.toWrite = BUFFER_SIZE;
+                } else if (size.toWrite == 0) {
+                    break;
                 }
 
+                // read proper number of bytes from the file
+                var bytesRead = fs.readSync(fileHandle, buffer, 0, size.toWrite, size.totalWritten);
+                
+                while ((bytesRead <= 0) && (--li_retryCount > 0)) {
+                    //
+                    bytesRead = fs.readSync(fileHandle, buffer, 0, size.toWrite, size.totalWritten);
+                }
+                //
+                if (bytesRead <= 0) {
+                    // could not read further
+                    ls_error = "ERROR: Read " + size.totalWritten.toString() + " bytes of complete " + size.file.toString() + " bytes from the file. Could not read further.";
+                    break;
+                }
+                
+                if (li_retryCount < RETRY_MAX) {
+                    li_retryCount = RETRY_MAX;
+                }
+
+                var ls_error = "";               
+                //
+                do {
+                    // upload the buffer's content to the Storj bucket bytes_written
+                    var uploadedInfo = libUplink.upload_writec(lO_uploadObject.upload, buffer, bytesRead);
+                    if (uploadedInfo.error.message != "") {
+                        ls_error = uploadedInfo.error.message;
+                    } else {
+                        size.actuallyWritten = uploadedInfo.bytes_written;
+                        if(size.actuallyWritten>=size.file){
+                            break;
+                        }
+                    }
+                } while ((ls_error != "") && (--li_retryCount > 0));
+                
+                if (ls_error != "") {
+                    break;
+                }
+                
+                if (li_retryCount < RETRY_MAX) {
+                    li_retryCount = RETRY_MAX;
+                }
+                
+                // if no further data is left to be read from the file and then uploaded
+                if (size.actuallyWritten == 0) {
+                    break;
+                }
+                //
+                size.totalWritten += size.actuallyWritten;
+                if((size.totalWritten>0)&&(size.file>0)){
+                    console.log("File uploaded on storj  : ",((Number(size.totalWritten)/Number(size.file))*100).toFixed(4)," %");
+                }
+                
+            }
+                
+            fs.closeSync(fileHandle);
+            
+            var ls_dataUploaded = "\n " + ((size.totalWritten * 100.0)/size.file).toString() + "% uploaded!";
+            
+            console.log("Adding MetaData...");
+            
+            var lO_CustomMetadataEntry1 =new storj.CustomMetadataEntry();
+            
+            lO_CustomMetadataEntry1.key = "testing";
+            lO_CustomMetadataEntry1.key_length = 7;
+            lO_CustomMetadataEntry1.value = "testing1";
+            lO_CustomMetadataEntry1.value_length = 8;
+            
+            var lO_CustomMetadataEntry2 =new storj.CustomMetadataEntry();
+            lO_CustomMetadataEntry2.key = "value";
+            lO_CustomMetadataEntry2.key_length = 4;
+            lO_CustomMetadataEntry2.value = "value1";
+            lO_CustomMetadataEntry2.value_length = 5;
+
+            var lO_CustomMetadataEntryArray =  [lO_CustomMetadataEntry1,lO_CustomMetadataEntry2];
+            var lO_CustomMetadata = new storj.CustomMetadata();
+            lO_CustomMetadata.count = lO_CustomMetadataEntryArray.length;
+            lO_CustomMetadata.entries = lO_CustomMetadataEntryArray;
+            var lO_setCustomMeta = libUplink.upload_set_custom_metadatac(lO_uploadObject.upload,lO_CustomMetadata);
+            
+            if(lO_setCustomMeta.error.message==""){
+                console.log("Custom MetaData for the object !");
             }else{
+                console.log("FAILed to set custom metadata \n Error code : ",lO_setCustomMeta.error.code,"\t Error message : ",lO_setCustomMeta.error.message);
+            }
+            
+            console.log("Commiting Object on storj...");
+            var ls_uploadcommit = libUplink.upload_commitc(lO_uploadObject.upload);
+            if(ls_uploadcommit.error.message==""){
+                console.log("Object Uploaded on storj : ",storjConfig.uploadPath);
+            }else{
+                console.log("FAILed to upload object on storj");
+                
+            }
 
-                console.log("FAILed to received encryption access");
-                console.log(lO_ScopeEncAccess.error);    
-            } 
+            console.log("Upload Info on storj...");
+            var lO_uploadinfo = libUplink.upload_infoc(lO_uploadObject.upload);
+
+            if(lO_uploadinfo.error.message==""){
+                objectsize = lO_uploadinfo.object.system.content_length;
+                console.log("\n ------------------  Object Info  ------------------ \n FileName\t\t: ",lO_uploadinfo.object.key,"\n FileSize\t\t: ",lO_uploadinfo.object.system.content_length,"\n Created\t\t: ",getDateTime(lO_uploadinfo.object.system.created));
+                
+            }else{
+                console.log("FAILed to get upload Info \n Error Code : ",lO_uploadinfo.error.code,"\t Error Message : ",lO_uploadinfo.error.message);
+            }
+
         }else{
-
-            console.log("FAILed to received satellite address");
-            console.log(lO_SerilizedAddress.error);
+            console.log("FAILed to upload object !\n","error code : ",lO_uploadObject.error.code,"\t error message : ",lO_uploadObject.error.message);
         }
-    
+        
+        console.log("\nListing Object....");
+
+        var lO_ListObjectsOptions = new storj.ListObjectsOptions();
+
+        lO_ListObjectsOptions.recursive = true;
+        lO_ListObjectsOptions.custom = true;
+        lO_ListObjectsOptions.system = true;
+        lO_ListObjectsOptions.prefix ="change-me-to-desired-object-prefix";
+
+        var lO_ObjectList = libUplink.list_objectsc(lO_ProjectResult.project,storjConfig.bucketName,lO_ListObjectsOptions);
+        i = 0;
+        
+        if(lO_ObjectList.error.message==""){
+            var objectList = lO_ObjectList.objectList;
+            console.log("S.No. \t Created On \t\t\t FileName \t\t FileSize");
+            console.log("===== \t ========== \t\t\t =========== \t\t ===========");
+            
+            for(objectInfo in objectList){
+                var num = "0" + (i + 1).toString();
+                console.log(num.substr(-2), "  ", getDateTime(lO_ObjectList.objectList[objectInfo].system.created), "\t\t", lO_ObjectList.objectList[objectInfo].key,"\t\t",lO_ObjectList.objectList[objectInfo].system.content_length);
+                i++;
+            }
+        }else{
+            console.log("FAILed to List Object \n Error code : ",lO_ObjectList.error.code,"\t Error Message : ",lO_ObjectList.error.message);
+        }
+        //
+        console.log("Getting Object Info");
+        
+        var lO_ObjectInfo = libUplink.stat_objectc(lO_ProjectResult.project,storjConfig.bucketName,storjConfig.uploadPath);
+        
+        if(lO_ObjectInfo.error.message==""){
+            console.log("\n\n------ Object Info -------\n");
+            console.log("Object Key\t\t: ",lO_ObjectInfo.object.key);
+            console.log("Object Size\t\t: ",lO_ObjectInfo.object.system.content_length);
+            console.log("Object Created\t\t: ",getDateTime(lO_ObjectInfo.object.system.created));
+        }else
+        {
+            console.log("FAILed to get Object Info \n Error Code : ",lO_ObjectInfo.error.code,"\t Error Message : ",lO_ObjectInfo.error.message);
+        }
+        
+        var dataread = new Buffer.alloc(BUFFER_SIZE);
+        
+        var lO_DownloadOptions = new storj.DownloadOptions();
+
+        lO_DownloadOptions.offset = 0;
+        lO_DownloadOptions.length = -1;
+
+        var lO_downloadObject = libUplink.download_objectc(lO_ProjectResult.project,storjConfig.bucketName,storjConfig.uploadPath,lO_DownloadOptions);
+        if(lO_downloadObject.error.message==""){
+            console.log("Downloading Object initated...");
+            //
+            size = { downloaded      : 0,
+                    actuallyWritten : 0,
+                    totalWritten    : 0
+                };
+            //
+            var li_retryCount = RETRY_MAX;
+            // set-up buffer
+            var buffer = new Buffer.alloc(BUFFER_SIZE);
+            // create/open file, to be written to with downloaded data
+            var fileHandle = fs.openSync(localFullFileName.dest, "w");
+            while(true) {
+                var ls_error = "";
+
+                do {
+                    // download a part of Storj object, as per the buffer size   
+                    var downloadedInfo = libUplink.download_readc(lO_downloadObject.download, buffer, BUFFER_SIZE);
+
+                    if (downloadedInfo.error.message != "") {
+                        ls_error = downloadedInfo.error;
+                    } else {
+                        size.downloaded = downloadedInfo.bytes_read;
+                        if(size.actuallyWritten>=objectsize){
+                            break;
+                        } 
+                    }
+                    
+                } while((ls_error != "") && (--li_retryCount > 0));
+                //
+                if (ls_error != "") {
+                    break;
+                }
+                
+                if (li_retryCount < RETRY_MAX) {
+                    li_retryCount = RETRY_MAX;
+                }
+                
+                
+                if (size.totalWritten == objectsize) {
+                    break;
+                }
+                do {
+                    // write the downloaded stuff to the file
+                    size.actuallyWritten = fs.writeSync(fileHandle, buffer, 0, size.downloaded, size.totalWritten);
+                    //
+                } while ((size.downloaded != size.actuallyWritten) && (--li_retryCount > 0));
+                //
+                size.totalWritten += size.actuallyWritten;
+                //
+                if((size.totalWritten>0)&&(objectsize>0)){
+                    console.log("File Dowloaded : ",((Number(size.totalWritten)/Number(objectsize))*100).toFixed(4)," %");
+                }
+               
+                if (size.downloaded != size.actuallyWritten) {
+                    // could not write all downloaded bytes
+                    ls_error = "FAILed to write all downloaded bytes to the file. Downloaded and written " + size.totalWritten.toString() + " bytes.";
+                    //
+                    break;
+                }
+                //
+                if (li_retryCount < RETRY_MAX) {
+                    li_retryCount = RETRY_MAX;
+                }
+            }
+
+            console.log("Download Info from storj...");
+            var lO_downloadinfo = libUplink.download_infoc(lO_downloadObject.download);
+            if(lO_downloadinfo.error.message==""){
+                console.log("\n\n------ Download Object Info -------\n");
+                console.log("Object Key\t\t: ",lO_downloadinfo.object.key);
+                console.log("Object Size\t\t: ",lO_downloadinfo.object.system.content_length);
+                console.log("Object Created\t\t: ",getDateTime(lO_downloadinfo.object.system.created));
+            }else{
+                console.log("FAILed to get upload Info \n Error Code : ",lO_downloadinfo.error.code,"\t Error Message : ",lO_downloadinfo.error.message);
+            }
+            // close the opened file
+            fs.closeSync(fileHandle);
+            // close download set-up
+            var lO_downloadclose = libUplink.close_downloadc(lO_downloadObject.download);
+            //
+            console.log("Download close function");
+            //
+            if(lO_downloadclose.error.message==""){
+                console.log("Object Downloaded successfully");
+            }else{
+                console.log("FAILed to download file");
+                console.log("Error code :",lO_downloadclose.error.code," Error message : ",lO_downloadclose.error.message);
+            }
+            //
+        }else{
+            console.log("\nFAILed to download object : ",storjConfig.uploadPath," ! \n","error code : ",lO_downloadObject.error.code,"\t error message : ",lO_downloadObject.error.message);
+        }
+        //
+        console.log("Creating restrict access....");
+        var lO_Permission = new storj.Permission();
+        lO_Permission.allow_delete = true
+        var lO_SharePrefix = storj.SharePrefix;
+        var lO_SharePrefixListArray = [];
+        lO_SharePrefix.bucket = "change-me-to-desired-bucket-name";
+        lO_SharePrefix.prefix ="change-me-to-desired-object-prefix";
+        lO_SharePrefixListArray.push(lO_SharePrefix);
+        var lO_AccessShareResult = libUplink.access_sharec(lO_AccessResult.access,lO_Permission,lO_SharePrefixListArray,lO_SharePrefixListArray.length);
+        
+        if(lO_AccessShareResult.error.message==""){
+            console.log("Created share access !!");
+            console.log("Creating Share Access Key...");
+            var lO_StringResult = libUplink.access_serializec(lO_AccessShareResult.access);
+
+            if(lO_StringResult.error.message==""){
+                var lO_AccessResultSharedObject= libUplink.parse_accessc(lO_StringResult.string);
+                console.log("Parsing Access created");
+                console.log("Opening Project Using Shared Access..."    );
+                var lO_RestrictedProjectResult = libUplink.open_projectc(lO_AccessResultSharedObject.access);
+                if(lO_RestrictedProjectResult.error.message==""){
+                    console.log("Opened Project using share key ");
+                }else{
+                    console.log("FAILed to open project \n Error Code : ",lO_RestrictedProjectResult.error.code,"\t Error Message : ",lO_RestrictedProjectResult.error.message);
+                }
+                console.log("Deleting Object with shared access ...");
+                var lO_deleteObject = libUplink.delete_objectc(lO_RestrictedProjectResult.project,storjConfig.bucketName,storjConfig.uploadPath);
+            
+                if(lO_deleteObject.error.message==""){
+                    console.log("Object ",storjConfig.uploadPath," Deleted");
+                }else{
+                    console.log("FAILed to delete object \n Error code : ",lO_deleteObject.error.code,"\tError Message : ",lO_deleteObject.error.message);
+                }
+            }else{
+                console.log("FAILed to create parse accesse");
+            }
+
+        }else{
+            console.log("FAILed to receive share access \n","Error Code : ",lO_AccessShareResult.error.code,"\t Error message : ",lO_AccessShareResult.error.message);
+        }
+
+        console.log("Deleting Object without shared access ...");
+        
+        var lO_deleteObjectWithoutShare = libUplink.delete_objectc(lO_ProjectResult.project,storjConfig.bucketName,storjConfig.uploadPath);
+        
+        if(lO_deleteObjectWithoutShare.error.message==""){
+            console.log("Object ",storjConfig.uploadPath," Deleted");
+        }else{
+            console.log("FAILed to delete object \n Error code : ",lO_deleteObjectWithoutShare.error.code,"\tError Message : ",lO_deleteObjectWithoutShare.error.message);
+        }
+        
+        console.log("Deleting Bucket : ",storjConfig.bucketName);
+        var lO_deleteBucketResult = libUplink.delete_bucketc(lO_ProjectResult.project,storjConfig.bucketName);
+        
+        if(lO_deleteBucketResult.error.message == ""){
+            console.log("\nBucket deleted successfully !! \n Bucket Name : ",lO_deleteBucketResult.bucket.name,"\t Created  : ",getDateTime(lO_deleteBucketResult.bucket.created));
+        }else{
+            console.log("\nFAILed to delete bucket !\n","error code : ",lO_BucketResult.error.code,"\t error message : ",lO_BucketResult.error.message);
+        }
+		
+        var lO_ProjectError = libUplink.close_projectc(lO_ProjectResult.project);
+        console.log("\nClosing Project !");
+        if(lO_ProjectError.error.message == ""){
+            console.log("Closed desired project!\n");
+        }else{
+            console.log("\nFAILed to close desired project!\n","Error Code : ",lO_ProjectError.error.code,"\t Error Message : ",lO_ProjectError.error.message);
+        }
     }else{
-        console.log("FAILed to received scope");
-        console.log(lO_serializedscope.error);
+       console.error("\nFAILed to open desired project!\n","Error Code : ",lO_ProjectResult.error.code,"\t Error Message : ",lO_ProjectResult.error.message);
     }
 
+}else{
+    console.error("\nFAILed to get access !\n","Error Code : ",lO_AccessResult.error.code,"\t Error Message : ",lO_AccessResult.error.message);
 }
-
-
 
 function getDateTime(unix_timestamp) {
     var dateTime = new Date(unix_timestamp * 1000);

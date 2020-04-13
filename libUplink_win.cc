@@ -1,11 +1,13 @@
 #include <assert.h>
-#include <node_api.h>
 #include "uplink_definitions.h"
-#include "libuplinkc.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <iostream>
+#include <windows.h>
+#include <vector>
+#include <cstdlib>
+#include <node_api.h>
 using namespace std; 
 
 /* A utility function to reverse a string  */
@@ -427,6 +429,12 @@ long getHandleValue(napi_env env,napi_value handleobj){
   return handlelong;
 }
 
+HINSTANCE hGetProcIDDLL;
+void loaddll(){
+  hGetProcIDDLL = LoadLibrary("libuplinkc.dll");
+}
+
+
 //  * function parse_accessc to parses serialized access grant string
 //  * pre-requisites: access_sharec
 //  * inputs: accessString (String)
@@ -464,21 +472,36 @@ napi_value parse_accessc(napi_env env, napi_callback_info info){
   status = napi_get_value_string_utf8(env,args[0],accessString,convertedvalue,&bufsize);
   assert(status == napi_ok);
 
-	AccessResult lO_AccessResult = parse_access(accessString);
-	if(lO_AccessResult.access==NULL){
-		if(lO_AccessResult.error!=NULL){
-			Error lO_errorObject = *(lO_AccessResult.error);
-			char* errorMessagePtr = lO_errorObject.message;
-			return createResult(env,"access",0,lO_errorObject.code,&errorMessagePtr[0]);
-		  }else{
-			char blank[] = "";
-			return createResult(env,"access",0,0,&blank[0]);
-		  }
-	}
-	Access lO_Access = *(lO_AccessResult.access);
-	size_t handlevalue = lO_Access._handle;
-	char blank[] = "";
-	return createResult(env,"access",handlevalue,0,&blank[0]);
+  if(!hGetProcIDDLL){
+    napi_throw_type_error(env,nullptr,"\nLibrary not found\n");
+    return NULL;
+  }else{
+    FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL),"parse_access");
+    if(!fn){
+      napi_throw_type_error(env,nullptr,"\nFunction not found \n");
+      return NULL;
+    }else{
+      typedef AccessResult(__stdcall * pICAccessResult)(char *);
+      pICAccessResult parse_access;
+      parse_access = pICAccessResult(fn);
+      AccessResult lO_AccessResult = parse_access(accessString);
+      if(lO_AccessResult.access==NULL){
+        if(lO_AccessResult.error!=NULL){
+            Error lO_errorObject = *(lO_AccessResult.error);
+            char* errorMessagePtr = lO_errorObject.message;
+            return createResult(env,"access",0,lO_errorObject.code,&errorMessagePtr[0]);
+          }else{
+            char blank[] = "";
+            return createResult(env,"access",0,0,&blank[0]);
+          }
+        }
+        Access lO_Access = *(lO_AccessResult.access);
+        size_t handlevalue = lO_Access._handle;
+        char blank[] = "";
+        return createResult(env,"access",handlevalue,0,&blank[0]);
+    }
+  }
+  return NULL;
 }
 
 
@@ -555,24 +578,38 @@ napi_value request_access_with_passphrasec(napi_env env, napi_callback_info info
   status = napi_get_value_string_utf8(env,args[2],passphrase,convertedvalue,&bufsize);
   assert(status == napi_ok);
 
-  AccessResult lO_AccessResult = request_access_with_passphrase(satellite_address,api_key,passphrase);
+  if(!hGetProcIDDLL){
+    napi_throw_type_error(env,nullptr,"\nLibrary not found\n");
+    return NULL;
+  }else{
+    FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL),"request_access_with_passphrase");
+    if(!fn){
+      napi_throw_type_error(env,nullptr,"\nFunction not found\n");
+      return NULL;
+    }else{
+      typedef AccessResult(__stdcall * pICAccessResult)(char *,char *,char *);
+      pICAccessResult request_access_with_passphrase;
+      request_access_with_passphrase = pICAccessResult(fn);
+      AccessResult lO_AccessResult = request_access_with_passphrase(satellite_address,api_key,passphrase);
       
-	  if(lO_AccessResult.access==NULL){
-		
-		if(lO_AccessResult.error!=NULL){
-		  Error lO_errorObject = *(lO_AccessResult.error);
-		  char* errorMessagePtr = lO_errorObject.message;
-		  return createResult(env,"access",0,lO_errorObject.code,&errorMessagePtr[0]);
-		}else{
-		  char blank[] = "";
-		  return createResult(env,"access",0,-1,&blank[0]);
-		}
-	  }
+      if(lO_AccessResult.access==NULL){
+        
+        if(lO_AccessResult.error!=NULL){
+          Error lO_errorObject = *(lO_AccessResult.error);
+          char* errorMessagePtr = lO_errorObject.message;
+          return createResult(env,"access",0,lO_errorObject.code,&errorMessagePtr[0]);
+        }else{
+          char blank[] = "";
+          return createResult(env,"access",0,-1,&blank[0]);
+        }
+      }
       Access lO_Access = *(lO_AccessResult.access);
       size_t handlevalue = lO_Access._handle;
       char blank[] = "";
       return createResult(env,"access",handlevalue,0,&blank[0]);
-
+    }
+  }
+  return NULL;
 }
 
   //  * function open_project opens project using access grant.
@@ -618,6 +655,18 @@ napi_value open_projectc(napi_env env, napi_callback_info info){
   if(lO_Access._handle==0){
     return NULL;
   }
+  if(!hGetProcIDDLL){
+    napi_throw_type_error(env, nullptr, "\nLibrary not found \n");
+    return NULL;
+  }else{
+    FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL),"open_project");
+    if(!fn){
+      napi_throw_type_error(env, nullptr, "\nFunction not found \n");
+      return NULL;
+    }else{
+      typedef ProjectResult(__stdcall * pICProjectResult)(Access *);
+      pICProjectResult open_project;
+      open_project = pICProjectResult(fn);
       ProjectResult lO_projectResult = open_project(&lO_Access);
       if(lO_projectResult.project==NULL){
         
@@ -634,6 +683,9 @@ napi_value open_projectc(napi_env env, napi_callback_info info){
       size_t handlevalue = lO_Project._handle;
       char blank[] = "";
       return createResult(env,"project",handlevalue,0,&blank[0]);
+    }
+  }
+  return NULL;
 }
 
   //  * function close_projectc closes the project.
@@ -681,6 +733,18 @@ napi_value close_projectc(napi_env env, napi_callback_info info){
   if(lO_Project._handle==0){
     return NULL;
   }
+  if(!hGetProcIDDLL){
+    napi_throw_type_error(env,nullptr,"\nLibrary not found\n");
+    return NULL;
+  }else{
+    FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL),"close_project");
+    if(!fn){
+      napi_throw_type_error(env,nullptr,"\nFunction not found\n");
+      return NULL;
+    }else{
+      typedef Error*(__stdcall * pICError)(Project *);
+      pICError close_project;
+      close_project = pICError(fn);
       Error* lO_ErrorPtr = close_project(&lO_Project);
       if(lO_ErrorPtr!=NULL){
         Error lO_Error = *(lO_ErrorPtr);
@@ -689,6 +753,10 @@ napi_value close_projectc(napi_env env, napi_callback_info info){
       }
       char blank[] = "";
       return createError(env,0,&blank[0]);
+    }
+  }
+  return NULL;
+
 }
   //  * function stat_bucketc returns information about a bucket.
   //  * pre-requisites: open_projectc
@@ -752,7 +820,19 @@ napi_value stat_bucketc(napi_env env, napi_callback_info info){
   if(lO_Project._handle==0){
     return NULL;
   }
-  BucketResult lO_bucketResult = stat_bucket(&lO_Project, bucketName);
+  if(!hGetProcIDDLL){
+    napi_throw_type_error(env,nullptr,"\nLibrary not found\n");
+    return NULL;
+  }else{
+    FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL),"stat_bucket");
+    if(!fn){
+      napi_throw_type_error(env,nullptr,"\nFunction not found\n");
+      return NULL;
+    }else{
+      typedef BucketResult(__stdcall * pICBucketResult)(Project *,char *);
+      pICBucketResult stat_bucket;
+      stat_bucket = pICBucketResult(fn);
+      BucketResult lO_bucketResult = stat_bucket(&lO_Project, bucketName);
 
       if(lO_bucketResult.bucket==NULL){
         
@@ -772,6 +852,9 @@ napi_value stat_bucketc(napi_env env, napi_callback_info info){
       int64_t bucketCreated = lO_bucket.created;
       char blank[] = "";
       return createBucketResult(env,"bucket",bucketCreated,bucketNamePtr,0,&blank[0]);
+    }
+  }
+  return NULL;
 }
 
   //  * function create_bucketc creates a new bucket.
@@ -838,7 +921,19 @@ napi_value create_bucketc(napi_env env, napi_callback_info info){
     return NULL;
   }
   //
-  BucketResult lO_bucketResult = create_bucket(&lO_Project, bucketName);
+  if(!hGetProcIDDLL){
+    napi_throw_type_error(env,nullptr,"\nLibrary not found\n");
+    return NULL;
+  }else{
+    FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL),"create_bucket");
+    if(!fn){
+      napi_throw_type_error(env,nullptr,"\nFunction not found\n");
+      return NULL;
+    }else{
+      typedef BucketResult(__stdcall * pICBucketResult)(Project *,char *);
+      pICBucketResult create_bucket;
+      create_bucket = pICBucketResult(fn);
+      BucketResult lO_bucketResult = create_bucket(&lO_Project, bucketName);
     
     if(lO_bucketResult.bucket==NULL){
       if(lO_bucketResult.error!=NULL){
@@ -858,6 +953,9 @@ napi_value create_bucketc(napi_env env, napi_callback_info info){
     int64_t bucketCreated = lO_bucket.created;
     char blank[] = "";
       return createBucketResult(env,"bucket",bucketCreated,bucketNamePtr,0,&blank[0]);
+    }
+  }
+  return NULL;  
 }
 
   //  * function ensure_bucketc creates a new bucket and ignores the error when it already exists
@@ -923,7 +1021,19 @@ napi_value ensure_bucketc(napi_env env, napi_callback_info info) {
     return NULL;
   }
   
-	BucketResult lO_bucketResult = ensure_bucket(&lO_Project, bucketName);
+  if(!hGetProcIDDLL){
+    napi_throw_type_error(env,nullptr,"\nLibrary not found\n");
+    return NULL;
+  }else{
+    FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL),"ensure_bucket");
+    if(!fn){
+      napi_throw_type_error(env,nullptr,"\nFound not found\n");
+      return NULL;
+    }else{
+      typedef BucketResult(__stdcall * pICBucketResult)(Project *,char *);
+      pICBucketResult ensure_bucket;
+      ensure_bucket = pICBucketResult(fn);
+      BucketResult lO_bucketResult = ensure_bucket(&lO_Project, bucketName);
       if(lO_bucketResult.bucket==NULL){
         
         if(lO_bucketResult.error!=NULL){
@@ -941,6 +1051,8 @@ napi_value ensure_bucketc(napi_env env, napi_callback_info info) {
       int64_t bucketCreated = lO_bucket.created;
       char blank[] = "";
       return createBucketResult(env,"bucket",bucketCreated,bucketNamePtr,0,&blank[0]); 
+    }
+  } 
 }
 
   //  * function delete_bucketc deletes a bucket.
@@ -1006,25 +1118,40 @@ napi_value delete_bucketc(napi_env env, napi_callback_info info) {
     return NULL;
   }
   
-	BucketResult lO_bucketResult = delete_bucket(&lO_Project, bucketName);
-	  if(lO_bucketResult.bucket==NULL){
-		
-		if(lO_bucketResult.error!=NULL){
-		  Error lO_errorObject = *(lO_bucketResult.error);
-		  char* errorMessagePtr = lO_errorObject.message;
-		  char blank[] = "";
-		  return createBucketResult(env,"bucket",0,&blank[0],lO_errorObject.code,&errorMessagePtr[0]);
+  if(!hGetProcIDDLL){
+    napi_throw_type_error(env,nullptr,"\nLibrary not found\n");
+    return NULL;
+  }else{
+    FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL),"delete_bucket");
+    if(!fn){
+      napi_throw_type_error(env,nullptr,"\nFunction not found\n");
+      return NULL;
+    }else{
+      typedef BucketResult(__stdcall * pICBucketResult)(Project *,char *);
+      pICBucketResult delete_bucket;
+      delete_bucket = pICBucketResult(fn);
+      BucketResult lO_bucketResult = delete_bucket(&lO_Project, bucketName);
+      if(lO_bucketResult.bucket==NULL){
+        
+        if(lO_bucketResult.error!=NULL){
+          Error lO_errorObject = *(lO_bucketResult.error);
+          char* errorMessagePtr = lO_errorObject.message;
+          char blank[] = "";
+          return createBucketResult(env,"bucket",0,&blank[0],lO_errorObject.code,&errorMessagePtr[0]);
 
-		}else{
-		  char blank[] = "";
-		  return createBucketResult(env,"bucket",-1,&blank[0],-1,&blank[0]);
-		}
-	  }
+        }else{
+          char blank[] = "";
+          return createBucketResult(env,"bucket",-1,&blank[0],-1,&blank[0]);
+        }
+      }
       Bucket lO_bucket = *(lO_bucketResult.bucket);
       char* bucketNamePtr = lO_bucket.name;
       int64_t bucketCreated = lO_bucket.created;
       char blank[] = "";
       return createBucketResult(env,"bucket",bucketCreated,bucketNamePtr,0,&blank[0]); 
+    }
+  }
+  return NULL;
 }
 
   //  * function list_bucketsc lists buckets
@@ -1084,116 +1211,150 @@ napi_value list_bucketsc(napi_env env, napi_callback_info info) {
   //
   BucketIterator *lO_BucketIterator= nullptr;
 
-	if(checktypeofinput==napi_null){
+  if(!hGetProcIDDLL){
+    napi_throw_type_error(env,nullptr,"\nLibrary not found\n");
+    return NULL;
+  }else{
+    FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL),"list_buckets");
+    if(!fn){
+      napi_throw_type_error(env,nullptr,"\nFunction not found\n");
+      return NULL;
+    }else{
+      typedef BucketIterator *(__stdcall * pICBucketIterator)(Project *,ListBucketsOptions *);
+      pICBucketIterator list_buckets;
+      list_buckets = pICBucketIterator(fn);
+      if(checktypeofinput==napi_null){
         lO_BucketIterator = list_buckets(&lO_Project,NULL);
-	  }else if(checktypeofinput==napi_object){
-		napi_value cursorNAPI;
-		status = napi_get_named_property(env,args[1],"cursor",&cursorNAPI);
-		assert(status == napi_ok);
-		size_t bufsize = 0;
-		size_t convertedvalue = 0;
-		status = napi_get_value_string_utf8(env, cursorNAPI,NULL,bufsize,&convertedvalue);
-		assert(status == napi_ok);
-		convertedvalue=convertedvalue+1;
+      }else if(checktypeofinput==napi_object){
+        napi_value cursorNAPI;
+        status = napi_get_named_property(env,args[1],"cursor",&cursorNAPI);
+        assert(status == napi_ok);
+        size_t bufsize = 0;
+        size_t convertedvalue = 0;
+        status = napi_get_value_string_utf8(env, cursorNAPI,NULL,bufsize,&convertedvalue);
+        assert(status == napi_ok);
+        convertedvalue=convertedvalue+1;
 
-		char* cursor =  new char[convertedvalue];
-		status = napi_get_value_string_utf8(env,cursorNAPI,cursor,convertedvalue,&bufsize);
-		assert(status == napi_ok);
-		lO_ListBucketsOptions.cursor = cursor;
-		lO_BucketIterator = list_buckets(&lO_Project,&lO_ListBucketsOptions);
+        char* cursor =  new char[convertedvalue];
+        status = napi_get_value_string_utf8(env,cursorNAPI,cursor,convertedvalue,&bufsize);
+        assert(status == napi_ok);
+        lO_ListBucketsOptions.cursor = cursor;
+        lO_BucketIterator = list_buckets(&lO_Project,&lO_ListBucketsOptions);
 
-	  }
+      }
 
-          
-	napi_value BucketList,errorObject;
-	
-	  status = napi_create_object(env,&BucketList);
-	  assert(status == napi_ok);
+      typedef bool (*BucketIteratorNextFUNC)(BucketIterator *);
+      BucketIteratorNextFUNC bucket_iterator_next = (BucketIteratorNextFUNC)GetProcAddress(hGetProcIDDLL,"bucket_iterator_next");
+      if(!bucket_iterator_next){
+          return NULL;
+        }else{
+          typedef Bucket * (*BucketIteratorItemFUNC)(BucketIterator *);
+          BucketIteratorItemFUNC bucket_iterator_item = (BucketIteratorItemFUNC)GetProcAddress(hGetProcIDDLL,"bucket_iterator_item");
+          if(!bucket_iterator_item){
+            return NULL;
+          }else{
+            typedef Error * (*BucketIteratorErrorFUNC)(BucketIterator *);
+            BucketIteratorErrorFUNC bucket_iterator_err = (BucketIteratorErrorFUNC)GetProcAddress(hGetProcIDDLL,"bucket_iterator_err");
+            napi_value BucketList,errorObject;
+            if(!bucket_iterator_err){
+              return NULL;
+            }else{
+              status = napi_create_object(env,&BucketList);
+              assert(status == napi_ok);
 
-	  status = napi_create_object(env,&errorObject);
-	  assert(status == napi_ok);
+              status = napi_create_object(env,&errorObject);
+              assert(status == napi_ok);
 
-	  status = napi_create_object(env,&returnObject);
-	  assert(status == napi_ok);
+              status = napi_create_object(env,&returnObject);
+              assert(status == napi_ok);
 
-	  int count = 0;
-	  while(bucket_iterator_next(lO_BucketIterator)){
-		  Bucket *lO_bucket = bucket_iterator_item(lO_BucketIterator);
+              int count = 0;
+              while(bucket_iterator_next(lO_BucketIterator)){
+                  Bucket *lO_bucket = bucket_iterator_item(lO_BucketIterator);
 
-		  napi_value BucketInfoObj;
-		  status = napi_create_object(env,&BucketInfoObj);
-		  assert(status == napi_ok);
+                  napi_value BucketInfoObj;
+                  status = napi_create_object(env,&BucketInfoObj);
+                  assert(status == napi_ok);
 
-		  char* bucketNamePtr = lO_bucket->name;
+                  char* bucketNamePtr = lO_bucket->name;
 
-		  napi_value bucketName;
+                  napi_value bucketName;
 
-		  status = napi_create_string_utf8(env,bucketNamePtr,NAPI_AUTO_LENGTH,&bucketName);
-		  assert(status == napi_ok);
+                  status = napi_create_string_utf8(env,bucketNamePtr,NAPI_AUTO_LENGTH,&bucketName);
+                  assert(status == napi_ok);
 
-		  status = napi_set_named_property(env,BucketInfoObj,"name",bucketName);
-		  assert(status == napi_ok);
-		  
-		  napi_value createdBucket;
-		  int64_t bucketcreatedvalue = lO_bucket->created;
+                  status = napi_set_named_property(env,BucketInfoObj,"name",bucketName);
+                  assert(status == napi_ok);
+                  
+                  napi_value createdBucket;
+                  int64_t bucketcreatedvalue = lO_bucket->created;
 
-		  status = napi_create_int64(env, bucketcreatedvalue, &createdBucket);
-		  assert(status == napi_ok);
+                  status = napi_create_int64(env, bucketcreatedvalue, &createdBucket);
+                  assert(status == napi_ok);
 
-		  status = napi_set_named_property(env,BucketInfoObj,"created",createdBucket);
-		  assert(status == napi_ok);
+                  status = napi_set_named_property(env,BucketInfoObj,"created",createdBucket);
+                  assert(status == napi_ok);
 
-		  char str[100];
-		  itoa(count, str, 10);
+                  char str[100];
+                  itoa(count, str, 10);
 
-		  status = napi_set_named_property(env,BucketList,str,BucketInfoObj);
-		  assert(status == napi_ok);
+                  status = napi_set_named_property(env,BucketList,str,BucketInfoObj);
+                  assert(status == napi_ok);
 
-		  count++;
-	  }
+                  count++;
+              }
 
-	  Error *err = bucket_iterator_err(lO_BucketIterator);
+              Error *err = bucket_iterator_err(lO_BucketIterator);
 
-	  if(err==NULL){
-		int32_t code = 0;
-		char message[] = "";
-		napi_value codenapi,errormessage;
+              if(err==NULL){
+                int32_t code = 0;
+                char message[] = "";
+                napi_value codenapi,errormessage;
 
-		status = napi_create_int64(env, code, &codenapi);
-		assert(status == napi_ok);
+                status = napi_create_int64(env, code, &codenapi);
+                assert(status == napi_ok);
 
-		status = napi_create_string_utf8(env,&message[0],NAPI_AUTO_LENGTH,&errormessage);
-		assert(status == napi_ok);
+                status = napi_create_string_utf8(env,&message[0],NAPI_AUTO_LENGTH,&errormessage);
+                assert(status == napi_ok);
 
-		status = napi_set_named_property(env,errorObject,"error",codenapi);
-		assert(status == napi_ok);
+                status = napi_set_named_property(env,errorObject,"error",codenapi);
+                assert(status == napi_ok);
 
-		status = napi_set_named_property(env,errorObject,"message",errormessage);
-		assert(status == napi_ok);
-	  }else{
-		
-		Error lO_Error = *(err);
-		char* messagePtr = lO_Error.message;
-		napi_value codenapi,errormessage;
-		
-		status = napi_create_int64(env, lO_Error.code, &codenapi);
-		assert(status == napi_ok);
-	  
-		status = napi_create_string_utf8(env,&messagePtr[0],NAPI_AUTO_LENGTH,&errormessage);
-		assert(status == napi_ok);
+                status = napi_set_named_property(env,errorObject,"message",errormessage);
+                assert(status == napi_ok);
+              }else{
+                
+                Error lO_Error = *(err);
+                char* messagePtr = lO_Error.message;
+                napi_value codenapi,errormessage;
+                
+                status = napi_create_int64(env, lO_Error.code, &codenapi);
+                assert(status == napi_ok);
+              
+                status = napi_create_string_utf8(env,&messagePtr[0],NAPI_AUTO_LENGTH,&errormessage);
+                assert(status == napi_ok);
 
-		status = napi_set_named_property(env,errorObject,"error",codenapi);
-		assert(status == napi_ok);
+                status = napi_set_named_property(env,errorObject,"error",codenapi);
+                assert(status == napi_ok);
 
-		status = napi_set_named_property(env,errorObject,"message",errormessage);
-		assert(status == napi_ok);
-	  }
-	  status = napi_set_named_property(env,returnObject,"error",errorObject);
-	  assert(status == napi_ok);
-	  //
-	  status = napi_set_named_property(env,returnObject,"bucketList",BucketList);
-	  assert(status == napi_ok);
-	  return returnObject;
+                status = napi_set_named_property(env,errorObject,"message",errormessage);
+                assert(status == napi_ok);
+              }
+              status = napi_set_named_property(env,returnObject,"error",errorObject);
+              assert(status == napi_ok);
+              //
+              status = napi_set_named_property(env,returnObject,"bucketList",BucketList);
+              assert(status == napi_ok);
+              return returnObject;
+            }
+            
+          }
+
+        }
+    }
+
+  }
+  return NULL;
 }
 
   //  * function stat_objectc information about an object at the specific key.
@@ -1275,14 +1436,29 @@ napi_value stat_objectc(napi_env env, napi_callback_info info) {
   char* objectKey =  new char[convertedvalue];
   status = napi_get_value_string_utf8(env,args[2],objectKey,convertedvalue,&bufsize);
   assert(status == napi_ok);
-  
+  if(!hGetProcIDDLL){
+    napi_throw_type_error(env,nullptr,"\nLibrary not found\n");
+    return NULL;
+  }else{
+    
+    FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL),"stat_object");
+    if(!fn){
+      napi_throw_type_error(env,nullptr,"\nFunction not found\n");
+    return NULL;
+    }else{
+      typedef ObjectResult(__stdcall * pICObjectResult)(Project *,char *,char *);
+      pICObjectResult stat_object;
+      stat_object = pICObjectResult(fn);
 
-  ObjectResult lO_ObjectResult = stat_object(&lO_Project,bucketName,objectKey);
-	if(lO_ObjectResult.error!=NULL){
-	  return createObjectResult(env,NULL,lO_ObjectResult.error);
-	}else{
-	  return createObjectResult(env,lO_ObjectResult.object,NULL);
-	}
+      ObjectResult lO_ObjectResult = stat_object(&lO_Project,bucketName,objectKey);
+        if(lO_ObjectResult.error!=NULL){
+          return createObjectResult(env,NULL,lO_ObjectResult.error);
+        }else{
+          return createObjectResult(env,lO_ObjectResult.object,NULL);
+        }
+    }
+  }
+  return NULL;
 }
 
   //  * function upload_objectc starts an upload to the specified key.
@@ -1373,7 +1549,20 @@ napi_value upload_objectc(napi_env env, napi_callback_info info) {
   status = napi_get_value_string_utf8(env,args[2],objectKey,convertedvalue,&bufsize);
   assert(status == napi_ok);
 
-  UploadResult lO_UploadResult;
+  if(!hGetProcIDDLL){
+    napi_throw_type_error(env,nullptr,"\nLibrary not found\n");
+    return NULL;
+  }else{
+    
+    FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL),"upload_object");
+    if(!fn){
+      napi_throw_type_error(env,nullptr,"\nFunction not found\n");
+      return NULL;
+    }else{
+      typedef UploadResult(__stdcall * pICUploadResult)(Project *,char *,char *,UploadOptions *);
+      pICUploadResult upload_object;
+      upload_object = pICUploadResult(fn);
+      UploadResult lO_UploadResult;
       if(checktypeofinput==napi_null){
         lO_UploadResult = upload_object(&lO_Project,&bucketName[0],&objectKey[0],NULL);
       }else{
@@ -1410,6 +1599,10 @@ napi_value upload_objectc(napi_env env, napi_callback_info info) {
       
       char blank[] = "";
       return createResult(env,"upload",handlevalue,0,&blank[0]);
+    
+    }
+  }
+  return NULL;
 }
 
 
@@ -1493,7 +1686,20 @@ napi_value upload_writec(napi_env env, napi_callback_info info) {
   uint8_t *ptrToData ; 
   ptrToData = (uint8_t *)bufferPtr;
 
-  WriteResult lO_WriteResult = upload_write(&lO_UploadRef,ptrToData,bytesread);
+  if(!hGetProcIDDLL){
+    napi_throw_type_error(env,nullptr,"\nLibrary not found\n");
+    return NULL;
+  }else{
+    FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL),"upload_write");
+    if(!fn){
+      napi_throw_type_error(env,nullptr,"\nFunction not found\n");
+      return NULL;
+    }else{
+      typedef WriteResult(__stdcall * pICWriteResult)(Upload *,uint8_t *,size_t);
+      pICWriteResult upload_write;
+      upload_write = pICWriteResult(fn);
+
+      WriteResult lO_WriteResult = upload_write(&lO_UploadRef,ptrToData,bytesread);
       napi_value returnObject,errorObject;
       status = napi_create_object(env,&returnObject);
       if(lO_WriteResult.error!=NULL){
@@ -1555,6 +1761,9 @@ napi_value upload_writec(napi_env env, napi_callback_info info) {
           assert(status == napi_ok);
           return returnObject;
       }
+      return NULL;
+    }
+  }
 }
 
   //  * function download_objectc starts  download to the specified key.
@@ -1644,7 +1853,20 @@ napi_value download_objectc(napi_env env, napi_callback_info info) {
   char* objectKey =  new char[convertedvalue];
   status = napi_get_value_string_utf8(env,args[2],objectKey,convertedvalue,&bufsize);
   assert(status == napi_ok);
-  DownloadResult lO_DownloadResult;
+  if(!hGetProcIDDLL){
+    napi_throw_type_error(env,nullptr,"\nLibrary not found\n");
+    return NULL;
+  }else{
+    
+    FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL),"download_object");
+    if(!fn){
+      napi_throw_type_error(env,nullptr,"\nFunction not found\n");
+    return NULL;
+    }else{
+      typedef DownloadResult(__stdcall * pICDownloadResult)(Project *,char *,char *,DownloadOptions *);
+      pICDownloadResult download_object;
+      download_object = pICDownloadResult(fn);
+      DownloadResult lO_DownloadResult;
       if(checktypeofinput==napi_null){
         lO_DownloadResult = download_object(&lO_Project,bucketName,objectKey,NULL);
       }else{
@@ -1686,7 +1908,9 @@ napi_value download_objectc(napi_env env, napi_callback_info info) {
       size_t handlevalue = lO_Download._handle;
       char blank[] = "";
       return createResult(env,"download",handlevalue,0,&blank[0]);
-
+    }
+  }
+  return NULL;
 }
 
   //  * function upload_commitc commits the uploaded data.
@@ -1734,7 +1958,19 @@ napi_value upload_commitc(napi_env env, napi_callback_info info) {
   if(lO_Upload._handle==0){
     return NULL;
   }
-   Error* lO_ErrorPtr = upload_commit(&lO_Upload);
+   if(!hGetProcIDDLL){
+    napi_throw_type_error(env,nullptr,"\nLibrary not found \n");
+    return NULL;
+  }else{
+    FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL),"upload_commit");
+    if(!fn){
+      napi_throw_type_error(env,nullptr,"\nFunction not found\n");
+      return NULL;
+    }else{
+      typedef Error *(__stdcall * pICError)(Upload *);
+      pICError upload_commit;
+      upload_commit = pICError(fn);
+      Error* lO_ErrorPtr = upload_commit(&lO_Upload);
       if(lO_ErrorPtr!=NULL){
         Error lO_Error = *(lO_ErrorPtr);
         char* errorMessagePtr = lO_Error.message;
@@ -1742,6 +1978,9 @@ napi_value upload_commitc(napi_env env, napi_callback_info info) {
       }
       char blank[] = "";
       return createError(env,0,&blank[0]);
+    }
+  }
+  return NULL;
 }
 
 //  * function close_downloadc closes the download.
@@ -1786,6 +2025,20 @@ napi_value close_downloadc(napi_env env, napi_callback_info info) {
 
   Download lO_Download;
   lO_Download._handle = getHandleValue(env,args[0]);
+  //
+  if(!hGetProcIDDLL){
+    napi_throw_type_error(env,nullptr,"\nLibrary not found \n");
+    return NULL;
+  }else{
+    
+    FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL),"close_download");
+    if(!fn){
+      napi_throw_type_error(env,nullptr,"\n Function not found \n");
+    return NULL;
+    }else{
+      typedef Error *(__stdcall * pICError)(Download *);
+      pICError close_download;
+      close_download = pICError(fn);
       Error* lO_ErrorPtr = close_download(&lO_Download);
   //
       if(lO_ErrorPtr!=NULL){
@@ -1797,6 +2050,10 @@ napi_value close_downloadc(napi_env env, napi_callback_info info) {
 
       char blank[] = "";
       return createError(env,0,&blank[0]);
+    }
+  }
+  //
+  
 }
 
 // * function download_readc downloads from object's data stream into bytes up to length amount.
@@ -1867,7 +2124,21 @@ napi_value download_readc(napi_env env, napi_callback_info info) {
   uint8_t *ptrToData ; 
   ptrToData = (uint8_t *)bufferPtr;
   //
-  ReadResult lO_ReadResult = download_read(&lO_DownloaderRef,ptrToData,lengthOfBuffer);
+  if(!hGetProcIDDLL){
+    napi_throw_type_error(env,nullptr,"\nLibrary not found \n");
+    return NULL;
+  }else{
+    
+    FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL),"download_read");
+    if(!fn){
+      napi_throw_type_error(env,nullptr,"\nFunction not found \n");
+      return NULL;
+    }else{
+      typedef ReadResult(__stdcall * pICReadResult)(Download *,uint8_t *,size_t);
+      pICReadResult download_read;
+      download_read = pICReadResult(fn);
+      //
+        ReadResult lO_ReadResult = download_read(&lO_DownloaderRef,ptrToData,lengthOfBuffer);
         //
         napi_value returnObject;
         //
@@ -1947,6 +2218,10 @@ napi_value download_readc(napi_env env, napi_callback_info info) {
             assert(status == napi_ok);
             return returnObject;
         }
+    }
+  }
+  return NULL;
+  
 }
 
 //  * function delete_objectc deletes an object.
@@ -2027,12 +2302,29 @@ napi_value delete_objectc(napi_env env, napi_callback_info info) {
   char* objectKey =  new char[convertedvalue];
   status = napi_get_value_string_utf8(env,args[2],objectKey,convertedvalue,&bufsize);
   assert(status == napi_ok);
-  ObjectResult lO_ObjectResult = delete_object(&lO_Project,bucketName,objectKey);
-  if(lO_ObjectResult.error!=NULL){
-	return createObjectResult(env,NULL,lO_ObjectResult.error);
+  if(!hGetProcIDDLL){
+    napi_throw_type_error(env,nullptr,"\nLibrary not found \n");
+    return NULL;
   }else{
-	return createObjectResult(env,lO_ObjectResult.object,NULL);
+
+    FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL),"delete_object");
+    if(!fn){
+      napi_throw_type_error(env,nullptr,"\nFunction not found \n");
+      return NULL;
+    }else{
+      typedef ObjectResult(__stdcall * pICObjectResult)(Project *,char *,char *);
+      pICObjectResult delete_object;
+      delete_object = pICObjectResult(fn);
+      ObjectResult lO_ObjectResult = delete_object(&lO_Project,bucketName,objectKey);
+      if(lO_ObjectResult.error!=NULL){
+        return createObjectResult(env,NULL,lO_ObjectResult.error);
+      }else{
+        return createObjectResult(env,lO_ObjectResult.object,NULL);
+      }
+    }
   }
+  return NULL;
+  //
 }
 
 //  * function access_sharec creates new access grant with specific permission. Permission will be applied to prefixes when defined.
@@ -2233,6 +2525,19 @@ napi_value access_sharec(napi_env env, napi_callback_info info) {
     *(SharePrefixListPointer+i)=lO_SharePrefix;
   }
 
+  if(!hGetProcIDDLL){
+    napi_throw_type_error(env,nullptr,"\nLibrary not found \n");
+    return NULL;
+  }else{
+    
+    FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL),"access_share");
+    if(!fn){
+      napi_throw_type_error(env,nullptr,"\nFunction not found \n");
+    return NULL;
+    }else{
+      typedef AccessResult(__stdcall * pICAccessResult)(Access *,Permission,SharePrefix *,int64_t);
+      pICAccessResult access_share;
+      access_share = pICAccessResult(fn);
 
       AccessResult lO_AccessResult = access_share(&lO_Access,lO_Permission,SharePrefixListPointer,sharePrefixSize);
 
@@ -2252,6 +2557,9 @@ napi_value access_sharec(napi_env env, napi_callback_info info) {
       
       char blank[] = "";
       return createResult(env,"access",handlevalue,0,&blank[0]);
+    }
+  }
+  return NULL;
 }
 
 
@@ -2332,7 +2640,20 @@ napi_value list_objectsc(napi_env env, napi_callback_info info) {
   ListObjectsOptions lO_ListObjectsOptions;
   //
   ObjectIterator *lO_ObjectIterator= nullptr;
-  if(checktypeofinput==napi_null){
+  if(!hGetProcIDDLL){
+    napi_throw_type_error(env,nullptr,"\nLibrary not found \n");
+    return NULL;
+  }else{
+    
+    FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL),"list_objects");
+    if(!fn){
+      napi_throw_type_error(env,nullptr,"\nFunction not found \n");
+      return NULL;
+    }else{
+      typedef ObjectIterator *(__stdcall * pICObjectIterator)(Project *,char *,ListObjectsOptions *);
+      pICObjectIterator list_objects;
+      list_objects = pICObjectIterator(fn);
+      if(checktypeofinput==napi_null){
         lO_ObjectIterator = list_objects(&lO_Project,&bucketName[0],NULL);
 
       }else if(checktypeofinput==napi_object){
@@ -2411,7 +2732,24 @@ napi_value list_objectsc(napi_env env, napi_callback_info info) {
       assert(status == napi_ok);
       int count = 0;
     
+      typedef bool (*ObjectIteratorNextFUNC)(ObjectIterator *);
+      ObjectIteratorNextFUNC object_iterator_next = (ObjectIteratorNextFUNC)GetProcAddress(hGetProcIDDLL,"object_iterator_next");
+
+      if(!object_iterator_next){
+        return NULL;
+      }else{
+        typedef Object * (*ObjectIteratorItemFUNC)(ObjectIterator *);
+        ObjectIteratorItemFUNC object_iterator_item = (ObjectIteratorItemFUNC)GetProcAddress(hGetProcIDDLL,"object_iterator_item");
+        if(!object_iterator_item){
+            return NULL;
+        }else{
+          typedef Error * (*ObjectIteratorErrorFUNC)(ObjectIterator *);
+          ObjectIteratorErrorFUNC object_iterator_err = (ObjectIteratorErrorFUNC)GetProcAddress(hGetProcIDDLL,"object_iterator_err");
           
+          if(!object_iterator_err){
+              return NULL;
+          }else{
+
               while(object_iterator_next(lO_ObjectIterator)){
 
                 Object *lO_ObjectPtr = object_iterator_item(lO_ObjectIterator);
@@ -2555,14 +2893,11 @@ napi_value list_objectsc(napi_env env, napi_callback_info info) {
             }
             //
             Error *err = object_iterator_err(lO_ObjectIterator);
+			
+			napi_value errorMessage,errorCode;
             
-            napi_value errorMessage,errorCode;
-            status = napi_create_object(env,&errorObject);
-            assert(status == napi_ok);
-            
-            status = napi_create_object(env,&returnObject);
-            assert(status == napi_ok);
             if(err==NULL){
+			  
               int32_t code = 0;
               char message[] = "";
               napi_value codenapi,errormessage;
@@ -2579,6 +2914,7 @@ napi_value list_objectsc(napi_env env, napi_callback_info info) {
               status = napi_set_named_property(env,errorObject,"message",errormessage);
               assert(status == napi_ok);
             }else{
+		
                 Error lO_Error = *(err);
                 char* messagePtr = lO_Error.message;
                 napi_value codenapi,errormessage;
@@ -2586,7 +2922,7 @@ napi_value list_objectsc(napi_env env, napi_callback_info info) {
                 status = napi_create_int64(env, lO_Error.code, &codenapi);
                 assert(status == napi_ok);
               
-                status = napi_create_string_utf8(env,&messagePtr[0],NAPI_AUTO_LENGTH,&errormessage);
+                status = napi_create_string_utf8(env,messagePtr,NAPI_AUTO_LENGTH,&errormessage);
                 assert(status == napi_ok);
 
                 status = napi_set_named_property(env,errorObject,"code",codenapi);
@@ -2594,7 +2930,7 @@ napi_value list_objectsc(napi_env env, napi_callback_info info) {
 
                 status = napi_set_named_property(env,errorObject,"message",errormessage);
                 assert(status == napi_ok);
-            }
+			}
             status = napi_set_named_property(env,returnObject,"error",errorObject);
             assert(status == napi_ok);
             //
@@ -2602,6 +2938,14 @@ napi_value list_objectsc(napi_env env, napi_callback_info info) {
             assert(status == napi_ok);
 
             return returnObject;
+          }
+        }  
+      }
+
+    }
+  }
+  
+  return NULL;
 }
 
 //  * function access_serializec serializes access grant into a string.
@@ -2648,7 +2992,20 @@ napi_value access_serializec(napi_env env, napi_callback_info info) {
   if(lO_Access._handle==0){
     return NULL;
   }
-  StringResult lO_StringResult = access_serialize(&lO_Access);
+  if(!hGetProcIDDLL){
+    napi_throw_type_error(env,nullptr,"\nLibrary not found \n");
+    return NULL;
+  }else{
+    
+    FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL),"access_serialize");
+    if(!fn){
+      napi_throw_type_error(env,nullptr,"\nFunction not found \n");
+      return NULL;
+    }else{
+      typedef StringResult(__stdcall * pICStringResult)(Access *);
+      pICStringResult access_serialize;
+      access_serialize = pICStringResult(fn);
+      StringResult lO_StringResult = access_serialize(&lO_Access);
       //
       napi_value errorObject,returnObject;
       
@@ -2701,6 +3058,10 @@ napi_value access_serializec(napi_env env, napi_callback_info info) {
       status = napi_set_named_property(env,returnObject,"string",stringNAPI);
       assert(status == napi_ok);
       return returnObject;
+
+    }
+  }
+  return NULL;
 }
 
 
@@ -2749,12 +3110,27 @@ napi_value upload_infoc(napi_env env, napi_callback_info info) {
     napi_throw_type_error(env,nullptr,"\nInvalid Object\n");
     return NULL;
   }
-  ObjectResult lO_ObjectResult = upload_info(&lO_Upload);
+  if(!hGetProcIDDLL){
+    napi_throw_type_error(env,nullptr,"\nLibrary not found\n");
+    return NULL;
+  }else{
+    FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL),"upload_info");
+    if(!fn){
+      napi_throw_type_error(env,nullptr,"\nFunction not found\n");
+      return NULL;
+    }else{
+      typedef ObjectResult(__stdcall * pICObjectResult)(Upload *);
+      pICObjectResult upload_info;
+      upload_info = pICObjectResult(fn);
+      ObjectResult lO_ObjectResult = upload_info(&lO_Upload);
       if(lO_ObjectResult.error!=NULL){
         return createObjectResult(env,NULL,lO_ObjectResult.error);
       }else{
         return createObjectResult(env,lO_ObjectResult.object,NULL);
       }
+    }
+  }
+  return NULL;
 }
 
 //  * function upload_abortc aborts an upload.
@@ -2800,7 +3176,19 @@ napi_value upload_abortc(napi_env env, napi_callback_info info){
   Upload lO_Upload;
   lO_Upload._handle = getHandleValue(env,args[0]);
   
-	Error* lO_ErrorPtr = upload_abort(&lO_Upload);
+  if(!hGetProcIDDLL){
+    napi_throw_type_error(env,nullptr,"\nLibrary not found \n");
+    return NULL;
+  }else{
+    FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL),"upload_abort");
+    if(!fn){
+      napi_throw_type_error(env,nullptr,"\nFunction not found \n");
+      return NULL;
+    }else{
+      typedef Error *(__stdcall * pICError)(Upload *);
+      pICError upload_abort;
+      upload_abort = pICError(fn);
+      Error* lO_ErrorPtr = upload_abort(&lO_Upload);
       //
       if(lO_ErrorPtr!=NULL){
         Error lO_Error = *(lO_ErrorPtr);
@@ -2809,6 +3197,9 @@ napi_value upload_abortc(napi_env env, napi_callback_info info){
       }
       char blank[] = "";
       return createError(env,0,&blank[0]);
+    }
+  }
+  return NULL;
 }
 
 //  * function download_infoc returns information about the downloaded object.
@@ -2853,13 +3244,31 @@ napi_value download_infoc(napi_env env, napi_callback_info info) {
   Download lO_Download;
   lO_Download._handle = getHandleValue(env,args[0]);
   //
-  ObjectResult lO_ObjectResult = download_info(&lO_Download);
+  if(!hGetProcIDDLL){
+    napi_throw_type_error(env,nullptr,"\nLibrary not found \n");
+    return NULL;
+  }else{
+    
+    FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL),"download_info");
+    if(!fn){
+     napi_throw_type_error(env,nullptr,"\nFunction not found \n");
+      return NULL;
+    }else{
+      typedef ObjectResult(__stdcall * pICObjectResult)(Download *);
+      pICObjectResult download_info;
+      download_info = pICObjectResult(fn);
+      ObjectResult lO_ObjectResult = download_info(&lO_Download);
   
       if(lO_ObjectResult.error!=NULL){
         return createObjectResult(env,NULL,lO_ObjectResult.error);
       }else{
         return createObjectResult(env,lO_ObjectResult.object,NULL);
       }
+    
+    }
+  }
+  //
+  return NULL;
 }
 
 //  * function upload_set_custom_metadatac set custom meta information
@@ -3018,7 +3427,21 @@ napi_value upload_set_custom_metadatac(napi_env env, napi_callback_info info){
     lO_CustomMetadata.count = sizeOfArray;
   }
   
-  Error* lO_ErrorPtr = upload_set_custom_metadata(&lO_Upload,lO_CustomMetadata);
+  //
+  if(!hGetProcIDDLL){
+    napi_throw_type_error(env,nullptr,"\nLibrary not found\n");
+    return NULL;
+  }else{
+    
+    FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL),"upload_set_custom_metadata");
+    if(!fn){
+      napi_throw_type_error(env,nullptr,"\nFunction not found\n");
+      return NULL;
+    }else{
+      typedef Error *(__stdcall * pICError)(Upload *,CustomMetadata);
+      pICError upload_set_custom_metadata;
+      upload_set_custom_metadata = pICError(fn);
+      Error* lO_ErrorPtr = upload_set_custom_metadata(&lO_Upload,lO_CustomMetadata);
       if(lO_ErrorPtr!=NULL){
         Error lO_Error = *(lO_ErrorPtr);
         char* errorMessagePtr = lO_Error.message;
@@ -3027,6 +3450,9 @@ napi_value upload_set_custom_metadatac(napi_env env, napi_callback_info info){
 
       char blank[] = "";
       return createError(env,0,&blank[0]);
+    }
+  }
+  return NULL;
 }
 
 #define DECLARE_NAPI_METHOD(name, func)                                        \
@@ -3132,6 +3558,7 @@ napi_value Init(napi_env env, napi_value exports) {
   status = napi_define_properties(env, exports, 1, &upload_set_custom_metadata);
   assert(status == napi_ok);
   
+  loaddll();
   return exports;
 }
 //

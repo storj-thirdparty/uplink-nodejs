@@ -1,5 +1,5 @@
 # storj-nodejs binding
-### *Developed using libuplinkc v0.30.7*
+### *Developed using RC v1.0.1 storj/uplink-c 
 ## Initial Set-up
 
 **NOTE**: for Golang
@@ -9,13 +9,14 @@ Make sure your `PATH` includes the `$GOPATH/bin` directory, so that your command
 export PATH=$PATH:$GOPATH/bin
 ```
 
-Install [storj-uplink](https://godoc.org/storj.io/storj/lib/uplink) go package, by running:
+Install [storj-uplink-c](https://github.com/storj/uplink-c) go package, by running:
 ```
-$ go get storj.io/storj/lib/uplink
+$ go get storj.io/uplink-c
 ```
-* Please ensure storj-uplink is installed at following location 
+* Please ensure GOPATH is set
+* Please ensure uplink-c is installed at following location 
 ```
-$ $HOME/go/src/
+$ $GOPATH/go/src/
 ```
 In case, following errors get reported during the process:
 ```
@@ -48,203 +49,159 @@ $ npm install storj-nodejs
 ## Sample Hello Storj!
 The sample *HelloStorj.js* code calls the *libUplinkNode.js* binding module to do the following:
     * create a new bucket within desired Storj project
+    * list buckets on storj V3
     * write a file from local system to the created Storj bucket
+    * list object on storj V3
     * read back the object from the Storj bucket to local system for verification
+    * create share access
+    * delete uploaded object
+    * delete created bucket
 
 
 ## Node.js-Storj Binding Functions
 
-### new_uplinkc(UplinkConfig,String)
-    * function to create new Storj uplink
-    * pre-requisites: None
-    * inputs: UplinkConfig (UplinkConfig) , Temp(String)
-    * output: Object contains error (if any ,else empty string) and data (UplinkRef)
+### parse_accessc(String)
+   * function parse_accessc to parses serialized access grant string
+   * pre-requisites: TO DO
+   * inputs: accessString (String)
+   * output: AccessResult (Object)
 
-### close_uplinkc(UplinkRef)
-    * function to close currently established uplink
-    * pre-requisites: new_uplinkc() function has been already called
-    * inputs: Uplink Reference(UplinkRef)
-    * output: Error if any else empty string
+### request_access_with_passphrasec(String, String, String)
+   * function request_access_with_passphrasec requests satellite for a new access grant using a passhprase
+   * pre-requisites: None
+   * inputs: satellite address (String),API key (String) and passphrase (String)
+   * output: AccessResult (Object)
 
-### parse_api_keyc(String)
-    * function to parse API key, to be used by Storj
-    * pre-requisites: None
-    * inputs: API key (String)
-    * output: object contains error (if any ,else empty string) and data (APIKeyRef)
+### open_project(Access)
+   * function open_project opens project using access grant.
+   * pre-requisites: request_access_with_passphrasec
+   * inputs: Access (Object)
+   * output: ProjectResult (Object)
 
-### open_projectc(UplinkRef, String, APIKeyRef)
-    * function to open a Storj project
-    * pre-requisites: new_uplinkc() and parse_api_keyc() functions have been already called
-    * inputs: valid UplinkRef, Satellite Address (String), valid APIKeyRef
-    * output: object contains error (if any ,else empty string) and data (ProjectRef)
+### close_projectc(Project)
+   * function close_projectc closes the project.
+   * pre-requisites: open_projectc
+   * inputs: Project (Object)
+   * output: Error (Object)
 
-### close_projectc(ProjectRef)
-    * function to close currently opened Storj project
-    * pre-requisites: open_projectc() function has been already called
-    * inputs: Project Reference (ProjectRef)
-    * output: error if any else empty string
+### stat_bucketc(Project, String)
+   * function stat_bucketc returns information about a bucket.
+   * pre-requisites: open_projectc
+   * inputs: Project (Object) ,Bucket Name (String)
+   * output: BucketResult (Object)
 
+### ensure_bucketc(Project, String)
+   * function ensure_bucketc creates a new bucket and ignores the error when it already exists
+   * pre-requisites: open_projectc
+   * inputs: Project (Object) ,Bucket Name (String)
+   * output: BucketResult (Object)
 
-### list_bucketsc(ProjectRef, BucketListOptions)
-    * function to fetch a list of buckets, available in the Storj project
-    * pre-requisites: open_projectc() function has been already called
-    * inputs: valid ProjectRef , BucketListOptions
-    * output: object contains error (if any ,else empty string) and data (BucketList)
+### create_bucketc(Project, String)
+   * function create_bucketc creates a new bucket.
+   * pre-requisites: open_projectc
+   * inputs: Project (Object) ,Bucket Name (String)
+   * output: BucketResult (Object)
 
-### list_objectsc(BucketRef, ListOptions)
-    * function to fetch a list of buckets, available in the Storj project
-    * pre-requisites: open_bucketc() function has been already called
-    * inputs: valid BucketRef , ListOptions
-    * output: object contains error (if any ,else empty string) and data (ObjectList)
+### delete_bucketc(Project, String)
+   * function delete_bucketc deletes a bucket.
+   * pre-requisites: open_projectc
+   * inputs: Project (object) ,Bucket Name (string)
+   * output: BucketResult (object)
 
-### create_bucketc(ProjectRef, String,BucketConfig)
-    * function to create new bucket in Storj project
-    * pre-requisites: open_projectc() function has been already called, successfully
-    * inputs: valid ProjectRef, Bucket Name (String),BucketConfig
-    * output: object contains error (if any ,else empty string) and data (BucketInfo)
+### list_bucketsc(Project, ListBucketsOptions)
+   * function list_bucketsc lists buckets
+   * pre-requisites: open_projectc
+   * inputs: Project (Object) ,ListBucketsOptions(Object)
+   * output: BucketList (Object)
 
-### delete_bucketc(ProjectRef, String)
-    * function to delete a bucket 
-    * pre-requisites: open_projectc() function has been already called, successfully
-    * inputs: valid ProjectRef, Bucket Name (String)
-    * output: error if any else empty string 
+### stat_objectc(Project, String, String)
+   * function stat_objectc information about an object at the specific key.
+   * pre-requisites: open_projectc
+   * inputs: Project (Object) ,Bucket Name (String) , Object Key(String)
+   * output: ObjectResult (Object)
 
-### encryption_accessc(ProjectRef, String)
-    * function to get encryption access to upload and/or download data to/from Storj
-    * pre-requisites: open_projectc() function has been already called
-    * inputs: valid ProjectRef, Encryption Pass Phrase (String)
-    * output: object contains error (if any ,else empty string) and data (EncryptionAccessRef)
+### upload_objectc(Project, String, String, Upload Options)
+   * function upload_objectc starts an upload to the specified key.
+   * pre-requisites: open_projectc
+   * inputs: Project (Object) ,Bucket Name (String) , Object Key(String) , Uplaod Options(Object)
+   * output: UploadResult  (Object)
 
-### project_salted_key_from_passphrasec(ProjectRef, String)
-    * function to generate a key from given phassphrase
-    * pre-requisites: open_projectc() function has been already called
-    * inputs: valid ProjectRef, Encryption PassPhrase (String)
-    * output: object contains error (if any ,else empty string) and data (int)
+### upload_writec(Upload, Pointer, size_t)
+   * function upload_writec uploads len(p) bytes from p to the object's data stream.
+   * pre-requisites: upload_objectc
+   * inputs: Upload (Object) ,Pointer(Buffer) , Length (size_t)
+   * output: WriteResult (Object)
 
-### serialize_encryption_accessc(EncryptionAccessRef)
-    * function to turn encryption access into base58
-    * pre-requisites: open_projectc() function has been already called
-    * inputs: EncryptionAccessRef
-    * output: object contains error (if any ,else empty string) and data (string)
+### download_objectc(Project, String, String, Download Options)
+   * function download_objectc starts  download to the specified key.
+   * pre-requisites: open_projectc
+   * inputs: Project (Object), Buxcket Name(String), Object Key(String), Download Options(Object)
+   * output: DownloadResult (Object)
 
-### open_bucketc(ProjectRef, String, String)
-    * function to open an already existing bucket in Storj project
-    * pre-requisites: encryption_keyc() function has been already called
-    * inputs: ProjectRef, Bucket Name (String), serialized EncryptionAccess (String)
-    * output: object contains error (if any ,else empty string) and data (APIKeyRef)
+### upload_commitc(Upload)
+   * function upload_commitc commits the uploaded data.
+   * pre-requisites: upload_objectc
+   * inputs: Upload (Object)
+   * output: Error (Object)
 
-### close_bucketc(BucketRef)
-    * function to close currently opened Storj project
-    * pre-requisites: open_bucketc() function has been already called
-    * inputs: Bucket Reference (BucketRef)
-    * output: error if any else empty string
+### close_downloadc(Download)
+   * function close_downloadc closes the download.
+   * pre-requisites: download_objectc
+   * inputs: Download (Object)
+   * output: Error (Object)
 
-### delete_objectc(BucketRef, String)
-    * function to delete an object in a bucket
-    * pre-requisites: open_bucket() function has been already called, successfully
-    * inputs: valid BucketRef, Object Path (String)
-    * output: Error (string) if any else None
+### download_readc(Download, Pointer, size_t)
+   * function download_readc downloads from object's data stream into bytes up to length amount.
+   * pre-requisites: download_objectc
+   * inputs: Download (Object), Pointer (Buffer), Length(size_t) 
+   * output: ReadResult  (Object)
 
-### uploadc(BucketRef, String, UploadOptions)
-    * function to get uploader reference used to upload data to Storj (V3) bucket's path
-    * pre-requisites: open_bucket() function has been already called
-    * inputs: Bucket Reference (BucketRef), Storj Path/File Name (String) within the opened bucket, Upload Options (UploadOptions)
-    * output: object contains error (if any ,else empty string) and data (UploadRef)
-    
-### upload_writec(UploaderRef, Buffer, Int)
-    * function to write data to Storj (V3) bucket's path
-    * pre-requisites: upload() function has been already called
-    * inputs: Uploader reference (uploaderRef), Data to upload (Buffer), Size of data to upload (Int)
-    * output: object contains error (if any ,else empty string) and data (int)
-   * **Note:** The Data to upload (buffer) passed to function should be a uint8 pointer only. 
-    
-### upload_commitc(UploaderRef)
-    * function to commit and finalize file for uploaded data to Storj (V3) bucket's path
-    * pre-requisites: upload() function has been already called
-    * inputs: Uploader reference (UploaderRef)
-    * output: Error (string) if any else None
-    
-### downloadc(BucketRef, String)
-    * function to get downloader reference to download Storj (V3) object's data and store it on local computer
-    * pre-requisites: open_bucket() function has been already called
-    * inputs: Bucket reference (BucketRef), Storj Path/File Name (String) within the opened bucket
-    * output: Downloader reference (downloaderRef), Error (string) if any else None
+### delete_objectc(Project, String, String)
+   * function delete_objectc deletes an object.
+   * pre-requisites: open_projectc
+   * inputs: Project (Object), Bucket Name (String), Object Key (String) 
+   * output: ObjectResult  (Object)
 
-### download_readc(DownloaderRef, Buffer, Int)
-    * function to read Storj (V3) object's data and return the data
-    * pre-requisites: download() function has been already called
-    * inputs: Downloader Reference (DownloaderRef), Buffer,Length of data to download (int)
-    * output: object contains error (if any ,else empty string) and data (int)
+### access_sharec(Access, Permission, SharePrefix, int)
+   * function access_sharec creates new access grant with specific permission. Permission will be applied to prefixes when defined.
+   * pre-requisites: parse_accessc
+   * inputs: Access (Object), Permission (Object), Share Prefix (Object), prefix count (int)
+   * output: String Result (Object)
 
-### download_closec(DownloaderRef)
-    * function to close downloader after completing the data read process
-    * pre-requisites: downloadc() function has been already called
-    * inputs: Downloader Reference (DownloaderRef)
-    * output: Error (string) if any else None
+### list_objectsc(Project, String, ListObjectsOptions) 
+   * function list_objectsc lists objects
+   * pre-requisites: open_projectc
+   * inputs: Project (Object), Bucket Name(String), ListObjectsOptions(Object) 
+   * output: ObjectList (Object)
 
-### open_objectc(BucketRef,String)
-    * function to an Object handle, if authorized
-    * pre-requisites: open_bucket() function has been already called
-    * inputs: Bucket Reference (BucketRef),objectPath(String)
-    * output: object contains error (if any ,else empty string) and data (ObjectRef)
+### access_serializec(Access)
+   * function access_serializec serializes access grant into a string.
+   * pre-requisites: parse_accessc
+   * inputs: Access (Object)
+   * output: String Result (object)
 
-### close_objectc(ObjectRef)
-    * function to closes the object
-    * pre-requisites: open_objectc() function has been already called
-    * inputs: object Reference (ObjectRef)
-    * output: error if any else empty string
+### upload_infoc(Upload)
+   * function upload_infoc returns the last information about the uploaded object.
+   * pre-requisites: upload_objectc
+   * inputs: Upload (Object)
+   * output: Object Result (object)
 
-### get_object_metac(ObjectRef)
-    * function to close downloader after completing the data read process
-    * pre-requisites: open_object() function has been already called
-    * inputs: object Reference (ObjectRef)
-    * output: object contains error (if any ,else empty string) and data (ObjectMeta)
+### upload_abortc(Upload)
+   * function upload_abortc aborts an upload.
+   * pre-requisites: upload_objectc
+   * inputs: Upload (Object)
+   * output: Error (Object)
 
-### get_scope_satellite_addressc(ScopeRef)
-    * function to gets Scope satellite address
-    * pre-requisites: new_scopec() function has been already called
-    * inputs: Scope Reference (ScopeRef)
-    * output: object contains error (if any ,else empty string) and data (string)
+### download_infoc(Download)
+   * function download_infoc returns information about the downloaded object.
+   * pre-requisites: download_objectc
+   * inputs: Download (Object)
+   * output: Object Result (Object)
 
-### serialize_scopec(ScopeRef)
-    * function to serializes the Scope to a string
-    * pre-requisites: new_scopec() function has been already called
-    * inputs: Scope Reference (ScopeRef)
-    * output: object contains error (if any ,else empty string) and data (String)
+### upload_set_custom_metadatac(Upload, CustomMetadata)
+   * function upload_set_custom_metadatac set custom meta information
+   * pre-requisites: upload_objectc
+   * inputs: Upload (Object), CustomMetadata 
+   * output: Error (object)
 
-### parse_scopec(ScopeRef)
-    * function to parses an Scope
-    * pre-requisites: new_scopec() function has been already called
-    * inputs: ScopeRef Reference (ScopeRef)
-    * output: object contains error (if any ,else empty string) and data (ScopeRef)
-
-### get_scope_enc_accessc(ScopeRef)
-    * function to get Scope encryption access
-    * pre-requisites: new_scopec() function has been already called
-    * inputs: Scope Reference (ScopeRef)
-    * output: object contains error (if any ,else empty string) and data (EncryptionAccessRef)
-
-### get_scope_api_keyc(ScopeRef)
-    * function to get Scope APIKey
-    * pre-requisites: new_scopec() function has been already called
-    * inputs: scope Reference (ScopeRef)
-    * output: object contains error (if any ,else empty string) and data (APIKeyRef)
-
-### restrict_scopec(ScopeRef,Object)
-    * function to restricts a given scope with the provided caveat and encryption restrictions
-    * pre-requisites: new_scope() function has been already called
-    * inputs: scope reference (ScopeRef) , caveat(object),encryptionRestriction(object)
-    * output: object contains error (if any ,else empty string) and data (ScopeRef)
-
-### new_encryption_access_with_default_keyc(Int)
-    * function to  creates an encryption access context with a default key set
-    * pre-requisites: new_scope() function has been already called
-    * inputs: key(int)
-    * output: object contains error (if any ,else empty string) and data (EncryptionAccessRef)
-
-### new_scopec(String ,APIKeyRef, EncryptionAccessRef)
-    * function to creates new Scope	
-    * pre-requisites: parse_api_keyc() and get_encryption_accessc() functions have been already called
-    * inputs: satellite address (string), api key refernce (APIKeyRef),  serialized encryption access (EncryptionAccessRef)
-    * output: object contains error (if any ,else empty string) and data (ScopeRef)
 

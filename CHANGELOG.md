@@ -1,5 +1,11 @@
 # Storj-Nodejs Changelog
 
+## [0.10.0] - 13-04-2020
+### Changelog:
+* Updated README.md
+* Updated Project according to RC 1.0
+* Resolved windows issue
+
 ## [0.9.2] - 05-02-2020
 ### Changelog:
 * Updated README.md
