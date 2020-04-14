@@ -72,7 +72,7 @@ The sample *HelloStorj.js* code calls the *libUplinkNode.js* binding module to d
    * inputs: satellite address (String),API key (String) and passphrase (String)
    * output: AccessResult (Object)
 
-### open_project(Access)
+### open_projectc(Access)
    * function open_project opens project using access grant.
    * pre-requisites: request_access_with_passphrasec
    * inputs: Access (Object)
@@ -204,4 +204,15 @@ The sample *HelloStorj.js* code calls the *libUplinkNode.js* binding module to d
    * inputs: Upload (Object), CustomMetadata 
    * output: Error (object)
 
+## Tested On
+### MacOS
+   * OS version : 10.15.3
+   * Node version : 13.6.0
 
+### Windows
+   * OS version : Windows 10
+   * Node version : v10.18.1
+
+### Ubuntu
+   * OS version : 16.04
+   * Node version : 10.12.0
