@@ -1,11 +1,11 @@
 {
   "name": "storj-nodejs",
-  "version": "0.10.1",
+  "version": "0.10.2",
   "description": "Storj-NodeJS bindings package",
   "main": "libUplinkNode.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "preinstall": "node build.js",
+    "preinstall": "make",
     "install": "(node-gyp configure) && (node-gyp rebuild)"
   },
   "repository": {
@@ -27,7 +27,7 @@
   "homepage": "https://github.com/utropicmedia/storj-nodejs#readme",
   "dependencies": {
     "bindings": "^1.5.0",
-    "dotenv": "^8.2.0",
     "node-gyp": "^6.1.0"
-  }
+  },
+  "devDependencies": {}
 }

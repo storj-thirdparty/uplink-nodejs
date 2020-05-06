@@ -1,3 +1,5 @@
+const process = require('process');
+process.chdir(__dirname);
 var storjnodejs = require('bindings')('storjnodejs');
 
 class ListBucketsOptions {
@@ -62,6 +64,14 @@ class CustomMetadataEntry {
         this.value_length=value_length;    
     }
 }
+
+class Config {
+    constructor(user_agent="", dial_timeout_milliseconds=0,temp_directory="") {
+        this.user_agent=user_agent;
+        this.dial_timeout_milliseconds=dial_timeout_milliseconds;
+        this.temp_directory=temp_directory;
+    }
+}
 //exporting function and object
 module.exports = {
     storj_nodejs : storjnodejs,
@@ -72,5 +82,6 @@ module.exports = {
     ListObjectsOptions : ListObjectsOptions,
     CustomMetadataEntry : CustomMetadataEntry,
     CustomMetadata : CustomMetadata,
-    SharePrefix : SharePrefix
+    SharePrefix : SharePrefix,
+    Config : Config
 }

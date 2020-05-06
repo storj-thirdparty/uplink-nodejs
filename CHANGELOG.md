@@ -1,5 +1,11 @@
 # Storj-Nodejs Changelog
 
+## [0.10.2] - 06-05-2020
+### Changelog:
+* Updated README.md
+* Add Makefile
+* Resloved MacOS Image not fount issue
+
 ## [0.10.1] - 14-04-2020
 ### Changelog:
 * Updated README.md

@@ -64,16 +64,16 @@ char* itoa(int num, char* str, int base)
 }
 
 // createObjectResult function creates NAPI type ObjectResult for returning it to javascript
-napi_value createObjectResult(napi_env env,Object* lO_ObjectPtr,Error* lO_ErrorPtr){
+napi_value createObjectResult(napi_env env,Object* objectPtr,Error* error_result){
   napi_value returnObject,objectNAPI,errorObject,SystemMetadataNAPI,CustomMetadataNAPI,CustomMetadataEntryNAPI;
   napi_status status;
 
   status = napi_create_object(env,&returnObject);
   assert(status == napi_ok);
 
-  if(lO_ObjectPtr!=NULL){
+  if(objectPtr!=NULL){
 
-    Object lO_Object = *(lO_ObjectPtr);
+    Object object_result = *(objectPtr);
 
     status = napi_create_object(env,&objectNAPI);
     assert(status == napi_ok);
@@ -88,11 +88,11 @@ napi_value createObjectResult(napi_env env,Object* lO_ObjectPtr,Error* lO_ErrorP
     assert(status == napi_ok);
     
     napi_value keyObjectNAPI;
-    status = napi_create_string_utf8(env,lO_ObjectPtr->key,NAPI_AUTO_LENGTH,&keyObjectNAPI);
+    status = napi_create_string_utf8(env,objectPtr->key,NAPI_AUTO_LENGTH,&keyObjectNAPI);
     assert(status == napi_ok);
     
     napi_value is_prefixNAPI;
-    if(lO_ObjectPtr->is_prefix){
+    if(objectPtr->is_prefix){
       status = napi_create_int64(env, 1, &is_prefixNAPI);
       assert(status == napi_ok);
     }else{
@@ -101,33 +101,33 @@ napi_value createObjectResult(napi_env env,Object* lO_ObjectPtr,Error* lO_ErrorP
     }
 
     //
-    SystemMetadata lO_SystemMetadata;
-    CustomMetadata lO_CustomMetadata;
-    CustomMetadataEntry lO_CustomMetadataEntry;
-    lO_SystemMetadata = lO_Object.system;
-    lO_CustomMetadata = lO_Object.custom;
+    SystemMetadata systemMetadata;
+    CustomMetadata customMetadata;
+    CustomMetadataEntry customMetadataEntry;
+    systemMetadata = object_result.system;
+    customMetadata = object_result.custom;
     napi_value entriesArray;
     status = napi_create_object(env,&entriesArray);
     assert(status == napi_ok);
     char empty[]="";
-    if(lO_CustomMetadata.count>0){
-      CustomMetadataEntry* CustomMetadataEntryListPointer = lO_CustomMetadata.entries;
-      for(int j=0;j<lO_CustomMetadata.count;j++){
-        lO_CustomMetadataEntry = *(CustomMetadataEntryListPointer+j);
+    if(customMetadata.count>0){
+      CustomMetadataEntry* CustomMetadataEntryListPointer = customMetadata.entries;
+      for(int j=0;j<customMetadata.count;j++){
+        customMetadataEntry = *(CustomMetadataEntryListPointer+j);
         napi_value key_lengthNAPI,value_lengthNAPI,keyNAPI,valueNAPI,customMetaNAPI;
         status = napi_create_object(env,&customMetaNAPI);
         assert(status == napi_ok);
 
-        status = napi_create_int64(env, lO_CustomMetadataEntry.key_length, &key_lengthNAPI);
+        status = napi_create_int64(env, customMetadataEntry.key_length, &key_lengthNAPI);
         assert(status == napi_ok);
     
-        status = napi_create_int64(env, lO_CustomMetadataEntry.value_length, &value_lengthNAPI);
+        status = napi_create_int64(env, customMetadataEntry.value_length, &value_lengthNAPI);
         assert(status == napi_ok);
 
-        status = napi_create_string_utf8(env,lO_CustomMetadataEntry.key,NAPI_AUTO_LENGTH,&keyNAPI);
+        status = napi_create_string_utf8(env,customMetadataEntry.key,NAPI_AUTO_LENGTH,&keyNAPI);
         assert(status == napi_ok);
         
-        status = napi_create_string_utf8(env,lO_CustomMetadataEntry.value,NAPI_AUTO_LENGTH,&valueNAPI);
+        status = napi_create_string_utf8(env,customMetadataEntry.value,NAPI_AUTO_LENGTH,&valueNAPI);
         assert(status == napi_ok);
         
         status = napi_set_named_property(env,customMetaNAPI,"key",keyNAPI);
@@ -161,19 +161,19 @@ napi_value createObjectResult(napi_env env,Object* lO_ObjectPtr,Error* lO_ErrorP
     
     
     napi_value createdNAPI;
-    status = napi_create_int64(env, lO_ObjectPtr->system.created, &createdNAPI);
+    status = napi_create_int64(env, objectPtr->system.created, &createdNAPI);
     assert(status == napi_ok);
     
     napi_value expiresNAPI;
-    status = napi_create_int64(env, lO_ObjectPtr->system.expires, &expiresNAPI);
+    status = napi_create_int64(env, objectPtr->system.expires, &expiresNAPI);
     assert(status == napi_ok);
 
     napi_value countNAPI;
-    status = napi_create_int64(env, lO_CustomMetadata.count, &countNAPI);
+    status = napi_create_int64(env, customMetadata.count, &countNAPI);
     assert(status == napi_ok);
 
     napi_value content_lengthNAPI;
-    status = napi_create_int64(env, lO_SystemMetadata.content_length, &content_lengthNAPI);
+    status = napi_create_int64(env, systemMetadata.content_length, &content_lengthNAPI);
     assert(status == napi_ok);
     
     status = napi_set_named_property(env,CustomMetadataNAPI,"entries",entriesArray);
@@ -226,19 +226,19 @@ napi_value createObjectResult(napi_env env,Object* lO_ObjectPtr,Error* lO_ErrorP
     status = napi_set_named_property(env,returnObject,"error",errorObject);
     assert(status == napi_ok);
 
-  }else if(lO_ErrorPtr!=NULL){
+  }else if(error_result!=NULL){
     
-    Error lO_Error = *(lO_ErrorPtr);
+    Error errorResult = *(error_result);
     
     status = napi_create_object(env,&errorObject);
     assert(status == napi_ok);
     
     napi_value errorCode;
-    status = napi_create_int64(env, lO_Error.code, &errorCode);
+    status = napi_create_int64(env, errorResult.code, &errorCode);
     assert(status == napi_ok);
     
     napi_value errorMessage;
-    status = napi_create_string_utf8(env,lO_Error.message,NAPI_AUTO_LENGTH,&errorMessage);
+    status = napi_create_string_utf8(env,errorResult.message,NAPI_AUTO_LENGTH,&errorMessage);
     assert(status == napi_ok);
     
     status = napi_set_named_property(env,errorObject,"code",errorCode);
@@ -464,19 +464,19 @@ napi_value parse_accessc(napi_env env, napi_callback_info info){
   status = napi_get_value_string_utf8(env,args[0],accessString,convertedvalue,&bufsize);
   assert(status == napi_ok);
 
-	AccessResult lO_AccessResult = parse_access(accessString);
-	if(lO_AccessResult.access==NULL){
-		if(lO_AccessResult.error!=NULL){
-			Error lO_errorObject = *(lO_AccessResult.error);
-			char* errorMessagePtr = lO_errorObject.message;
-			return createResult(env,"access",0,lO_errorObject.code,&errorMessagePtr[0]);
+	AccessResult access_Result = parse_access(accessString);
+	if(access_Result.access==NULL){
+		if(access_Result.error!=NULL){
+			Error error_result = *(access_Result.error);
+			char* errorMessagePtr = error_result.message;
+			return createResult(env,"access",0,error_result.code,&errorMessagePtr[0]);
 		  }else{
 			char blank[] = "";
 			return createResult(env,"access",0,0,&blank[0]);
 		  }
 	}
-	Access lO_Access = *(lO_AccessResult.access);
-	size_t handlevalue = lO_Access._handle;
+	Access access = *(access_Result.access);
+	size_t handlevalue = access._handle;
 	char blank[] = "";
 	return createResult(env,"access",handlevalue,0,&blank[0]);
 }
@@ -555,25 +555,209 @@ napi_value request_access_with_passphrasec(napi_env env, napi_callback_info info
   status = napi_get_value_string_utf8(env,args[2],passphrase,convertedvalue,&bufsize);
   assert(status == napi_ok);
 
-  AccessResult lO_AccessResult = request_access_with_passphrase(satellite_address,api_key,passphrase);
+  AccessResult access_Result = request_access_with_passphrase(satellite_address,api_key,passphrase);
       
-	  if(lO_AccessResult.access==NULL){
+	  if(access_Result.access==NULL){
 		
-		if(lO_AccessResult.error!=NULL){
-		  Error lO_errorObject = *(lO_AccessResult.error);
-		  char* errorMessagePtr = lO_errorObject.message;
-		  return createResult(env,"access",0,lO_errorObject.code,&errorMessagePtr[0]);
+		if(access_Result.error!=NULL){
+		  Error error_result = *(access_Result.error);
+		  char* errorMessagePtr = error_result.message;
+		  return createResult(env,"access",0,error_result.code,&errorMessagePtr[0]);
 		}else{
 		  char blank[] = "";
 		  return createResult(env,"access",0,-1,&blank[0]);
 		}
 	  }
-      Access lO_Access = *(lO_AccessResult.access);
-      size_t handlevalue = lO_Access._handle;
+      Access access = *(access_Result.access);
+      size_t handlevalue = access._handle;
       char blank[] = "";
       return createResult(env,"access",handlevalue,0,&blank[0]);
 
 }
+
+
+  //  * function config_request_access_with_passphrasec requests satellite for a new access grant using a passhprase  and config
+  //  * pre-requisites: None
+  //  * inputs: satellite address (String),API key (String) and passphrase (String)
+  //  * output: AccessResult (Object)
+napi_value config_request_access_with_passphrasec(napi_env env, napi_callback_info info){
+  napi_status status;
+
+  size_t argc = 4;
+  napi_value args[4];
+
+  status = napi_get_cb_info(env, info,&argc,args, nullptr ,nullptr);
+  assert(status == napi_ok);
+  
+  if (argc < 4) {
+    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!! excepted 3 arguments\n");
+    return NULL;
+  }
+
+  Config config;
+
+  napi_valuetype checktypeofinput;
+  status = napi_typeof(env,args[0],&checktypeofinput);
+  assert(status == napi_ok);
+
+  if(checktypeofinput!=napi_object){
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! First argument excepted to be object type\n");
+    return NULL;
+  }
+
+  status = napi_typeof(env,args[1],&checktypeofinput);
+  assert(status == napi_ok);
+
+  if(checktypeofinput!=napi_string){
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! Second argument excepted to be string type\n");
+    return NULL;
+  }
+
+  status = napi_typeof(env,args[2],&checktypeofinput);
+  assert(status == napi_ok);
+
+  if(checktypeofinput!=napi_string){
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! Third argument excepted to be string type\n");
+    return NULL;
+  }
+
+  status = napi_typeof(env,args[3],&checktypeofinput);
+  assert(status == napi_ok);
+
+  if(checktypeofinput!=napi_string){
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! Fourth argument excepted to be string type\n");
+    return NULL;
+  }
+  //
+  bool configUserAgentExists,configDialTimeoutMilliSecondsExists,configTempDirectoryExists = false;
+  napi_value configUserAgentNAPI,configDialTimeoutMilliSecondsNAPI,configTempDirectoryNAPI;
+  char* user_agent_property = "user_agent";
+  char* dial_timeout_milliseconds_property = "dial_timeout_milliseconds";
+  char* temp_directory_property = "temp_directory";
+  
+  status = napi_create_string_utf8(env,user_agent_property,NAPI_AUTO_LENGTH ,&configUserAgentNAPI);
+  assert(status == napi_ok);
+  //
+  status = napi_has_property(env,args[0],configUserAgentNAPI,&configUserAgentExists);
+  assert(status == napi_ok);
+  //
+  if(!configUserAgentExists){
+    napi_throw_type_error(env,nullptr,"\nInvalid Config Object \n");
+    return NULL;
+  }
+  //
+  status = napi_create_string_utf8(env,dial_timeout_milliseconds_property,NAPI_AUTO_LENGTH ,&configDialTimeoutMilliSecondsNAPI);
+  assert(status == napi_ok);
+  //
+  status = napi_has_property(env,args[0],configDialTimeoutMilliSecondsNAPI,&configDialTimeoutMilliSecondsExists);
+  assert(status == napi_ok);
+  //
+  if(!configDialTimeoutMilliSecondsExists){
+    napi_throw_type_error(env,nullptr,"\nInvalid Config Object \n");
+    return NULL;
+  }
+  //
+  status = napi_create_string_utf8(env,temp_directory_property,NAPI_AUTO_LENGTH ,&configTempDirectoryNAPI);
+  assert(status == napi_ok);
+  //
+  status = napi_has_property(env,args[0],configTempDirectoryNAPI,&configTempDirectoryExists);
+  assert(status == napi_ok);
+  //
+  if(!configTempDirectoryExists){
+    napi_throw_type_error(env,nullptr,"\nInvalid Config Object \n");
+    return NULL;
+  }
+  //
+  napi_value user_agentNAPI;
+  status = napi_get_named_property(env,args[0],"user_agent",&user_agentNAPI);
+  assert(status == napi_ok);
+  //
+  napi_value dial_timeout_millisecondsNAPI;
+  status = napi_get_named_property(env,args[0],"dial_timeout_milliseconds",&dial_timeout_millisecondsNAPI);
+  assert(status == napi_ok);
+  //
+  napi_value temp_directoryNAPI;
+  status = napi_get_named_property(env,args[0],"temp_directory",&temp_directoryNAPI);
+  assert(status == napi_ok);
+  //
+  size_t bufsize = 0;
+  size_t convertedvalue = 0;
+  status = napi_get_value_string_utf8(env, user_agentNAPI,NULL,bufsize,&convertedvalue);
+  assert(status == napi_ok);
+  convertedvalue = convertedvalue+1;
+
+  char* user_agent =  new char[convertedvalue];
+  status = napi_get_value_string_utf8(env,user_agentNAPI,user_agent,convertedvalue,&bufsize);
+  assert(status == napi_ok);
+  //
+  bufsize = 0;
+  convertedvalue = 0;
+  status = napi_get_value_string_utf8(env, temp_directoryNAPI,NULL,bufsize,&convertedvalue);
+  assert(status == napi_ok);
+  convertedvalue = convertedvalue+1;
+  
+  char* temp_directory =  new char[convertedvalue];
+  status = napi_get_value_string_utf8(env,temp_directoryNAPI,temp_directory,convertedvalue,&bufsize);
+  assert(status == napi_ok);
+  //
+  int32_t dial_timeout_milliseconds;
+  status = napi_get_value_int32(env,dial_timeout_millisecondsNAPI,&dial_timeout_milliseconds);
+  assert(status == napi_ok);
+  //
+  config.temp_directory = temp_directory;
+  config.dial_timeout_milliseconds = dial_timeout_milliseconds;
+  config.user_agent = user_agent;
+  //
+  bufsize = 0;
+  convertedvalue = 0;
+  status = napi_get_value_string_utf8(env, args[1],NULL,bufsize,&convertedvalue);
+  assert(status == napi_ok);
+  convertedvalue = convertedvalue+1;
+  
+  char* satellite_address =  new char[convertedvalue];
+  status = napi_get_value_string_utf8(env,args[1],satellite_address,convertedvalue,&bufsize);
+  assert(status == napi_ok);
+  
+  bufsize = 0;
+  convertedvalue = 0;
+  status = napi_get_value_string_utf8(env, args[2],NULL,bufsize,&convertedvalue);
+  assert(status == napi_ok);
+  convertedvalue = convertedvalue+1;
+  
+  char* api_key =  new char[convertedvalue];
+  status = napi_get_value_string_utf8(env,args[2],api_key,convertedvalue,&bufsize);
+  assert(status == napi_ok);
+
+  bufsize = 0;
+  convertedvalue = 0;
+  status = napi_get_value_string_utf8(env, args[3],NULL,bufsize,&convertedvalue);
+  assert(status == napi_ok);
+  convertedvalue = convertedvalue+1;
+  
+  char* passphrase =  new char[convertedvalue];
+  status = napi_get_value_string_utf8(env,args[3],passphrase,convertedvalue,&bufsize);
+  assert(status == napi_ok);
+
+  AccessResult access_Result = config_request_access_with_passphrase(config,satellite_address,api_key,passphrase);
+      
+    if(access_Result.access==NULL){
+    
+    if(access_Result.error!=NULL){
+      Error error_result = *(access_Result.error);
+      char* errorMessagePtr = error_result.message;
+      return createResult(env,"access",0,error_result.code,&errorMessagePtr[0]);
+    }else{
+      char blank[] = "";
+      return createResult(env,"access",0,-1,&blank[0]);
+    }
+    }
+      Access access = *(access_Result.access);
+      size_t handlevalue = access._handle;
+      char blank[] = "";
+      return createResult(env,"access",handlevalue,0,&blank[0]);
+
+}
+
 
   //  * function open_project opens project using access grant.
   //  * pre-requisites: request_access_with_passphrasec
@@ -613,28 +797,182 @@ napi_value open_projectc(napi_env env, napi_callback_info info){
     napi_throw_type_error(env,nullptr,"\nInvalid Object \n");
     return NULL;
   }
-  Access lO_Access;
-  lO_Access._handle = getHandleValue(env,args[0]);
-  if(lO_Access._handle==0){
+  Access access;
+  access._handle = getHandleValue(env,args[0]);
+  if(access._handle==0){
     return NULL;
   }
-      ProjectResult lO_projectResult = open_project(&lO_Access);
-      if(lO_projectResult.project==NULL){
+      ProjectResult project_result = open_project(&access);
+      if(project_result.project==NULL){
         
-        if(lO_projectResult.error!=NULL){
-          Error lO_errorObject = *(lO_projectResult.error);
-          char* errorMessagePtr = lO_errorObject.message;
-          return createResult(env,"project",0,lO_errorObject.code,errorMessagePtr);
+        if(project_result.error!=NULL){
+          Error error_result = *(project_result.error);
+          char* errorMessagePtr = error_result.message;
+          return createResult(env,"project",0,error_result.code,errorMessagePtr);
         }else{
           char blank[] = "";
           return createResult(env,"project",0,-1,&blank[0]);
         }
       }
-      Project lO_Project = *(lO_projectResult.project);
-      size_t handlevalue = lO_Project._handle;
+      Project project = *(project_result.project);
+      size_t handlevalue = project._handle;
       char blank[] = "";
       return createResult(env,"project",handlevalue,0,&blank[0]);
 }
+
+
+  //  * function config_open_project opens project using access grant and config.
+  //  * pre-requisites: request_access_with_passphrasec
+  //  * inputs: Access (Object)
+  //  * output: ProjectResult (Object)
+napi_value config_open_projectc(napi_env env, napi_callback_info info){
+  napi_status status;
+
+  size_t argc = 2;
+  napi_value args[2];
+
+  status = napi_get_cb_info(env, info,&argc,args, nullptr ,nullptr);
+  assert(status == napi_ok);
+
+  if (argc < 2) {
+    napi_throw_type_error(env, nullptr, "\nWrong number of arguments!! excepted 1 arguments\n");
+    return NULL;
+  }
+  Config config;
+  napi_valuetype checktypeofinput;
+  status = napi_typeof(env,args[0],&checktypeofinput);
+  assert(status == napi_ok);
+
+  if(checktypeofinput!=napi_object){
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! First argument excepted to be object type\n");
+    return NULL;
+  }
+
+  status = napi_typeof(env,args[1],&checktypeofinput);
+  assert(status == napi_ok);
+
+  if(checktypeofinput!=napi_object){
+    napi_throw_type_error(env,nullptr,"\nWrong datatype !! Second argument excepted to be object type\n");
+    return NULL;
+  }
+  //
+  bool configUserAgentExists,configDialTimeoutMilliSecondsExists,configTempDirectoryExists = false;
+  napi_value configUserAgentNAPI,configDialTimeoutMilliSecondsNAPI,configTempDirectoryNAPI;
+  char* user_agent_property = "user_agent";
+  char* dial_timeout_milliseconds_property = "dial_timeout_milliseconds";
+  char* temp_directory_property = "temp_directory";
+  
+  status = napi_create_string_utf8(env,user_agent_property,NAPI_AUTO_LENGTH ,&configUserAgentNAPI);
+  assert(status == napi_ok);
+  //
+  status = napi_has_property(env,args[0],configUserAgentNAPI,&configUserAgentExists);
+  assert(status == napi_ok);
+  //
+  if(!configUserAgentExists){
+    napi_throw_type_error(env,nullptr,"\nInvalid Config Object \n");
+    return NULL;
+  }
+  //
+  status = napi_create_string_utf8(env,dial_timeout_milliseconds_property,NAPI_AUTO_LENGTH ,&configDialTimeoutMilliSecondsNAPI);
+  assert(status == napi_ok);
+  //
+  status = napi_has_property(env,args[0],configDialTimeoutMilliSecondsNAPI,&configDialTimeoutMilliSecondsExists);
+  assert(status == napi_ok);
+  //
+  if(!configDialTimeoutMilliSecondsExists){
+    napi_throw_type_error(env,nullptr,"\nInvalid Config Object \n");
+    return NULL;
+  }
+  //
+  status = napi_create_string_utf8(env,temp_directory_property,NAPI_AUTO_LENGTH ,&configTempDirectoryNAPI);
+  assert(status == napi_ok);
+  //
+  status = napi_has_property(env,args[0],configTempDirectoryNAPI,&configTempDirectoryExists);
+  assert(status == napi_ok);
+  //
+  if(!configTempDirectoryExists){
+    napi_throw_type_error(env,nullptr,"\nInvalid Config Object \n");
+    return NULL;
+  }
+  //
+  napi_value user_agentNAPI;
+  status = napi_get_named_property(env,args[0],"user_agent",&user_agentNAPI);
+  assert(status == napi_ok);
+  //
+  napi_value dial_timeout_millisecondsNAPI;
+  status = napi_get_named_property(env,args[0],"dial_timeout_milliseconds",&dial_timeout_millisecondsNAPI);
+  assert(status == napi_ok);
+  //
+  napi_value temp_directoryNAPI;
+  status = napi_get_named_property(env,args[0],"temp_directory",&temp_directoryNAPI);
+  assert(status == napi_ok);
+  //
+  size_t bufsize = 0;
+  size_t convertedvalue = 0;
+  status = napi_get_value_string_utf8(env, user_agentNAPI,NULL,bufsize,&convertedvalue);
+  assert(status == napi_ok);
+  convertedvalue = convertedvalue+1;
+
+  char* user_agent =  new char[convertedvalue];
+  status = napi_get_value_string_utf8(env,user_agentNAPI,user_agent,convertedvalue,&bufsize);
+  assert(status == napi_ok);
+  //
+  bufsize = 0;
+  convertedvalue = 0;
+  status = napi_get_value_string_utf8(env, temp_directoryNAPI,NULL,bufsize,&convertedvalue);
+  assert(status == napi_ok);
+  convertedvalue = convertedvalue+1;
+  
+  char* temp_directory =  new char[convertedvalue];
+  status = napi_get_value_string_utf8(env,temp_directoryNAPI,temp_directory,convertedvalue,&bufsize);
+  assert(status == napi_ok);
+  //
+  int32_t dial_timeout_milliseconds;
+  status = napi_get_value_int32(env,dial_timeout_millisecondsNAPI,&dial_timeout_milliseconds);
+  assert(status == napi_ok);
+  //
+  config.temp_directory = temp_directory;
+  config.dial_timeout_milliseconds = dial_timeout_milliseconds;
+  config.user_agent = user_agent;
+  //
+  bool propertyexists = false;
+  napi_value ObjectkeyNAPI;
+  char* handle = "_handle";
+  status = napi_create_string_utf8(env,handle,NAPI_AUTO_LENGTH ,&ObjectkeyNAPI);
+  assert(status == napi_ok);
+  //
+  status = napi_has_property(env,args[1],ObjectkeyNAPI,&propertyexists);
+  assert(status == napi_ok);
+  if(!propertyexists){
+    napi_throw_type_error(env,nullptr,"\nInvalid Object \n");
+    return NULL;
+  }
+  Access access;
+  access._handle = getHandleValue(env,args[1]);
+  if(access._handle==0){
+    return NULL;
+  }
+  
+
+  ProjectResult project_result = config_open_project(config,&access);
+  if(project_result.project==NULL){
+    
+    if(project_result.error!=NULL){
+      Error error_result = *(project_result.error);
+      char* errorMessagePtr = error_result.message;
+      return createResult(env,"project",0,error_result.code,errorMessagePtr);
+    }else{
+      char blank[] = "";
+      return createResult(env,"project",0,-1,&blank[0]);
+    }
+  }
+    Project project = *(project_result.project);
+    size_t handlevalue = project._handle;
+    char blank[] = "";
+    return createResult(env,"project",handlevalue,0,&blank[0]);
+}
+
+
 
   //  * function close_projectc closes the project.
   //  * pre-requisites: open_projectc
@@ -676,16 +1014,16 @@ napi_value close_projectc(napi_env env, napi_callback_info info){
     return NULL;
   }
 
-  Project lO_Project;
-  lO_Project._handle = getHandleValue(env,args[0]);
-  if(lO_Project._handle==0){
+  Project project_result;
+  project_result._handle = getHandleValue(env,args[0]);
+  if(project_result._handle==0){
     return NULL;
   }
-      Error* lO_ErrorPtr = close_project(&lO_Project);
-      if(lO_ErrorPtr!=NULL){
-        Error lO_Error = *(lO_ErrorPtr);
-        char* errorMessagePtr = lO_Error.message;
-        return createError(env,lO_Error.code,&errorMessagePtr[0]);
+      Error* error_result = close_project(&project_result);
+      if(error_result!=NULL){
+        Error errorResult = *(error_result);
+        char* errorMessagePtr = errorResult.message;
+        return createError(env,errorResult.code,&errorMessagePtr[0]);
       }
       char blank[] = "";
       return createError(env,0,&blank[0]);
@@ -747,29 +1085,29 @@ napi_value stat_bucketc(napi_env env, napi_callback_info info){
     return NULL;
   }
 
-  Project lO_Project;
-  lO_Project._handle = getHandleValue(env,args[0]);
-  if(lO_Project._handle==0){
+  Project project_result;
+  project_result._handle = getHandleValue(env,args[0]);
+  if(project_result._handle==0){
     return NULL;
   }
-  BucketResult lO_bucketResult = stat_bucket(&lO_Project, bucketName);
+  BucketResult bucket_Result = stat_bucket(&project_result, bucketName);
 
-      if(lO_bucketResult.bucket==NULL){
+      if(bucket_Result.bucket==NULL){
         
-        if(lO_bucketResult.error!=NULL){
-          Error lO_errorObject = *(lO_bucketResult.error);
-          char* errorMessagePtr = lO_errorObject.message;
+        if(bucket_Result.error!=NULL){
+          Error error_result = *(bucket_Result.error);
+          char* errorMessagePtr = error_result.message;
           char blank[] = "";
-          return createBucketResult(env,"bucket",0,&blank[0],lO_errorObject.code,&errorMessagePtr[0]);
+          return createBucketResult(env,"bucket",0,&blank[0],error_result.code,&errorMessagePtr[0]);
 
         }else{
           char blank[] = "";
           return createBucketResult(env,"bucket",-1,&blank[0],-1,&blank[0]);
         }
       }
-      Bucket lO_bucket = *(lO_bucketResult.bucket);
-      char* bucketNamePtr = lO_bucket.name;
-      int64_t bucketCreated = lO_bucket.created;
+      Bucket bucket_result = *(bucket_Result.bucket);
+      char* bucketNamePtr = bucket_result.name;
+      int64_t bucketCreated = bucket_result.created;
       char blank[] = "";
       return createBucketResult(env,"bucket",bucketCreated,bucketNamePtr,0,&blank[0]);
 }
@@ -832,20 +1170,20 @@ napi_value create_bucketc(napi_env env, napi_callback_info info){
     return NULL;
   }
 
-  Project lO_Project;
-  lO_Project._handle = getHandleValue(env,args[0]);
-  if(lO_Project._handle==0){
+  Project project_result;
+  project_result._handle = getHandleValue(env,args[0]);
+  if(project_result._handle==0){
     return NULL;
   }
   //
-  BucketResult lO_bucketResult = create_bucket(&lO_Project, bucketName);
+  BucketResult bucket_Result = create_bucket(&project_result, bucketName);
     
-    if(lO_bucketResult.bucket==NULL){
-      if(lO_bucketResult.error!=NULL){
-        Error lO_errorObject = *(lO_bucketResult.error);
-        char* errorMessagePtr = lO_errorObject.message;
+    if(bucket_Result.bucket==NULL){
+      if(bucket_Result.error!=NULL){
+        Error error_result = *(bucket_Result.error);
+        char* errorMessagePtr = error_result.message;
         char blank[] = "";
-        return createBucketResult(env,"bucket",0,&blank[0],lO_errorObject.code,&errorMessagePtr[0]);
+        return createBucketResult(env,"bucket",0,&blank[0],error_result.code,&errorMessagePtr[0]);
 
       }else{
         char blank[] = "";
@@ -853,9 +1191,9 @@ napi_value create_bucketc(napi_env env, napi_callback_info info){
       }
    }
 
-    Bucket lO_bucket = *(lO_bucketResult.bucket);
-    char* bucketNamePtr = lO_bucket.name;
-    int64_t bucketCreated = lO_bucket.created;
+    Bucket bucket_result = *(bucket_Result.bucket);
+    char* bucketNamePtr = bucket_result.name;
+    int64_t bucketCreated = bucket_result.created;
     char blank[] = "";
       return createBucketResult(env,"bucket",bucketCreated,bucketNamePtr,0,&blank[0]);
 }
@@ -917,28 +1255,28 @@ napi_value ensure_bucketc(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  Project lO_Project;
-  lO_Project._handle = getHandleValue(env,args[0]);
-  if(lO_Project._handle==0){
+  Project project_result;
+  project_result._handle = getHandleValue(env,args[0]);
+  if(project_result._handle==0){
     return NULL;
   }
   
-	BucketResult lO_bucketResult = ensure_bucket(&lO_Project, bucketName);
-      if(lO_bucketResult.bucket==NULL){
+	BucketResult bucket_Result = ensure_bucket(&project_result, bucketName);
+      if(bucket_Result.bucket==NULL){
         
-        if(lO_bucketResult.error!=NULL){
-          Error lO_errorObject = *(lO_bucketResult.error);
-          char* errorMessagePtr = lO_errorObject.message;
+        if(bucket_Result.error!=NULL){
+          Error error_result = *(bucket_Result.error);
+          char* errorMessagePtr = error_result.message;
           char blank[] = "";
-          return createBucketResult(env,"bucket",0,&blank[0],lO_errorObject.code,&errorMessagePtr[0]);
+          return createBucketResult(env,"bucket",0,&blank[0],error_result.code,&errorMessagePtr[0]);
         }else{
           char blank[] = "";
           return createBucketResult(env,"bucket",-1,&blank[0],-1,&blank[0]);
         }
       }
-      Bucket lO_bucket = *(lO_bucketResult.bucket);
-      char* bucketNamePtr = lO_bucket.name;
-      int64_t bucketCreated = lO_bucket.created;
+      Bucket bucket_result = *(bucket_Result.bucket);
+      char* bucketNamePtr = bucket_result.name;
+      int64_t bucketCreated = bucket_result.created;
       char blank[] = "";
       return createBucketResult(env,"bucket",bucketCreated,bucketNamePtr,0,&blank[0]); 
 }
@@ -1000,29 +1338,29 @@ napi_value delete_bucketc(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  Project lO_Project;
-  lO_Project._handle = getHandleValue(env,args[0]);
-  if(lO_Project._handle==0){
+  Project project_result;
+  project_result._handle = getHandleValue(env,args[0]);
+  if(project_result._handle==0){
     return NULL;
   }
   
-	BucketResult lO_bucketResult = delete_bucket(&lO_Project, bucketName);
-	  if(lO_bucketResult.bucket==NULL){
+	BucketResult bucket_Result = delete_bucket(&project_result, bucketName);
+	  if(bucket_Result.bucket==NULL){
 		
-		if(lO_bucketResult.error!=NULL){
-		  Error lO_errorObject = *(lO_bucketResult.error);
-		  char* errorMessagePtr = lO_errorObject.message;
+		if(bucket_Result.error!=NULL){
+		  Error error_result = *(bucket_Result.error);
+		  char* errorMessagePtr = error_result.message;
 		  char blank[] = "";
-		  return createBucketResult(env,"bucket",0,&blank[0],lO_errorObject.code,&errorMessagePtr[0]);
+		  return createBucketResult(env,"bucket",0,&blank[0],error_result.code,&errorMessagePtr[0]);
 
 		}else{
 		  char blank[] = "";
 		  return createBucketResult(env,"bucket",-1,&blank[0],-1,&blank[0]);
 		}
 	  }
-      Bucket lO_bucket = *(lO_bucketResult.bucket);
-      char* bucketNamePtr = lO_bucket.name;
-      int64_t bucketCreated = lO_bucket.created;
+      Bucket bucket_result = *(bucket_Result.bucket);
+      char* bucketNamePtr = bucket_result.name;
+      int64_t bucketCreated = bucket_result.created;
       char blank[] = "";
       return createBucketResult(env,"bucket",bucketCreated,bucketNamePtr,0,&blank[0]); 
 }
@@ -1075,17 +1413,17 @@ napi_value list_bucketsc(napi_env env, napi_callback_info info) {
     return NULL;
   }
   //
-  Project lO_Project;
-  lO_Project._handle = getHandleValue(env,args[0]);
-  if(lO_Project._handle==0){
+  Project project_result;
+  project_result._handle = getHandleValue(env,args[0]);
+  if(project_result._handle==0){
     return NULL;
   }
-  ListBucketsOptions lO_ListBucketsOptions;
+  ListBucketsOptions listBucketsOptions;
   //
-  BucketIterator *lO_BucketIterator= nullptr;
+  BucketIterator *bucket_resultIterator= nullptr;
 
 	if(checktypeofinput==napi_null){
-        lO_BucketIterator = list_buckets(&lO_Project,NULL);
+        bucket_resultIterator = list_buckets(&project_result,NULL);
 	  }else if(checktypeofinput==napi_object){
 		napi_value cursorNAPI;
 		status = napi_get_named_property(env,args[1],"cursor",&cursorNAPI);
@@ -1099,8 +1437,8 @@ napi_value list_bucketsc(napi_env env, napi_callback_info info) {
 		char* cursor =  new char[convertedvalue];
 		status = napi_get_value_string_utf8(env,cursorNAPI,cursor,convertedvalue,&bufsize);
 		assert(status == napi_ok);
-		lO_ListBucketsOptions.cursor = cursor;
-		lO_BucketIterator = list_buckets(&lO_Project,&lO_ListBucketsOptions);
+		listBucketsOptions.cursor = cursor;
+		bucket_resultIterator = list_buckets(&project_result,&listBucketsOptions);
 
 	  }
 
@@ -1117,14 +1455,14 @@ napi_value list_bucketsc(napi_env env, napi_callback_info info) {
 	  assert(status == napi_ok);
 
 	  int count = 0;
-	  while(bucket_iterator_next(lO_BucketIterator)){
-		  Bucket *lO_bucket = bucket_iterator_item(lO_BucketIterator);
+	  while(bucket_iterator_next(bucket_resultIterator)){
+		  Bucket *bucket_result = bucket_iterator_item(bucket_resultIterator);
 
 		  napi_value BucketInfoObj;
 		  status = napi_create_object(env,&BucketInfoObj);
 		  assert(status == napi_ok);
 
-		  char* bucketNamePtr = lO_bucket->name;
+		  char* bucketNamePtr = bucket_result->name;
 
 		  napi_value bucketName;
 
@@ -1135,7 +1473,7 @@ napi_value list_bucketsc(napi_env env, napi_callback_info info) {
 		  assert(status == napi_ok);
 		  
 		  napi_value createdBucket;
-		  int64_t bucketcreatedvalue = lO_bucket->created;
+		  int64_t bucketcreatedvalue = bucket_result->created;
 
 		  status = napi_create_int64(env, bucketcreatedvalue, &createdBucket);
 		  assert(status == napi_ok);
@@ -1152,7 +1490,7 @@ napi_value list_bucketsc(napi_env env, napi_callback_info info) {
 		  count++;
 	  }
 
-	  Error *err = bucket_iterator_err(lO_BucketIterator);
+	  Error *err = bucket_iterator_err(bucket_resultIterator);
 
 	  if(err==NULL){
 		int32_t code = 0;
@@ -1172,11 +1510,11 @@ napi_value list_bucketsc(napi_env env, napi_callback_info info) {
 		assert(status == napi_ok);
 	  }else{
 		
-		Error lO_Error = *(err);
-		char* messagePtr = lO_Error.message;
+		Error errorResult = *(err);
+		char* messagePtr = errorResult.message;
 		napi_value codenapi,errormessage;
 		
-		status = napi_create_int64(env, lO_Error.code, &codenapi);
+		status = napi_create_int64(env, errorResult.code, &codenapi);
 		assert(status == napi_ok);
 	  
 		status = napi_create_string_utf8(env,&messagePtr[0],NAPI_AUTO_LENGTH,&errormessage);
@@ -1251,9 +1589,9 @@ napi_value stat_objectc(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  Project lO_Project;
-  lO_Project._handle = getHandleValue(env,args[0]);
-  if(lO_Project._handle==0){
+  Project project_result;
+  project_result._handle = getHandleValue(env,args[0]);
+  if(project_result._handle==0){
     return NULL;
   }
 
@@ -1277,11 +1615,11 @@ napi_value stat_objectc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
   
 
-  ObjectResult lO_ObjectResult = stat_object(&lO_Project,bucketName,objectKey);
-	if(lO_ObjectResult.error!=NULL){
-	  return createObjectResult(env,NULL,lO_ObjectResult.error);
+  ObjectResult object_result = stat_object(&project_result,bucketName,objectKey);
+	if(object_result.error!=NULL){
+	  return createObjectResult(env,NULL,object_result.error);
 	}else{
-	  return createObjectResult(env,lO_ObjectResult.object,NULL);
+	  return createObjectResult(env,object_result.object,NULL);
 	}
 }
 
@@ -1349,9 +1687,9 @@ napi_value upload_objectc(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  Project lO_Project;
-  lO_Project._handle = getHandleValue(env,args[0]);
-  if(lO_Project._handle==0){
+  Project project_result;
+  project_result._handle = getHandleValue(env,args[0]);
+  if(project_result._handle==0){
     return NULL;
   }
   size_t bufsize = 0;
@@ -1373,12 +1711,12 @@ napi_value upload_objectc(napi_env env, napi_callback_info info) {
   status = napi_get_value_string_utf8(env,args[2],objectKey,convertedvalue,&bufsize);
   assert(status == napi_ok);
 
-  UploadResult lO_UploadResult;
+  UploadResult upload_result;
       if(checktypeofinput==napi_null){
-        lO_UploadResult = upload_object(&lO_Project,&bucketName[0],&objectKey[0],NULL);
+        upload_result = upload_object(&project_result,&bucketName[0],&objectKey[0],NULL);
       }else{
         
-        UploadOptions lO_UploadOptions;
+        UploadOptions uploadOptions;
         napi_value expiresNAPI;
 
         status = napi_get_named_property(env,args[3],"expires",&expiresNAPI);
@@ -1387,26 +1725,26 @@ napi_value upload_objectc(napi_env env, napi_callback_info info) {
         int64_t expires;
         status = napi_get_value_int64(env,expiresNAPI,&expires);
         assert(status == napi_ok);
-        lO_UploadOptions.expires = expires;
+        uploadOptions.expires = expires;
 
-        lO_UploadResult = upload_object(&lO_Project,bucketName,objectKey,&lO_UploadOptions);
+        upload_result = upload_object(&project_result,bucketName,objectKey,&uploadOptions);
       }
-      if(lO_UploadResult.upload==NULL){
+      if(upload_result.upload==NULL){
         
-        if(lO_UploadResult.error!=NULL){
+        if(upload_result.error!=NULL){
 
-          Error lO_errorObject = *(lO_UploadResult.error);
-          char* errorMessagePtr = lO_errorObject.message;
-          return createResult(env,"upload",0,lO_errorObject.code,&errorMessagePtr[0]);
+          Error error_result = *(upload_result.error);
+          char* errorMessagePtr = error_result.message;
+          return createResult(env,"upload",0,error_result.code,&errorMessagePtr[0]);
         }else{
           char blank[] = "";
           return createResult(env,"upload",0,-1,&blank[0]);
         }
       }
       
-      Upload lO_Upload = *(lO_UploadResult.upload);
+      Upload upload = *(upload_result.upload);
       
-      size_t handlevalue = lO_Upload._handle;
+      size_t handlevalue = upload._handle;
       
       char blank[] = "";
       return createResult(env,"upload",handlevalue,0,&blank[0]);
@@ -1469,9 +1807,9 @@ napi_value upload_writec(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  Upload lO_UploadRef;
-  lO_UploadRef._handle = getHandleValue(env,args[0]);
-  if(lO_UploadRef._handle==0){
+  Upload upload_resultRef;
+  upload_resultRef._handle = getHandleValue(env,args[0]);
+  if(upload_resultRef._handle==0){
     return NULL;
   }
   bool buffertype1;
@@ -1493,12 +1831,12 @@ napi_value upload_writec(napi_env env, napi_callback_info info) {
   uint8_t *ptrToData ; 
   ptrToData = (uint8_t *)bufferPtr;
 
-  WriteResult lO_WriteResult = upload_write(&lO_UploadRef,ptrToData,bytesread);
+  WriteResult write_result = upload_write(&upload_resultRef,ptrToData,bytesread);
       napi_value returnObject,errorObject;
       status = napi_create_object(env,&returnObject);
-      if(lO_WriteResult.error!=NULL){
-          Error lO_errorObject = *(lO_WriteResult.error);
-          char* errorMessagePtr = lO_errorObject.message;
+      if(write_result.error!=NULL){
+          Error error_result = *(write_result.error);
+          char* errorMessagePtr = error_result.message;
           size_t datauploaded = 0;
           napi_value datauploadedObject;
           status = napi_create_object(env,&errorObject);
@@ -1510,7 +1848,7 @@ napi_value upload_writec(napi_env env, napi_callback_info info) {
           status = napi_set_named_property(env,returnObject,"bytes_written",datauploadedObject);
           assert(status == napi_ok);
 
-          status = napi_create_int64(env, lO_errorObject.code, &errorCode);
+          status = napi_create_int64(env, error_result.code, &errorCode);
           assert(status == napi_ok);
 
           status = napi_create_string_utf8(env,&errorMessagePtr[0],NAPI_AUTO_LENGTH,&errorMessage);
@@ -1532,7 +1870,7 @@ napi_value upload_writec(napi_env env, napi_callback_info info) {
           status = napi_create_object(env,&errorObject);
           assert(status == napi_ok);
 
-          size_t datauploaded = lO_WriteResult.bytes_written;
+          size_t datauploaded = write_result.bytes_written;
           napi_value datauploadedObject;
           status = napi_create_int32(env,datauploaded,&datauploadedObject);
           assert(status == napi_ok);
@@ -1621,9 +1959,9 @@ napi_value download_objectc(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  Project lO_Project;
-  lO_Project._handle = getHandleValue(env,args[0]);
-  if(lO_Project._handle==0){
+  Project project_result;
+  project_result._handle = getHandleValue(env,args[0]);
+  if(project_result._handle==0){
     return NULL;
   }
   size_t bufsize = 0;
@@ -1644,11 +1982,11 @@ napi_value download_objectc(napi_env env, napi_callback_info info) {
   char* objectKey =  new char[convertedvalue];
   status = napi_get_value_string_utf8(env,args[2],objectKey,convertedvalue,&bufsize);
   assert(status == napi_ok);
-  DownloadResult lO_DownloadResult;
+  DownloadResult download_result;
       if(checktypeofinput==napi_null){
-        lO_DownloadResult = download_object(&lO_Project,bucketName,objectKey,NULL);
+        download_result = download_object(&project_result,bucketName,objectKey,NULL);
       }else{
-        DownloadOptions lO_DownloadOption;
+        DownloadOptions downloadOption;
         napi_value offsetNAPI,lengthNAPI;
 
         status = napi_get_named_property(env,args[3],"offset",&offsetNAPI);
@@ -1663,27 +2001,27 @@ napi_value download_objectc(napi_env env, napi_callback_info info) {
         status = napi_get_value_int64(env,lengthNAPI,&length);
         assert(status == napi_ok);
 
-        lO_DownloadOption.offset = offset;
-        lO_DownloadOption.length = length;
-        lO_DownloadResult = download_object(&lO_Project,&bucketName[0],&objectKey[0],&lO_DownloadOption);
+        downloadOption.offset = offset;
+        downloadOption.length = length;
+        download_result = download_object(&project_result,&bucketName[0],&objectKey[0],&downloadOption);
       }
       
       napi_value returnObject;
       
       status = napi_create_object(env,&returnObject);
       
-      if(lO_DownloadResult.download==NULL){
-        if(lO_DownloadResult.error!=NULL){
-          Error lO_errorObject = *(lO_DownloadResult.error);
-          char* errorMessagePtr = lO_errorObject.message;
-          return createResult(env,"upload",0,lO_errorObject.code,&errorMessagePtr[0]);
+      if(download_result.download==NULL){
+        if(download_result.error!=NULL){
+          Error error_result = *(download_result.error);
+          char* errorMessagePtr = error_result.message;
+          return createResult(env,"upload",0,error_result.code,&errorMessagePtr[0]);
         }else{
           char blank[] = "";
           return createResult(env,"upload",0,-1,&blank[0]);
         }
       }
-      Download lO_Download = *(lO_DownloadResult.download);
-      size_t handlevalue = lO_Download._handle;
+      Download download = *(download_result.download);
+      size_t handlevalue = download._handle;
       char blank[] = "";
       return createResult(env,"download",handlevalue,0,&blank[0]);
 
@@ -1729,16 +2067,16 @@ napi_value upload_commitc(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  Upload lO_Upload;
-  lO_Upload._handle = getHandleValue(env,args[0]);
-  if(lO_Upload._handle==0){
+  Upload upload_result;
+  upload_result._handle = getHandleValue(env,args[0]);
+  if(upload_result._handle==0){
     return NULL;
   }
-   Error* lO_ErrorPtr = upload_commit(&lO_Upload);
-      if(lO_ErrorPtr!=NULL){
-        Error lO_Error = *(lO_ErrorPtr);
-        char* errorMessagePtr = lO_Error.message;
-        return createError(env,lO_Error.code,&errorMessagePtr[0]);
+   Error* error_result = upload_commit(&upload_result);
+      if(error_result!=NULL){
+        Error errorResult = *(error_result);
+        char* errorMessagePtr = errorResult.message;
+        return createError(env,errorResult.code,&errorMessagePtr[0]);
       }
       char blank[] = "";
       return createError(env,0,&blank[0]);
@@ -1784,15 +2122,15 @@ napi_value close_downloadc(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  Download lO_Download;
-  lO_Download._handle = getHandleValue(env,args[0]);
-      Error* lO_ErrorPtr = close_download(&lO_Download);
+  Download download_result;
+  download_result._handle = getHandleValue(env,args[0]);
+      Error* error_result = close_download(&download_result);
   //
-      if(lO_ErrorPtr!=NULL){
+      if(error_result!=NULL){
         
-        Error lO_Error = *(lO_ErrorPtr);
-        char* errorMessagePtr = lO_Error.message;
-        return createError(env,lO_Error.code,&errorMessagePtr[0]);
+        Error errorResult = *(error_result);
+        char* errorMessagePtr = errorResult.message;
+        return createError(env,errorResult.code,&errorMessagePtr[0]);
       }
 
       char blank[] = "";
@@ -1856,8 +2194,8 @@ napi_value download_readc(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  Download lO_DownloaderRef;
-  lO_DownloaderRef._handle = getHandleValue(env,args[0]);
+  Download download_resulterRef;
+  download_resulterRef._handle = getHandleValue(env,args[0]);
   
   void* bufferPtr = NULL;  
   size_t lengthOfBuffer;  
@@ -1867,17 +2205,17 @@ napi_value download_readc(napi_env env, napi_callback_info info) {
   uint8_t *ptrToData ; 
   ptrToData = (uint8_t *)bufferPtr;
   //
-  ReadResult lO_ReadResult = download_read(&lO_DownloaderRef,ptrToData,lengthOfBuffer);
+  ReadResult read_result = download_read(&download_resulterRef,ptrToData,lengthOfBuffer);
         //
         napi_value returnObject;
         //
         status = napi_create_object(env,&returnObject);
         //
-        if(lO_ReadResult.error!=NULL){
+        if(read_result.error!=NULL){
           
             napi_value errorObject,errorCode,errorMessage;
-            Error lO_errorObject = *(lO_ReadResult.error);
-            char* errorMessagePtr = lO_errorObject.message;
+            Error error_result = *(read_result.error);
+            char* errorMessagePtr = error_result.message;
             
             size_t datadownload = 0;
             napi_value dataDownloadObject;
@@ -1890,9 +2228,9 @@ napi_value download_readc(napi_env env, napi_callback_info info) {
             status = napi_set_named_property(env,returnObject,"bytes_read",dataDownloadObject);
             assert(status == napi_ok);
             
-            lO_errorObject.code = 0;
+            error_result.code = 0;
             
-            status = napi_create_int64(env, lO_errorObject.code, &errorCode);
+            status = napi_create_int64(env, error_result.code, &errorCode);
             assert(status == napi_ok);
             
             if(errorMessagePtr!=NULL){
@@ -1923,7 +2261,7 @@ napi_value download_readc(napi_env env, napi_callback_info info) {
             status = napi_create_object(env,&errorObject);
             assert(status == napi_ok);
             
-            size_t datauploaded = lO_ReadResult.bytes_read;
+            size_t datauploaded = read_result.bytes_read;
             napi_value dataDownloadObject;
             status = napi_create_int32(env,datauploaded,&dataDownloadObject);
             assert(status == napi_ok);
@@ -1965,7 +2303,7 @@ napi_value delete_objectc(napi_env env, napi_callback_info info) {
     napi_throw_type_error(env, nullptr, "\nWrong number of arguments!! excepted 3 arguments\n");
     return NULL;
   }
-
+  
   napi_valuetype checktypeofinput;
   status = napi_typeof(env,args[0],&checktypeofinput);
   assert(status == napi_ok);
@@ -1974,7 +2312,7 @@ napi_value delete_objectc(napi_env env, napi_callback_info info) {
     napi_throw_type_error(env,nullptr,"\nWrong datatype !! First argument excepted to be object type\n");
     return NULL;
   }
-
+  
   status = napi_typeof(env,args[1],&checktypeofinput);
   assert(status == napi_ok);
 
@@ -1982,7 +2320,7 @@ napi_value delete_objectc(napi_env env, napi_callback_info info) {
     napi_throw_type_error(env,nullptr,"\nWrong datatype !! Second argument excepted to be string type\n");
     return NULL;
   }
-  //
+  
   status = napi_typeof(env,args[2],&checktypeofinput);
   assert(status == napi_ok);
 
@@ -2004,17 +2342,18 @@ napi_value delete_objectc(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  Project lO_Project;
-  lO_Project._handle = getHandleValue(env,args[0]);
-  if(lO_Project._handle==0){
+  Project project_result;
+  project_result._handle = getHandleValue(env,args[0]);
+  if(project_result._handle==0){
     return NULL;
   }
+  
   size_t bufsize = 0;
   size_t convertedvalue = 0;
   status = napi_get_value_string_utf8(env, args[1],NULL,bufsize,&convertedvalue);
   assert(status == napi_ok);
   convertedvalue = convertedvalue+1;
-
+  
   char* bucketName =  new char[convertedvalue];
   status = napi_get_value_string_utf8(env,args[1],bucketName,convertedvalue,&bufsize);
   assert(status == napi_ok);
@@ -2023,15 +2362,16 @@ napi_value delete_objectc(napi_env env, napi_callback_info info) {
   status = napi_get_value_string_utf8(env, args[2],NULL,bufsize,&convertedvalue);
   assert(status == napi_ok);
   convertedvalue = convertedvalue+1;
-
+  
   char* objectKey =  new char[convertedvalue];
   status = napi_get_value_string_utf8(env,args[2],objectKey,convertedvalue,&bufsize);
   assert(status == napi_ok);
-  ObjectResult lO_ObjectResult = delete_object(&lO_Project,bucketName,objectKey);
-  if(lO_ObjectResult.error!=NULL){
-	return createObjectResult(env,NULL,lO_ObjectResult.error);
+  
+  ObjectResult object_result = delete_object(&project_result,bucketName,objectKey);
+  if(object_result.error!=NULL){
+	  return createObjectResult(env,NULL,object_result.error);
   }else{
-	return createObjectResult(env,lO_ObjectResult.object,NULL);
+	 return createObjectResult(env,object_result.object,NULL);
   }
 }
 
@@ -2085,7 +2425,7 @@ napi_value access_sharec(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  Access lO_Access;
+  Access access;
   if(checktypeofinput1!=napi_null){
     bool propertyexists = false;
     napi_value ObjectkeyNAPI;
@@ -2099,14 +2439,14 @@ napi_value access_sharec(napi_env env, napi_callback_info info) {
       napi_throw_type_error(env,nullptr,"\nInvalid Object \n");
       return NULL;
     }
-    lO_Access._handle = getHandleValue(env,args[0]);
-    if(lO_Access._handle==0){
+    access._handle = getHandleValue(env,args[0]);
+    if(access._handle==0){
       napi_throw_type_error(env,nullptr,"\nInvalid Handle\n");
       return NULL;
     }
   }
   
-  Permission lO_Permission;
+  Permission permission;
   
   napi_value allow_downloadNAPI;
   status = napi_get_named_property(env,args[1],"allow_download",&allow_downloadNAPI);
@@ -2116,7 +2456,7 @@ napi_value access_sharec(napi_env env, napi_callback_info info) {
   status = napi_get_value_bool(env,allow_downloadNAPI,&allow_downloadc);
   assert(status == napi_ok);
   
-  lO_Permission.allow_download = allow_downloadc;
+  permission.allow_download = allow_downloadc;
 
   napi_value allow_uploadNAPI;
   status = napi_get_named_property(env,args[1],"allow_upload",&allow_uploadNAPI);
@@ -2126,7 +2466,7 @@ napi_value access_sharec(napi_env env, napi_callback_info info) {
   status = napi_get_value_bool(env,allow_uploadNAPI,&allow_uploadc);
   assert(status == napi_ok);
   
-  lO_Permission.allow_upload = allow_uploadc;
+  permission.allow_upload = allow_uploadc;
   
   napi_value allow_listNAPI;
   status = napi_get_named_property(env,args[1],"allow_list",&allow_listNAPI);
@@ -2136,7 +2476,7 @@ napi_value access_sharec(napi_env env, napi_callback_info info) {
   status = napi_get_value_bool(env,allow_listNAPI,&allow_listc);
   assert(status == napi_ok);
   
-  lO_Permission.allow_list = allow_listc;
+  permission.allow_list = allow_listc;
   
   napi_value allow_deleteNAPI;
   status = napi_get_named_property(env,args[1],"allow_delete",&allow_deleteNAPI);
@@ -2146,7 +2486,7 @@ napi_value access_sharec(napi_env env, napi_callback_info info) {
   status = napi_get_value_bool(env,allow_deleteNAPI,&allow_deletec);
   assert(status == napi_ok);
   //
-  lO_Permission.allow_delete = allow_deletec;
+  permission.allow_delete = allow_deletec;
 
   napi_value not_beforeNAPI;
   status = napi_get_named_property(env,args[1],"not_before",&not_beforeNAPI);
@@ -2156,7 +2496,7 @@ napi_value access_sharec(napi_env env, napi_callback_info info) {
   status = napi_get_value_int64(env,not_beforeNAPI,&not_beforec);
   assert(status == napi_ok);
   
-  lO_Permission.not_before = not_beforec;
+  permission.not_before = not_beforec;
   //
   napi_value not_afterNAPI;
   status = napi_get_named_property(env,args[1],"not_after",&not_afterNAPI);
@@ -2166,7 +2506,7 @@ napi_value access_sharec(napi_env env, napi_callback_info info) {
   status = napi_get_value_int64(env,not_afterNAPI,&not_afterc);
   assert(status == napi_ok);
   
-  lO_Permission.not_after = not_afterc;
+  permission.not_after = not_afterc;
   //
   int64_t sharePrefixSize;
   status = napi_get_value_int64(env,args[3],&sharePrefixSize);
@@ -2198,7 +2538,7 @@ napi_value access_sharec(napi_env env, napi_callback_info info) {
   
   for(uint32_t i=0;i<(uint32_t)sizeOfArrayInt;i++){
     
-    SharePrefix lO_SharePrefix;
+    SharePrefix sharePrefix;
     status = napi_get_element(env,args[2],i,&SharePrefixObject);
     assert(status == napi_ok);
 
@@ -2228,27 +2568,27 @@ napi_value access_sharec(napi_env env, napi_callback_info info) {
     char* prefixc =  new char[convertedvalue];
     status = napi_get_value_string_utf8(env,prefix,prefixc,convertedvalue,&bufsize);
     assert(status == napi_ok);
-    lO_SharePrefix.bucket = bucketc;
-    lO_SharePrefix.prefix = prefixc;
-    *(SharePrefixListPointer+i)=lO_SharePrefix;
+    sharePrefix.bucket = bucketc;
+    sharePrefix.prefix = prefixc;
+    *(SharePrefixListPointer+i)=sharePrefix;
   }
 
 
-      AccessResult lO_AccessResult = access_share(&lO_Access,lO_Permission,SharePrefixListPointer,sharePrefixSize);
+      AccessResult access_Result = access_share(&access,permission,SharePrefixListPointer,sharePrefixSize);
 
-      if(lO_AccessResult.access==NULL){
+      if(access_Result.access==NULL){
         
-        if(lO_AccessResult.error!=NULL){
-          Error lO_errorObject = *(lO_AccessResult.error);
-          char* errorMessagePtr = lO_errorObject.message;
-          return createResult(env,"access",0,lO_errorObject.code,&errorMessagePtr[0]);
+        if(access_Result.error!=NULL){
+          Error error_result = *(access_Result.error);
+          char* errorMessagePtr = error_result.message;
+          return createResult(env,"access",0,error_result.code,&errorMessagePtr[0]);
         }else{
           char blank[] = "";
           return createResult(env,"access",0,-1,&blank[0]);
         }
       }
-      lO_Access = *(lO_AccessResult.access);
-      size_t handlevalue = lO_Access._handle;
+      access = *(access_Result.access);
+      size_t handlevalue = access._handle;
       
       char blank[] = "";
       return createResult(env,"access",handlevalue,0,&blank[0]);
@@ -2323,17 +2663,17 @@ napi_value list_objectsc(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  Project lO_Project;
-  lO_Project._handle = getHandleValue(env,args[0]);
-  if(lO_Project._handle==0){
+  Project project_result;
+  project_result._handle = getHandleValue(env,args[0]);
+  if(project_result._handle==0){
     return NULL;
   }
   //
-  ListObjectsOptions lO_ListObjectsOptions;
+  ListObjectsOptions listObjectsOptions;
   //
-  ObjectIterator *lO_ObjectIterator= nullptr;
+  ObjectIterator *objectIterator= nullptr;
   if(checktypeofinput==napi_null){
-        lO_ObjectIterator = list_objects(&lO_Project,&bucketName[0],NULL);
+        objectIterator = list_objects(&project_result,&bucketName[0],NULL);
 
       }else if(checktypeofinput==napi_object){
         //
@@ -2354,7 +2694,7 @@ napi_value list_objectsc(napi_env env, napi_callback_info info) {
         char* cursor =  new char[convertedvalue];
         status = napi_get_value_string_utf8(env,cursorNAPI,cursor,convertedvalue,&bufsize);
         assert(status == napi_ok);
-        lO_ListObjectsOptions.cursor = cursor;
+        listObjectsOptions.cursor = cursor;
 
         bufsize = 0;
         convertedvalue = 0;
@@ -2366,7 +2706,7 @@ napi_value list_objectsc(napi_env env, napi_callback_info info) {
         char* prefix =  new char[convertedvalue];
         status = napi_get_value_string_utf8(env,prefixNAPI,prefix,convertedvalue,&bufsize);
         assert(status == napi_ok);
-        lO_ListObjectsOptions.prefix = prefix;
+        listObjectsOptions.prefix = prefix;
         
         napi_value recursiveNAPI;
         status = napi_get_named_property(env,args[2],"recursive",&recursiveNAPI);
@@ -2392,11 +2732,11 @@ napi_value list_objectsc(napi_env env, napi_callback_info info) {
         napi_get_value_bool(env,customNAPI,&custom);
         assert(status == napi_ok);
         //
-        lO_ListObjectsOptions.custom = custom;
-        lO_ListObjectsOptions.system = system;
-        lO_ListObjectsOptions.recursive = recursive;
+        listObjectsOptions.custom = custom;
+        listObjectsOptions.system = system;
+        listObjectsOptions.recursive = recursive;
         
-        lO_ObjectIterator = list_objects(&lO_Project,bucketName,&lO_ListObjectsOptions);
+        objectIterator = list_objects(&project_result,bucketName,&listObjectsOptions);
         
       }
       
@@ -2412,11 +2752,11 @@ napi_value list_objectsc(napi_env env, napi_callback_info info) {
       int count = 0;
     
           
-              while(object_iterator_next(lO_ObjectIterator)){
+              while(object_iterator_next(objectIterator)){
 
-                Object *lO_ObjectPtr = object_iterator_item(lO_ObjectIterator);
+                Object *objectPtr = object_iterator_item(objectIterator);
 
-                Object lO_Object = *(lO_ObjectPtr);
+                Object object_result = *(objectPtr);
 
                 napi_value objectNAPI,SystemMetadataNAPI,CustomMetadataNAPI,CustomMetadataEntryNAPI;
 
@@ -2433,11 +2773,11 @@ napi_value list_objectsc(napi_env env, napi_callback_info info) {
                 assert(status == napi_ok);
                 
                 napi_value keyObjectNAPI;
-                status = napi_create_string_utf8(env,lO_ObjectPtr->key,NAPI_AUTO_LENGTH,&keyObjectNAPI);
+                status = napi_create_string_utf8(env,objectPtr->key,NAPI_AUTO_LENGTH,&keyObjectNAPI);
                 assert(status == napi_ok);
                 napi_value is_prefixNAPI;
                 //
-                if(lO_ObjectPtr->is_prefix){
+                if(objectPtr->is_prefix){
                   status = napi_create_int64(env, 1, &is_prefixNAPI);
                   assert(status == napi_ok);
                 }else{
@@ -2445,33 +2785,33 @@ napi_value list_objectsc(napi_env env, napi_callback_info info) {
                   assert(status == napi_ok);
                 }
 
-                SystemMetadata lO_SystemMetadata;
-                CustomMetadata lO_CustomMetadata;
-                CustomMetadataEntry lO_CustomMetadataEntry;
-                lO_SystemMetadata = lO_Object.system;
-                lO_CustomMetadata = lO_Object.custom;
+                SystemMetadata systemMetadata;
+                CustomMetadata customMetadata;
+                CustomMetadataEntry customMetadataEntry;
+                systemMetadata = object_result.system;
+                customMetadata = object_result.custom;
                 napi_value entriesArray;
                 status = napi_create_object(env,&entriesArray);
                 assert(status == napi_ok);
                 char empty[]="";
-                if(lO_CustomMetadata.count>0){
-                  CustomMetadataEntry* CustomMetadataEntryListPointer = lO_CustomMetadata.entries;
-                  for(int j=0;j<lO_CustomMetadata.count;j++){
-                    lO_CustomMetadataEntry = *(CustomMetadataEntryListPointer+j);
+                if(customMetadata.count>0){
+                  CustomMetadataEntry* CustomMetadataEntryListPointer = customMetadata.entries;
+                  for(int j=0;j<customMetadata.count;j++){
+                    customMetadataEntry = *(CustomMetadataEntryListPointer+j);
                     napi_value key_lengthNAPI,value_lengthNAPI,keyNAPI,valueNAPI,customMetaNAPI;
                     status = napi_create_object(env,&customMetaNAPI);
                     assert(status == napi_ok);
 
-                    status = napi_create_int64(env, lO_CustomMetadataEntry.key_length, &key_lengthNAPI);
+                    status = napi_create_int64(env, customMetadataEntry.key_length, &key_lengthNAPI);
                     assert(status == napi_ok);
                 
-                    status = napi_create_int64(env, lO_CustomMetadataEntry.value_length, &value_lengthNAPI);
+                    status = napi_create_int64(env, customMetadataEntry.value_length, &value_lengthNAPI);
                     assert(status == napi_ok);
 
-                    status = napi_create_string_utf8(env,lO_CustomMetadataEntry.key,NAPI_AUTO_LENGTH,&keyNAPI);
+                    status = napi_create_string_utf8(env,customMetadataEntry.key,NAPI_AUTO_LENGTH,&keyNAPI);
                     assert(status == napi_ok);
                     
-                    status = napi_create_string_utf8(env,lO_CustomMetadataEntry.value,NAPI_AUTO_LENGTH,&valueNAPI);
+                    status = napi_create_string_utf8(env,customMetadataEntry.value,NAPI_AUTO_LENGTH,&valueNAPI);
                     assert(status == napi_ok);
                     
                     status = napi_set_named_property(env,customMetaNAPI,"key",keyNAPI);
@@ -2503,19 +2843,19 @@ napi_value list_objectsc(napi_env env, napi_callback_info info) {
                   assert(status == napi_ok);
                 }
                 napi_value createdNAPI;
-                status = napi_create_int64(env, lO_ObjectPtr->system.created, &createdNAPI);
+                status = napi_create_int64(env, objectPtr->system.created, &createdNAPI);
                 assert(status == napi_ok);
                 
                 napi_value expiresNAPI;
-                status = napi_create_int64(env, lO_ObjectPtr->system.expires, &expiresNAPI);
+                status = napi_create_int64(env, objectPtr->system.expires, &expiresNAPI);
                 assert(status == napi_ok);
 
                 napi_value countNAPI;
-                status = napi_create_int64(env, lO_CustomMetadata.count, &countNAPI);
+                status = napi_create_int64(env, customMetadata.count, &countNAPI);
                 assert(status == napi_ok);
                 //
                 napi_value content_lengthNAPI;
-                status = napi_create_int64(env, lO_SystemMetadata.content_length, &content_lengthNAPI);
+                status = napi_create_int64(env, systemMetadata.content_length, &content_lengthNAPI);
                 assert(status == napi_ok);
 
                 status = napi_set_named_property(env,CustomMetadataNAPI,"entries",entriesArray);
@@ -2554,7 +2894,7 @@ napi_value list_objectsc(napi_env env, napi_callback_info info) {
                 count++;
             }
             //
-            Error *err = object_iterator_err(lO_ObjectIterator);
+            Error *err = object_iterator_err(objectIterator);
             
             napi_value errorMessage,errorCode;
             status = napi_create_object(env,&errorObject);
@@ -2579,11 +2919,11 @@ napi_value list_objectsc(napi_env env, napi_callback_info info) {
               status = napi_set_named_property(env,errorObject,"message",errormessage);
               assert(status == napi_ok);
             }else{
-                Error lO_Error = *(err);
-                char* messagePtr = lO_Error.message;
+                Error errorResult = *(err);
+                char* messagePtr = errorResult.message;
                 napi_value codenapi,errormessage;
                 
-                status = napi_create_int64(env, lO_Error.code, &codenapi);
+                status = napi_create_int64(env, errorResult.code, &codenapi);
                 assert(status == napi_ok);
               
                 status = napi_create_string_utf8(env,&messagePtr[0],NAPI_AUTO_LENGTH,&errormessage);
@@ -2643,12 +2983,12 @@ napi_value access_serializec(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  Access lO_Access;
-  lO_Access._handle = lO_Access._handle = getHandleValue(env,args[0]);
-  if(lO_Access._handle==0){
+  Access access;
+  access._handle = access._handle = getHandleValue(env,args[0]);
+  if(access._handle==0){
     return NULL;
   }
-  StringResult lO_StringResult = access_serialize(&lO_Access);
+  StringResult string_result = access_serialize(&access);
       //
       napi_value errorObject,returnObject;
       
@@ -2661,13 +3001,13 @@ napi_value access_serializec(napi_env env, napi_callback_info info) {
       char blank[] = "";
 
       napi_value errorCode,errorMessage,stringNAPI;
-      if(lO_StringResult.error!=NULL){
-        Error lO_errorObject = *(lO_StringResult.error);
+      if(string_result.error!=NULL){
+        Error error_result = *(string_result.error);
 
-        status = napi_create_int64(env, lO_errorObject.code, &errorCode);
+        status = napi_create_int64(env, error_result.code, &errorCode);
         assert(status == napi_ok);
 
-        char* errorMessagePtr = lO_errorObject.message;
+        char* errorMessagePtr = error_result.message;
 
         status = napi_create_string_utf8(env,&errorMessagePtr[0],NAPI_AUTO_LENGTH,&errorMessage);
         assert(status == napi_ok);
@@ -2676,7 +3016,7 @@ napi_value access_serializec(napi_env env, napi_callback_info info) {
         assert(status == napi_ok); 
       }else{
         
-        char* StringResultPtr= lO_StringResult.string;
+        char* StringResultPtr= string_result.string;
         status = napi_create_int64(env, 0, &errorCode);
         assert(status == napi_ok);
       
@@ -2743,17 +3083,17 @@ napi_value upload_infoc(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  Upload lO_Upload;
-  lO_Upload._handle = getHandleValue(env,args[0]);
-  if(lO_Upload._handle==0){
+  Upload upload_result;
+  upload_result._handle = getHandleValue(env,args[0]);
+  if(upload_result._handle==0){
     napi_throw_type_error(env,nullptr,"\nInvalid Object\n");
     return NULL;
   }
-  ObjectResult lO_ObjectResult = upload_info(&lO_Upload);
-      if(lO_ObjectResult.error!=NULL){
-        return createObjectResult(env,NULL,lO_ObjectResult.error);
+  ObjectResult object_result = upload_info(&upload_result);
+      if(object_result.error!=NULL){
+        return createObjectResult(env,NULL,object_result.error);
       }else{
-        return createObjectResult(env,lO_ObjectResult.object,NULL);
+        return createObjectResult(env,object_result.object,NULL);
       }
 }
 
@@ -2797,15 +3137,15 @@ napi_value upload_abortc(napi_env env, napi_callback_info info){
     napi_throw_type_error(env,nullptr,"\nInvalid Object \n");
     return NULL;
   }
-  Upload lO_Upload;
-  lO_Upload._handle = getHandleValue(env,args[0]);
+  Upload upload_result;
+  upload_result._handle = getHandleValue(env,args[0]);
   
-	Error* lO_ErrorPtr = upload_abort(&lO_Upload);
+	Error* error_result = upload_abort(&upload_result);
       //
-      if(lO_ErrorPtr!=NULL){
-        Error lO_Error = *(lO_ErrorPtr);
-        char* errorMessagePtr = lO_Error.message;
-        return createError(env,lO_Error.code,&errorMessagePtr[0]);
+      if(error_result!=NULL){
+        Error errorResult = *(error_result);
+        char* errorMessagePtr = errorResult.message;
+        return createError(env,errorResult.code,&errorMessagePtr[0]);
       }
       char blank[] = "";
       return createError(env,0,&blank[0]);
@@ -2850,15 +3190,15 @@ napi_value download_infoc(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  Download lO_Download;
-  lO_Download._handle = getHandleValue(env,args[0]);
+  Download download_result;
+  download_result._handle = getHandleValue(env,args[0]);
   //
-  ObjectResult lO_ObjectResult = download_info(&lO_Download);
+  ObjectResult object_result = download_info(&download_result);
   
-      if(lO_ObjectResult.error!=NULL){
-        return createObjectResult(env,NULL,lO_ObjectResult.error);
+      if(object_result.error!=NULL){
+        return createObjectResult(env,NULL,object_result.error);
       }else{
-        return createObjectResult(env,lO_ObjectResult.object,NULL);
+        return createObjectResult(env,object_result.object,NULL);
       }
 }
 
@@ -2907,9 +3247,9 @@ napi_value upload_set_custom_metadatac(napi_env env, napi_callback_info info){
     napi_throw_type_error(env,nullptr,"\nInvalid Object \n");
     return NULL;
   }
-  Upload lO_Upload;
-  lO_Upload._handle = getHandleValue(env,args[0]);
-  if(lO_Upload._handle==0){
+  Upload upload_result;
+  upload_result._handle = getHandleValue(env,args[0]);
+  if(upload_result._handle==0){
     napi_throw_type_error(env,nullptr,"\nWrong object passed\n");
     return NULL;
   }
@@ -2953,11 +3293,11 @@ napi_value upload_set_custom_metadatac(napi_env env, napi_callback_info info){
   
   int size = (int)sizeOfArray;
   CustomMetadataEntry* CustomMetadataEntryListPointer = new CustomMetadataEntry[size];
-  CustomMetadata lO_CustomMetadata;
+  CustomMetadata customMetadata;
   napi_value CustomMetadataEntryObject;
   
   for(int i=0;i<size;i++){
-    CustomMetadataEntry lO_CustomMetadataEntry;
+    CustomMetadataEntry customMetadataEntry;
     status = napi_get_element(env,entriesArrayNAPI,i,&CustomMetadataEntryObject);
     assert(status == napi_ok);
 
@@ -3004,25 +3344,25 @@ napi_value upload_set_custom_metadatac(napi_env env, napi_callback_info info){
     status = napi_get_value_int64(env,value_lengthNAPI,&value_lengthsize);
     assert(status == napi_ok);
 
-    lO_CustomMetadataEntry.key = keyc;
-    lO_CustomMetadataEntry.key_length =key_lengthc;
-    lO_CustomMetadataEntry.value=valuec;
-    lO_CustomMetadataEntry.value_length = value_lengthsize;
-    *(CustomMetadataEntryListPointer+i)=lO_CustomMetadataEntry;
+    customMetadataEntry.key = keyc;
+    customMetadataEntry.key_length =key_lengthc;
+    customMetadataEntry.value=valuec;
+    customMetadataEntry.value_length = value_lengthsize;
+    *(CustomMetadataEntryListPointer+i)=customMetadataEntry;
 
   }
-  lO_CustomMetadata.entries = (CustomMetadataEntryListPointer+0);
+  customMetadata.entries = (CustomMetadataEntryListPointer+0);
   if(countc==size){
-    lO_CustomMetadata.count = countc;
+    customMetadata.count = countc;
   }else{
-    lO_CustomMetadata.count = sizeOfArray;
+    customMetadata.count = sizeOfArray;
   }
   
-  Error* lO_ErrorPtr = upload_set_custom_metadata(&lO_Upload,lO_CustomMetadata);
-      if(lO_ErrorPtr!=NULL){
-        Error lO_Error = *(lO_ErrorPtr);
-        char* errorMessagePtr = lO_Error.message;
-        return createError(env,lO_Error.code,&errorMessagePtr[0]);
+  Error* error_result = upload_set_custom_metadata(&upload_result,customMetadata);
+      if(error_result!=NULL){
+        Error errorResult = *(error_result);
+        char* errorMessagePtr = errorResult.message;
+        return createError(env,errorResult.code,&errorMessagePtr[0]);
       }
 
       char blank[] = "";
@@ -3043,11 +3383,20 @@ napi_value Init(napi_env env, napi_value exports) {
   napi_property_descriptor request_access_with_passphrase = DECLARE_NAPI_METHOD("request_access_with_passphrasec", request_access_with_passphrasec);
   status = napi_define_properties(env, exports, 1, &request_access_with_passphrase);
   assert(status == napi_ok);
+
+  napi_property_descriptor config_request_access_with_passphrase = DECLARE_NAPI_METHOD("config_request_access_with_passphrasec", config_request_access_with_passphrasec);
+  status = napi_define_properties(env, exports, 1, &config_request_access_with_passphrase);
+  assert(status == napi_ok);
+
   
   napi_property_descriptor  open_project = DECLARE_NAPI_METHOD("open_projectc", open_projectc);
   status = napi_define_properties(env, exports, 1, & open_project);
   assert(status == napi_ok);
   
+  napi_property_descriptor  config_open_project = DECLARE_NAPI_METHOD("config_open_projectc", config_open_projectc);
+  status = napi_define_properties(env, exports, 1, & config_open_project);
+  assert(status == napi_ok);
+
   napi_property_descriptor close_project = DECLARE_NAPI_METHOD("close_projectc", close_projectc);
   status = napi_define_properties(env, exports, 1, &close_project);
   assert(status == napi_ok);

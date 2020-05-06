@@ -1,5 +1,5 @@
 # storj-nodejs binding
-### *Developed using RC v1.0.1 storj/uplink-c 
+### *Developed using RC v1.0.2 storj/uplink-c 
 ## Initial Set-up
 
 **NOTE**: for Golang
@@ -8,24 +8,6 @@ Make sure your `PATH` includes the `$GOPATH/bin` directory, so that your command
 ```
 export PATH=$PATH:$GOPATH/bin
 ```
-
-Install [storj-uplink-c](https://github.com/storj/uplink-c) go package, by running:
-```
-$ go get storj.io/uplink-c
-```
-* Please ensure GOPATH is set
-* Please ensure uplink-c is installed at following location 
-```
-$ $GOPATH/go/src/
-```
-In case, following errors get reported during the process:
-```
-go/src/github.com/zeebo/errs/errs.go:42:9: undefined: errors.Unwrap
-go/src/github.com/zeebo/errs/group.go:84:6: undefined: errors.Is
-```
-please arrange for the module dependencies to be met, using the Go modules functionality.
-Reference: [ISSUE#3053: Getting error while downloading module](https://github.com/storj/storj/issues/3053#issuecomment-532883993)
-
 
 **NOTE**: for Nodejs 
 
@@ -43,8 +25,7 @@ $ npm install -g node-gyp
 ```
 $ npm install storj-nodejs
 ```
-
-
+**NOTE**: for windows please ensure **make** is already installed.
 
 ## Sample Hello Storj!
 The sample *HelloStorj.js* code calls the *libUplinkNode.js* binding module to do the following:
@@ -62,7 +43,7 @@ The sample *HelloStorj.js* code calls the *libUplinkNode.js* binding module to d
 
 ### parse_accessc(String)
    * function parse_accessc to parses serialized access grant string
-   * pre-requisites: TO DO
+   * pre-requisites: None
    * inputs: accessString (String)
    * output: AccessResult (Object)
 
@@ -72,9 +53,21 @@ The sample *HelloStorj.js* code calls the *libUplinkNode.js* binding module to d
    * inputs: satellite address (String),API key (String) and passphrase (String)
    * output: AccessResult (Object)
 
+### config_request_access_with_passphrasec(Config ,String, String, String)
+   * function config_request_access_with_passphrasec requests satellite for a new access grant using a passhprase and config
+   * pre-requisites: None
+   * inputs: satellite address (String),API key (String) and passphrase (String)
+   * output: AccessResult (Object)
+
 ### open_projectc(Access)
    * function open_project opens project using access grant.
-   * pre-requisites: request_access_with_passphrasec
+   * pre-requisites: request_access_with_passphrasec or config_request_access_with_passphrasec
+   * inputs: Access (Object)
+   * output: ProjectResult (Object)
+
+### config_open_projectc(Config, Access)
+   * function open_project opens project using access grant and config
+   * pre-requisites: request_access_with_passphrasec or config_open_projectc
    * inputs: Access (Object)
    * output: ProjectResult (Object)
 
