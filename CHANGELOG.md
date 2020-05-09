@@ -1,5 +1,9 @@
 # Storj-Nodejs Changelog
 
+## [1.0.2] - 09-05-2020
+### Changelog:
+* Updated module version
+
 ## [0.10.2] - 06-05-2020
 ### Changelog:
 * Updated README.md
