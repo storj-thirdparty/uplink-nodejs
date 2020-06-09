@@ -1,6 +1,8 @@
 const process = require('process');
+/*eslint-disable */
 process.chdir(__dirname);
-var storjnodejs = require('bindings')('storjnodejs');
+/*eslint-enable */
+var uplink = require('bindings')('uplink');
 
 class ListBucketsOptions {
     constructor(cursor=""){
@@ -74,7 +76,7 @@ class Config {
 }
 //exporting function and object
 module.exports = {
-    storj_nodejs : storjnodejs,
+    uplink : uplink,
     DownloadOptions : DownloadOptions,
     ListBucketsOptions : ListBucketsOptions,
     Permission : Permission,

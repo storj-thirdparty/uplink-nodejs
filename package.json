@@ -1,8 +1,8 @@
 {
-  "name": "storj-nodejs",
-  "version": "1.0.2",
+  "name": "uplink-nodejs",
+  "version": "1.0.3",
   "description": "Storj-NodeJS bindings package",
-  "main": "libUplinkNode.js",
+  "main": "uplink.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "preinstall": "make",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/utropicmedia/storj-nodejs.git"
+    "url": "git+https://github.com/storj-thirdparty/uplink-nodejs.git"
   },
   "keywords": [
     "bindings",
@@ -22,12 +22,12 @@
   "author": "Utropicmedia",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/utropicmedia/storj-nodejs/issues"
+    "url": "https://github.com/storj-thirdparty/uplink-nodejs/issues"
   },
-  "homepage": "https://github.com/utropicmedia/storj-nodejs#readme",
+  "homepage": "https://github.com/storj-thirdparty/uplink-nodejs#readme",
+  "devDependencies": {},
   "dependencies": {
     "bindings": "^1.5.0",
-    "node-gyp": "^6.1.0"
-  },
-  "devDependencies": {}
+    "node-gyp": "^7.0.0"
+  }
 }

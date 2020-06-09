@@ -1,5 +1,12 @@
 # Storj-Nodejs Changelog
 
+## [1.0.3] - 09-06-2020
+### Changelog:
+* Updated ReadMe
+* Removed Warnings
+* Improved Memory managment and memory leaks
+* Changed module name
+
 ## [1.0.2] - 09-05-2020
 ### Changelog:
 * Updated module version
