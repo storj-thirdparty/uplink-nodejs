@@ -1,0 +1,7 @@
+steps:
+- name: 'node'
+  entrypoint: 'npm'
+  args: ['install', '-g', 'node-gyp']
+- name: 'node'
+  entrypoint: 'npm'
+  args: ['install', 'uplink-nodejs']
