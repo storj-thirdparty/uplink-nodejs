@@ -3,7 +3,7 @@
     ['OS=="linux"',{
       'targets':[
         {
-          "target_name": "storjnodejs",
+          "target_name": "uplink",
           "sources":["./libUplink.cc"],
           "libraries":["<(module_root_dir)/libuplinkc.so"],
           "ldflags": ["-Wl,-rpath,'$$ORIGIN'"],
@@ -14,7 +14,7 @@
     ['OS=="win"',{
       'targets':[
         {
-          "target_name": "storjnodejs",
+          "target_name": "uplink",
           "sources":["libUplink_win.cc"],
           "copies":[{
             "destination":"<(module_root_dir)/build/Release",
@@ -27,7 +27,7 @@
     ['OS=="mac"',{
         'targets':[
           {
-            "target_name": "storjnodejs",
+            "target_name": "uplink",
             "sources":["./libUplink.cc"],
             'include_dirs': ['<(module_root_dir)'],
             "copies":[{
