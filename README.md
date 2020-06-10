@@ -1,4 +1,7 @@
 # <b>uplink-nodejs binding</b>
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/992f2ada01c64d358d71febaadc54b41)](https://app.codacy.com/gh/storj-thirdparty/uplink-nodejs?utm_source=github.com&utm_medium=referral&utm_content=storj-thirdparty/uplink-nodejs&utm_campaign=Badge_Grade_Dashboard)
+
 #### *Developed using v1.0.2 storj/uplink-c*
 
 ## <b>Initial Set-up (Important)</b>
