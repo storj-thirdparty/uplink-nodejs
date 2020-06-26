@@ -6,24 +6,27 @@ napi_value stat_objectc(napi_env env, napi_callback_info info) {
   size_t argc = 3;
   napi_value args[3];
   napi_value promise;
-  //
+
   objectOperationObj *obj = (objectOperationObj *)
   malloc(sizeof(objectOperationObj));
   if (obj == NULL) {
+      free(obj);
     napi_throw_error(env, NULL, "Memory allocation error");
     return NULL;
   }
   obj->async_action_status = 1;
-  //
+
   status = napi_get_cb_info(env, info, &argc, args, nullptr , nullptr);
   assert(status == napi_ok);
-  //
+
   status = napi_create_promise(env, &obj->deferred, &promise);
   if (status != napi_ok) {
+      free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
   }
-  //
+
   if (argc < 3) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong number of arguments!! excepted 2 arguments\n");
     return NULL;
@@ -34,6 +37,7 @@ napi_value stat_objectc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if (checktypeofinput != napi_object) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong datatype !! First argument excepted to be object type\n");
     return NULL;
@@ -43,6 +47,7 @@ napi_value stat_objectc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if (checktypeofinput != napi_string) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong datatype !! Second argument excepted to be string type\n");
     return NULL;
@@ -52,6 +57,7 @@ napi_value stat_objectc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if (checktypeofinput != napi_string) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong datatype !! Third argument excepted to be string type\n");
     return NULL;
@@ -67,6 +73,7 @@ napi_value stat_objectc(napi_env env, napi_callback_info info) {
   status = napi_has_property(env, args[0], ObjectkeyNAPI, &propertyexists);
   assert(status == napi_ok);
   if (!propertyexists) {
+      free(obj);
     napi_throw_type_error(env, nullptr, "\nInvalid Object \n");
     return NULL;
   }
@@ -74,6 +81,7 @@ napi_value stat_objectc(napi_env env, napi_callback_info info) {
   Project project_result;
   project_result._handle = getHandleValue(env, args[0]);
   if (project_result._handle == 0) {
+      free(obj);
     napi_throw_type_error(env, nullptr, "\nInvalid Object \n");
     return NULL;
   }
@@ -110,16 +118,17 @@ napi_value stat_objectc(napi_env env, napi_callback_info info) {
   napi_queue_async_work(env, obj->work);
   return promise;
 }
-//
+
 napi_value delete_objectc(napi_env env, napi_callback_info info) {
   napi_status status;
   size_t argc = 3;
   napi_value args[3];
   napi_value promise;
-  //
+
   objectOperationObj *obj = (objectOperationObj *)
   malloc(sizeof(objectOperationObj));
   if (obj == NULL) {
+      free(obj);
     napi_throw_error(env, NULL, "Memory allocation error");
     return NULL;
   }
@@ -130,10 +139,12 @@ napi_value delete_objectc(napi_env env, napi_callback_info info) {
   //
   status = napi_create_promise(env, &obj->deferred, &promise);
   if (status != napi_ok) {
+      free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
   }
   //
   if (argc < 3) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong number of arguments!! excepted 2 arguments\n");
     return NULL;
@@ -144,6 +155,7 @@ napi_value delete_objectc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if (checktypeofinput != napi_object) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong datatype !! First argument excepted to be object type\n");
     return NULL;
@@ -153,6 +165,7 @@ napi_value delete_objectc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if (checktypeofinput != napi_string) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong datatype !! Second argument excepted to be string type\n");
     return NULL;
@@ -162,6 +175,7 @@ napi_value delete_objectc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if (checktypeofinput != napi_string) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong datatype !! Third argument excepted to be string type\n");
     return NULL;
@@ -177,6 +191,7 @@ napi_value delete_objectc(napi_env env, napi_callback_info info) {
   status = napi_has_property(env, args[0], ObjectkeyNAPI, &propertyexists);
   assert(status == napi_ok);
   if (!propertyexists) {
+      free(obj);
     napi_throw_type_error(env, nullptr, "\nInvalid Object \n");
     return NULL;
   }
@@ -184,6 +199,7 @@ napi_value delete_objectc(napi_env env, napi_callback_info info) {
   Project project_result;
   project_result._handle = getHandleValue(env, args[0]);
   if (project_result._handle == 0) {
+      free(obj);
     napi_throw_type_error(env, nullptr, "\nInvalid Object \n");
     return NULL;
   }

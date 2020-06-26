@@ -12,6 +12,7 @@ napi_value close_projectc(napi_env env, napi_callback_info info) {
   malloc(sizeof(closeProjectPromiseObj));
 
   if (obj == NULL) {
+      free(obj);
     napi_throw_error(env, NULL, "Memory allocation error");
     return NULL;
   }
@@ -21,10 +22,12 @@ napi_value close_projectc(napi_env env, napi_callback_info info) {
 
   status = napi_create_promise(env, &obj->deferred, &promise);
   if (status != napi_ok) {
+      free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
   }
 
   if (argc < 1) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong number of arguments!! excepted 1 arguments\n");
     return NULL;
@@ -35,6 +38,7 @@ napi_value close_projectc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if (checktypeofinput != napi_object) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong datatype !! First argument excepted to be object type\n");
     return NULL;
@@ -49,6 +53,7 @@ napi_value close_projectc(napi_env env, napi_callback_info info) {
   status = napi_has_property(env, args[0], ObjectkeyNAPI, &propertyexists);
   assert(status == napi_ok);
   if (!propertyexists) {
+      free(obj);
     napi_throw_type_error(env, nullptr, "\nInvalid Object \n");
     return NULL;
   }
@@ -56,6 +61,7 @@ napi_value close_projectc(napi_env env, napi_callback_info info) {
   Project project_result;
   project_result._handle = getHandleValue(env, args[0]);
   if (project_result._handle == 0) {
+      free(obj);
     return NULL;
   }
   obj->project_result = project_result;
@@ -67,7 +73,7 @@ napi_value close_projectc(napi_env env, napi_callback_info info) {
   napi_queue_async_work(env, obj->work);
   return promise;
 }
-//
+
 napi_value config_open_projectc(napi_env env, napi_callback_info info) {
   napi_status status;
   napi_value promise;
@@ -79,6 +85,7 @@ napi_value config_open_projectc(napi_env env, napi_callback_info info) {
   malloc(sizeof(configOpenProjectPromiseObj));
 
   if (obj == NULL) {
+      free(obj);
     napi_throw_error(env, NULL, "Memory allocation error");
     return NULL;
   }
@@ -88,10 +95,12 @@ napi_value config_open_projectc(napi_env env, napi_callback_info info) {
 
   status = napi_create_promise(env, &obj->deferred, &promise);
   if (status != napi_ok) {
+      free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
   }
 
   if (argc < 2) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong number of arguments!! excepted 2 arguments\n");
     return NULL;
@@ -104,6 +113,7 @@ napi_value config_open_projectc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if (checktypeofinput != napi_object) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong datatype !! First argument excepted to be object type\n");
     return NULL;
@@ -113,6 +123,7 @@ napi_value config_open_projectc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if (checktypeofinput != napi_object) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong datatype !! Second argument excepted to be object type\n");
     return NULL;
@@ -137,6 +148,7 @@ napi_value config_open_projectc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if (!configUserAgentExists) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nInvalid Config Object \n");
     return NULL;
@@ -153,6 +165,7 @@ napi_value config_open_projectc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if (!configDialTimeoutMilliSecondsExists) {
+      free(obj);
     napi_throw_type_error(env, nullptr, "\nInvalid Config Object \n");
     return NULL;
   }
@@ -167,6 +180,7 @@ napi_value config_open_projectc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if (!configTempDirectoryExists) {
+      free(obj);
     napi_throw_type_error(env, nullptr, "\nInvalid Config Object \n");
     return NULL;
   }
@@ -231,6 +245,7 @@ napi_value config_open_projectc(napi_env env, napi_callback_info info) {
   status = napi_has_property(env, args[1], ObjectkeyNAPI, &propertyexists);
   assert(status == napi_ok);
   if (!propertyexists) {
+      free(obj);
     napi_throw_type_error(env, nullptr, "\nInvalid Object \n");
     return NULL;
   }
@@ -238,6 +253,7 @@ napi_value config_open_projectc(napi_env env, napi_callback_info info) {
   Access access;
   access._handle = getHandleValue(env, args[1]);
   if (access._handle == 0) {
+      free(obj);
     return NULL;
   }
 
@@ -251,7 +267,7 @@ napi_value config_open_projectc(napi_env env, napi_callback_info info) {
   napi_queue_async_work(env, obj->work);
   return promise;
 }
-//
+
 napi_value open_projectc(napi_env env, napi_callback_info info) {
   napi_status status;
   napi_value promise;
@@ -263,6 +279,7 @@ napi_value open_projectc(napi_env env, napi_callback_info info) {
   malloc(sizeof(openProjectPromiseObj));
 
   if (obj == NULL) {
+      free(obj);
     napi_throw_error(env, NULL, "Memory allocation error");
     return NULL;
   }
@@ -272,10 +289,12 @@ napi_value open_projectc(napi_env env, napi_callback_info info) {
 
   status = napi_create_promise(env, &obj->deferred, &promise);
   if (status != napi_ok) {
+      free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
   }
 
   if (argc < 1) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong number of arguments!! excepted 1 arguments\n");
     return NULL;
@@ -286,10 +305,12 @@ napi_value open_projectc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if (checktypeofinput != napi_object) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong datatype !! First argument excepted to be object type\n");
     return NULL;
   }
+
   bool propertyexists = false;
   napi_value ObjectkeyNAPI;
   string handle = "_handle";
@@ -300,12 +321,14 @@ napi_value open_projectc(napi_env env, napi_callback_info info) {
   status = napi_has_property(env, args[0], ObjectkeyNAPI, &propertyexists);
   assert(status == napi_ok);
   if (!propertyexists) {
+      free(obj);
     napi_throw_type_error(env, nullptr, "\nInvalid Object \n");
     return NULL;
   }
   Access access;
   access._handle = getHandleValue(env, args[0]);
   if (access._handle == 0) {
+      free(obj);
     napi_throw_type_error(env, nullptr, "\nInvalid Object \n");
     return NULL;
   }

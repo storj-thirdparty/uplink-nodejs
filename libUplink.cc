@@ -1,6 +1,14 @@
 // Copyright 2020 Storj Storj
+/** @mainpage Node-js bindings
+ *  It uses napi for creating node module
+ * 
+ */
 #include "libUplink.h"
-
+#include <utility>
+#include <string>
+/*! \fn void reverse(char str[], int length)
+    \brief A utility function to reverse a string
+*/
 /* A utility function to reverse a string  */
 void reverse(char str[], int length) {
     int start = 0;
@@ -11,7 +19,11 @@ void reverse(char str[], int length) {
         end--;
     }
 }
-
+/*! \fn itoa(int num, char* str, int base)
+    \brief itoa function negative numbers are handled only with
+     base 10. Otherwise numbers are considered unsigned , 
+    itoa returns a string
+*/
 char* itoa(int num, char* str, int base) {
     int i = 0;
     bool isNegative = false;
@@ -43,40 +55,48 @@ char* itoa(int num, char* str, int base) {
     reverse(str, i);
     return str;
 }
-//
+/*! \fn napi_value createError(napi_env env, int64_t accessError,
+  char* errorMessagePtr)
+   \brief napi_value createError creates NAPI type error object
+      it returns the object for which error occurred
+*/
 // function creates NAPI type error object
 napi_value createError(napi_env env, int64_t accessError,
   char* errorMessagePtr) {
-  
+//
   napi_status status;
   napi_value returnObject, errorObject, errorCode, errorMessage;
-  
+
   status = napi_create_object(env, &errorObject);
   assert(status == napi_ok);
-  
+
   status = napi_create_object(env, &returnObject);
   assert(status == napi_ok);
-  
+
   status = napi_create_int64(env, accessError, &errorCode);
   assert(status == napi_ok);
-  
+
   status = napi_create_string_utf8(env,
     errorMessagePtr, NAPI_AUTO_LENGTH, &errorMessage);
   assert(status == napi_ok);
-  
-  status = napi_set_named_property(env, errorObject,"code", errorCode);
+
+  status = napi_set_named_property(env, errorObject, "code", errorCode);
   assert(status == napi_ok);
-  
+
   status = napi_set_named_property(env, errorObject,
     "message", errorMessage);
   assert(status == napi_ok);
-  
+
   status = napi_set_named_property(env, returnObject,
     "error", errorObject);
-  
+
   assert(status == napi_ok);
   return returnObject;
 }
+/*! \fn int64_t getHandleValue(napi_env env, napi_value handleobj)
+   \brief int64_t getHandleValue handles the value type
+      it returns integer type handlelong
+*/
 //
 int64_t getHandleValue(napi_env env, napi_value handleobj) {
   napi_status status;
@@ -110,6 +130,10 @@ int64_t getHandleValue(napi_env env, napi_value handleobj) {
   int64_t handlelong = handle;
   return handlelong;
 }
+/*! \fn napi_value createResult(napi_env env, string resultType,
+    int64_t handlevalue)
+   \brief napi_value createResult create result of new object whether it is generated or not
+*/
 //
 napi_value createResult(napi_env env, string resultType,
     int64_t handlevalue) {
@@ -125,16 +149,21 @@ napi_value createResult(napi_env env, string resultType,
 
     status = napi_create_int64(env, handlevalue, &_handle);
     assert(status == napi_ok);
-  
-    status = napi_set_named_property(env,ObjectRef,"_handle",_handle);
+
+    status = napi_set_named_property(env, ObjectRef, "_handle", _handle);
     assert(status == napi_ok);
     const char* resultTypeChar = resultType.c_str();
 
-    status = napi_set_named_property(env, returnObject,&resultTypeChar[0], ObjectRef);
+    status = napi_set_named_property(env, returnObject,
+    &resultTypeChar[0], ObjectRef);
     assert(status == napi_ok);
 
     return returnObject;
 }
+/*! \fn napi_value createBucketResult(napi_env env, string resultType,
+  int64_t bucketCreated, char* bucketNamePtr)
+     \brief createBucketResult creates bucket result whether it is generated or not
+*/
 //
 napi_value createBucketResult(napi_env env, string resultType,
   int64_t bucketCreated, char* bucketNamePtr) {
@@ -162,6 +191,11 @@ napi_value createBucketResult(napi_env env, string resultType,
 
   return ObjectRef;
 }
+/*! \fn napi_value createObjectResult(napi_env env,
+  Object* objectPtr)
+     \brief createObjectResult create object's result whether it is generated or not
+ 
+  */
 //
 napi_value createObjectResult(napi_env env,
   Object* objectPtr) {
@@ -172,7 +206,7 @@ napi_value createObjectResult(napi_env env,
   status = napi_create_object(env, &returnObject);
   assert(status == napi_ok);
   if (objectPtr != NULL) {
-
+//
     Object object_result = *(objectPtr);
 
     status = napi_create_object(env, &objectNAPI);
@@ -186,12 +220,12 @@ napi_value createObjectResult(napi_env env,
 
     status = napi_create_object(env, &CustomMetadataEntryNAPI);
     assert(status == napi_ok);
-    
+
     napi_value keyObjectNAPI;
     status = napi_create_string_utf8(env,
       objectPtr-> key, NAPI_AUTO_LENGTH, &keyObjectNAPI);
     assert(status == napi_ok);
-    
+
     napi_value is_prefixNAPI;
     if (objectPtr->  is_prefix) {
       status = napi_create_int64(env, 1, &is_prefixNAPI);
@@ -213,11 +247,11 @@ napi_value createObjectResult(napi_env env,
     char empty[]="";
 
     if (customMetadata.count > 0) {
-
+//
       CustomMetadataEntry* CustomMetadataEntryListPointer =
       customMetadata.entries;
       for (uint32_t j=0; j < customMetadata.count; j++) {
-
+//
         customMetadataEntry = *(CustomMetadataEntryListPointer+j);
         napi_value key_lengthNAPI, value_lengthNAPI, keyNAPI,
         valueNAPI, customMetaNAPI;
@@ -267,7 +301,6 @@ napi_value createObjectResult(napi_env env,
         assert(status == napi_ok);
       }
     } else {
-
       napi_value emptyNAPI;
       status = napi_create_string_utf8(env,
         &empty[0], NAPI_AUTO_LENGTH, &emptyNAPI);
@@ -337,109 +370,160 @@ napi_value createObjectResult(napi_env env,
   return objectNAPI;
 }
 //
-napi_value AccessFunction(napi_env env,napi_value AccessNAPIObj){
+/*!
+ \fn napi_value AccessFunction(napi_env env, napi_value AccessNAPIObj)
+  \brief AccessFunction helps to use function open_projectc
+  ,access_serializec, access_sharec, config_open_projectc
+  
+ */
+napi_value AccessFunction(napi_env env, napi_value AccessNAPIObj) {
   //
   napi_status status;
-  napi_value openprojectNAPI,accessSerializeFunction,accessShareFunction,configOpenProjectFunction;
-  
-  status = napi_create_function(env, NULL, 0, open_projectc, NULL, &openprojectNAPI);
-  assert(status == napi_ok);
-  
-  status = napi_set_named_property(env, AccessNAPIObj, "open_project", openprojectNAPI);
+  napi_value openprojectNAPI, accessSerializeFunction,
+  accessShareFunction, configOpenProjectFunction;
+
+  status = napi_create_function(env, NULL, 0, open_projectc,
+  NULL, &openprojectNAPI);
   assert(status == napi_ok);
 
-  status = napi_create_function(env, NULL, 0, access_serializec, NULL, &accessSerializeFunction);
-  assert(status == napi_ok);
-  
-  status = napi_set_named_property(env, AccessNAPIObj, "access_serialize", accessSerializeFunction);
+  status = napi_set_named_property(env, AccessNAPIObj,
+  "open_project", openprojectNAPI);
   assert(status == napi_ok);
 
-  status = napi_create_function(env, NULL, 0, access_sharec, NULL, &accessShareFunction);
-  assert(status == napi_ok);
-  
-  status = napi_set_named_property(env, AccessNAPIObj, "access_share", accessShareFunction);
+  status = napi_create_function(env, NULL, 0, access_serializec,
+  NULL, &accessSerializeFunction);
   assert(status == napi_ok);
 
-  status = napi_create_function(env, NULL, 0, config_open_projectc, NULL, &configOpenProjectFunction);
+  status = napi_set_named_property(env, AccessNAPIObj,
+  "access_serialize", accessSerializeFunction);
   assert(status == napi_ok);
-  
-  status = napi_set_named_property(env, AccessNAPIObj, "config_open_project", configOpenProjectFunction);
+
+  status = napi_create_function(env, NULL, 0, access_sharec,
+  NULL, &accessShareFunction);
+  assert(status == napi_ok);
+
+  status = napi_set_named_property(env, AccessNAPIObj,
+  "access_share", accessShareFunction);
+  assert(status == napi_ok);
+
+  status = napi_create_function(env, NULL, 0, config_open_projectc,
+  NULL, &configOpenProjectFunction);
+  assert(status == napi_ok);
+
+  status = napi_set_named_property(env, AccessNAPIObj,
+  "config_open_project", configOpenProjectFunction);
   assert(status == napi_ok);
   //
   return AccessNAPIObj;
 }
+/*!
+ \fn napi_value ProjectFunction(napi_env env, napi_value projectNAPIObj)
+ \brief ProjectFunction helps to use functions list_bucketsc, stat_bucketc, 
+ create_bucketc, delete_bucketc, ensure_bucketc, list_objectsc, stat_objectc,
+  delete_objectc, upload_objectc, download_objectc
+ */
 //
-napi_value ProjectFunction(napi_env env, napi_value projectNAPIObj){
+napi_value ProjectFunction(napi_env env, napi_value projectNAPIObj) {
   napi_status status;
-  napi_value listbucketsFunction,statbucketFunction,createBucketFunction,ensureBucketFunction,deleteBucketFunction,statObjectFunction,deleteObjectFunction,uploadObjectFunction,closeProjectFunction;
-    napi_value downloadObjectFunction,listObjectFunction;
-    status = napi_create_function(env, NULL, 0, list_bucketsc, NULL, &listbucketsFunction);
+  napi_value listbucketsFunction, statbucketFunction, createBucketFunction,
+  ensureBucketFunction, deleteBucketFunction, statObjectFunction,
+  deleteObjectFunction, uploadObjectFunction, closeProjectFunction;
+    napi_value downloadObjectFunction, listObjectFunction;
+    status = napi_create_function(env, NULL, 0, list_bucketsc,
+    NULL, &listbucketsFunction);
     assert(status == napi_ok);
 
-    status = napi_create_function(env, NULL, 0, stat_bucketc, NULL, &statbucketFunction);
-    assert(status == napi_ok);
-    
-    status = napi_create_function(env, NULL, 0, create_bucketc, NULL, &createBucketFunction);
-    assert(status == napi_ok);
-    
-    status = napi_create_function(env, NULL, 0, ensure_bucketc, NULL, &ensureBucketFunction);
-    assert(status == napi_ok);
-    
-    status = napi_create_function(env, NULL, 0, delete_bucketc, NULL, &deleteBucketFunction);
+    status = napi_create_function(env, NULL, 0, stat_bucketc,
+    NULL, &statbucketFunction);
     assert(status == napi_ok);
 
-    status = napi_create_function(env, NULL, 0, delete_objectc, NULL, &deleteObjectFunction);
-    assert(status == napi_ok);
-    
-    status = napi_create_function(env, NULL, 0, stat_objectc, NULL, &statObjectFunction);
+    status = napi_create_function(env, NULL, 0, create_bucketc,
+    NULL, &createBucketFunction);
     assert(status == napi_ok);
 
-    status = napi_create_function(env, NULL, 0, upload_objectc, NULL, &uploadObjectFunction);
+    status = napi_create_function(env, NULL, 0, ensure_bucketc,
+    NULL, &ensureBucketFunction);
     assert(status == napi_ok);
 
-    status = napi_create_function(env, NULL, 0, list_objectsc, NULL, &listObjectFunction);
+    status = napi_create_function(env, NULL, 0, delete_bucketc,
+    NULL, &deleteBucketFunction);
     assert(status == napi_ok);
 
-    status = napi_create_function(env, NULL, 0, download_objectc, NULL, &downloadObjectFunction);
+    status = napi_create_function(env, NULL, 0, delete_objectc,
+    NULL, &deleteObjectFunction);
+    assert(status == napi_ok);
+
+    status = napi_create_function(env, NULL, 0, stat_objectc,
+    NULL, &statObjectFunction);
+    assert(status == napi_ok);
+
+    status = napi_create_function(env, NULL, 0, upload_objectc,
+    NULL, &uploadObjectFunction);
+    assert(status == napi_ok);
+
+    status = napi_create_function(env, NULL, 0, list_objectsc,
+    NULL, &listObjectFunction);
+    assert(status == napi_ok);
+
+    status = napi_create_function(env, NULL, 0, download_objectc,
+    NULL, &downloadObjectFunction);
     assert(status == napi_ok);
     //
-    status = napi_set_named_property(env, projectNAPIObj, "listbuckets", listbucketsFunction);
+    status = napi_set_named_property(env, projectNAPIObj,
+    "listbuckets", listbucketsFunction);
     assert(status == napi_ok);
 
-    status = napi_set_named_property(env, projectNAPIObj, "stat_bucket", statbucketFunction);
+    status = napi_set_named_property(env, projectNAPIObj,
+    "stat_bucket", statbucketFunction);
     assert(status == napi_ok);
 
-    status = napi_set_named_property(env, projectNAPIObj, "create_bucket", createBucketFunction);
+    status = napi_set_named_property(env, projectNAPIObj,
+    "create_bucket", createBucketFunction);
     assert(status == napi_ok);
 
-    status = napi_set_named_property(env, projectNAPIObj, "ensure_bucket", ensureBucketFunction);
+    status = napi_set_named_property(env, projectNAPIObj,
+    "ensure_bucket", ensureBucketFunction);
     assert(status == napi_ok);
 
-    status = napi_set_named_property(env, projectNAPIObj, "delete_bucket", deleteBucketFunction);
+    status = napi_set_named_property(env, projectNAPIObj,
+    "delete_bucket", deleteBucketFunction);
     assert(status == napi_ok);
 
-    status = napi_set_named_property(env, projectNAPIObj, "delete_object", deleteObjectFunction);
+    status = napi_set_named_property(env, projectNAPIObj,
+    "delete_object", deleteObjectFunction);
     assert(status == napi_ok);
 
-    status = napi_set_named_property(env, projectNAPIObj, "stat_object", statObjectFunction);
+    status = napi_set_named_property(env, projectNAPIObj,
+    "stat_object", statObjectFunction);
     assert(status == napi_ok);
 
-    status = napi_set_named_property(env, projectNAPIObj, "upload_object", uploadObjectFunction);
+    status = napi_set_named_property(env, projectNAPIObj,
+    "upload_object", uploadObjectFunction);
     assert(status == napi_ok);
 
-    status = napi_set_named_property(env, projectNAPIObj, "download_object", downloadObjectFunction);
+    status = napi_set_named_property(env, projectNAPIObj,
+    "download_object", downloadObjectFunction);
     assert(status == napi_ok);
     //
-    status = napi_set_named_property(env, projectNAPIObj, "list_objects", listObjectFunction);
+    status = napi_set_named_property(env, projectNAPIObj,
+    "list_objects", listObjectFunction);
     assert(status == napi_ok);
 
-    status = napi_create_function(env, NULL, 0, close_projectc, NULL, &closeProjectFunction);
+    status = napi_create_function(env, NULL, 0, close_projectc,
+    NULL, &closeProjectFunction);
     assert(status == napi_ok);
-  
-    status = napi_set_named_property(env, projectNAPIObj, "close_project", closeProjectFunction);
+
+    status = napi_set_named_property(env, projectNAPIObj,
+    "close_project", closeProjectFunction);
     assert(status == napi_ok);
     return projectNAPIObj;
 }
+/*!
+ \fn napi_value list_objectsc(napi_env env, napi_callback_info info)
+ \brief list_objectsc creates list of objects 
+  promise function makes list_objectsc asynchronous function
+ 
+ */
 //
 napi_value list_objectsc(napi_env env, napi_callback_info info) {
   napi_status status;
@@ -447,8 +531,10 @@ napi_value list_objectsc(napi_env env, napi_callback_info info) {
   size_t argc = 3;
   napi_value args[3];
 
-  listObjectPromiseObj *obj = (listObjectPromiseObj *)malloc(sizeof(listObjectPromiseObj));
-  if(obj==NULL){
+  listObjectPromiseObj *obj = (listObjectPromiseObj *)
+  malloc(sizeof(listObjectPromiseObj));
+  if (obj == NULL) {
+      free(obj);
     napi_throw_error(env, NULL, "Memory allocation error");
     return NULL;
   }
@@ -457,10 +543,12 @@ napi_value list_objectsc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
   //
   status = napi_create_promise(env, &obj->deferred, &promise);
-  if(status!=napi_ok){
+  if (status != napi_ok) {
+      free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
   }
   if (argc < 3) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong number of arguments!! excepted 2 arguments\n");
     return NULL;
@@ -471,6 +559,7 @@ napi_value list_objectsc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if (checktypeofinput != napi_object) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong datatype !! First argument excepted to be object type\n");
     return NULL;
@@ -480,6 +569,7 @@ napi_value list_objectsc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if (checktypeofinput != napi_string) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong datatype !! Second argument excepted to be string\n");
     return NULL;
@@ -489,6 +579,7 @@ napi_value list_objectsc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if ((checktypeofinput != napi_object)&&(checktypeofinput != napi_null)) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong datatype !! Second argument excepted to be object or NULL\n");
     return NULL;
@@ -517,6 +608,7 @@ napi_value list_objectsc(napi_env env, napi_callback_info info) {
     &propertyexists);
   assert(status == napi_ok);
   if (!propertyexists) {
+      free(obj);
     napi_throw_type_error(env, nullptr, "\nInvalid Object \n");
     return NULL;
   }
@@ -524,6 +616,7 @@ napi_value list_objectsc(napi_env env, napi_callback_info info) {
   Project project_result;
   project_result._handle = getHandleValue(env, args[0]);
   if (project_result._handle == 0) {
+      free(obj);
     napi_throw_type_error(env, nullptr, "\nInvalid Object \n");
     return NULL;
   }
@@ -609,12 +702,19 @@ napi_value list_objectsc(napi_env env, napi_callback_info info) {
   obj->project_result = project_result;
   napi_value resource_name;
   napi_create_string_utf8(env, "listObjects", NAPI_AUTO_LENGTH, &resource_name);
-  napi_create_async_work(env, NULL, resource_name, listObjectPromiseExecute, listObjectPromiseComplete, obj, &obj->work);
+  napi_create_async_work(env, NULL, resource_name, listObjectPromiseExecute,
+  listObjectPromiseComplete, obj, &obj->work);
   napi_queue_async_work(env, obj->work);
   return promise;
 }
 
 //
+/*!
+ \fn napi_value list_bucketsc(napi_env env, napi_callback_info info)
+  \brief list_bucketsc provide list of buckets
+  using promise makes list_bucketsc asynchronous
+  
+ */
 
 napi_value list_bucketsc(napi_env env, napi_callback_info info) {
   napi_value promise;
@@ -623,8 +723,10 @@ napi_value list_bucketsc(napi_env env, napi_callback_info info) {
   size_t argc = 2;
   napi_value args[2];
 
-  ListBucketsPromiseObj *obj = (ListBucketsPromiseObj *)malloc(sizeof(ListBucketsPromiseObj));
-  if(obj==NULL){
+  ListBucketsPromiseObj *obj = (ListBucketsPromiseObj *)
+  malloc(sizeof(ListBucketsPromiseObj));
+  if (obj == NULL) {
+      free(obj);
     napi_throw_error(env, NULL, "Memory allocation error");
     return NULL;
   }
@@ -634,6 +736,7 @@ napi_value list_bucketsc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if (argc < 2) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong number of arguments!! excepted 2 arguments\n");
     return NULL;
@@ -644,6 +747,7 @@ napi_value list_bucketsc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if (checktypeofinput != napi_object) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong datatype !! First argument excepted to be object type\n");
     return NULL;
@@ -653,6 +757,7 @@ napi_value list_bucketsc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if ((checktypeofinput != napi_object)&&(checktypeofinput != napi_null)) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
   "\nWrong datatype !! Second argument excepted to be object type or null\n");
     return NULL;
@@ -681,9 +786,10 @@ napi_value list_bucketsc(napi_env env, napi_callback_info info) {
     obj->listBucketsOptions = listBucketsOptions;
     delete[] cursor;
   }
-  
+
   status = napi_create_promise(env, &obj->deferred, &promise);
-  if(status!=napi_ok){
+  if (status != napi_ok) {
+      free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
   }
 
@@ -701,6 +807,7 @@ napi_value list_bucketsc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if (!propertyexists) {
+      free(obj);
     napi_throw_type_error(env, nullptr, "\nInvalid Object \n");
     return NULL;
   }
@@ -709,6 +816,7 @@ napi_value list_bucketsc(napi_env env, napi_callback_info info) {
   project_result._handle = getHandleValue(env, args[0]);
 
   if (project_result._handle == 0) {
+      free(obj);
     napi_throw_type_error(env, nullptr, "\nInvalid Object \n");
     return NULL;
   }
@@ -718,34 +826,38 @@ napi_value list_bucketsc(napi_env env, napi_callback_info info) {
 
   napi_value resource_name;
   napi_create_string_utf8(env, "ListBuckets", NAPI_AUTO_LENGTH, &resource_name);
-  napi_create_async_work(env, NULL, resource_name, ListBucketsPromiseExecute, ListBucketsPromiseComplete, obj, &obj->work);
+  napi_create_async_work(env, NULL, resource_name, ListBucketsPromiseExecute,
+  ListBucketsPromiseComplete, obj, &obj->work);
   napi_queue_async_work(env, obj->work);
   return promise;
-
+//
 }
 /**/
-napi_value Init(napi_env env, napi_value exports) { 
+/*!
+  \fn napi_value Init(napi_env env, napi_value exports)
+   \brief This is main function
+  1) request_access_with_passphrase requests satellite for a new access grant using a passhprase .
+  2) parse_access parses serialized access grant string .
+  3) config_request_access_with_passphrase requests satellite for a new access grant using a passhprase .
+ */
+napi_value Init(napi_env env, napi_value exports) {
   napi_status status;
   napi_property_descriptor request_access_with_passphrase = DECLARE_NAPI_METHOD(
     "request_access_with_passphrase", request_access_with_passphrasec);
   status = napi_define_properties(
     env, exports, 1, &request_access_with_passphrase);
   assert(status == napi_ok);
-  
+
   napi_property_descriptor parse_access = DECLARE_NAPI_METHOD(
     "parse_access", parse_accessc);
   status = napi_define_properties(
     env, exports, 1, &parse_access);
   assert(status == napi_ok);
-  /*
-  napi_property_descriptor access_share = DECLARE_NAPI_METHOD(
-    "access_share", access_sharec);
-  status = napi_define_properties(
-    env, exports, 1, &access_share);
-  assert(status == napi_ok);*/
-  
-  napi_property_descriptor config_request_access_with_passphrase = DECLARE_NAPI_METHOD(
-    "config_request_access_with_passphrase", config_request_access_with_passphrasec);
+
+  napi_property_descriptor config_request_access_with_passphrase =
+  DECLARE_NAPI_METHOD(
+    "config_request_access_with_passphrase",
+    config_request_access_with_passphrasec);
   status = napi_define_properties(
     env, exports, 1, &config_request_access_with_passphrase);
   assert(status == napi_ok);

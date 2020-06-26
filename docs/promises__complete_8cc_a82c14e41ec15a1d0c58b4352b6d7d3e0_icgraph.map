@@ -1,0 +1,12 @@
+<map id="ShareAccessPromiseComplete" name="ShareAccessPromiseComplete">
+<area shape="rect" id="node1" title="ShareAccessPromiseComplete function called when async operation get complete and convert c data type ..." alt="" coords="904,71,1107,98"/>
+<area shape="rect" id="node2" href="$access__operations_8cc.html#ac2d6031216e6786399943d5b80d2e250" title="parse_accessc function is called from the javascript file access_share creates new access grant with ..." alt="" coords="745,46,856,73"/>
+<area shape="rect" id="node3" href="$lib_uplink_8cc.html#a0dd001df23d7f135da9f824539db3ed5" title="AccessFunction helps to use function open_projectc ,access_serializec, access_sharec,..." alt="" coords="581,71,697,98"/>
+<area shape="rect" id="node4" href="$promises__complete_8cc.html#a6c5e1478f8570826522b03cafc999aab" title="ConfigRequestAccessWithEncryptionPromiseComplete function called when async operation get complete an..." alt="" coords="295,5,533,47"/>
+<area shape="rect" id="node7" href="$promises__complete_8cc.html#a551f241ba659821a9690c7e1cc54806c" title="ParseAccessPromiseComplete function called when async operation get complete and convert c data type ..." alt="" coords="313,71,515,98"/>
+<area shape="rect" id="node9" href="$promises__complete_8cc.html#ab68333b4939d887d65bf194794b8f404" title="RequestAccessWithEncryptionPromiseComplete function called when async operation get complete and conv..." alt="" coords="313,123,515,164"/>
+<area shape="rect" id="node5" href="$access__operations_8cc.html#ad1ad6e328d17546077efb9cad66351da" title="config_request_access_with_passphrasec function is called from the javascript file config_request_acc..." alt="" coords="92,5,247,47"/>
+<area shape="rect" id="node6" href="$lib_uplink_8cc.html#a2a8628282ff7cc746345d7a7afb2884d" title="This is main function 1) request_access_with_passphrase requests satellite for a new access grant usi..." alt="" coords="5,71,44,98"/>
+<area shape="rect" id="node8" href="$access__operations_8cc.html#a7bc1930fa62634db41978a6ed56ae3c9" title="parse_accessc function is called from the javascript file parse_access parses serialized access grant..." alt="" coords="114,71,225,98"/>
+<area shape="rect" id="node10" href="$access__operations_8cc.html#a1b24e58dd7f4843b6d3d9e1b7422158e" title="request_access_with_passphrase function is called from the javascript file request_access_with_passph..." alt="" coords="97,123,241,164"/>
+</map>

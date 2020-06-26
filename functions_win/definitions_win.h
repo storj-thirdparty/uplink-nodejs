@@ -149,16 +149,15 @@ typedef struct {
   BucketResult bucket_Result;
 } bucketOperationObj;
 
-typedef struct{
-  Project project_result;
-  ListBucketsOptions listBucketsOptions;
-  BucketIterator *bucket_resultIterator;
-  int async_action_status;
-  napi_deferred deferred;
-  napi_async_work work;
-  napi_value result;
-  Bucket ptrToArray;
-  napi_value BucketList, errorObject, returnObject;
+typedef struct {
+    Project project_result;
+    ListBucketsOptions listBucketsOptions;
+    BucketIterator* bucket_resultIterator;
+    int async_action_status;
+    napi_deferred deferred;
+    napi_async_work work;
+    napi_value result;
+    int listBucketOptionSet;
 } ListBucketsPromiseObj;
 
 typedef struct {

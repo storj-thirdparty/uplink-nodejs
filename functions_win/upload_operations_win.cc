@@ -1,4 +1,5 @@
 #include "upload_operations_win.h"
+#include <string>
 
 napi_value upload_set_custom_metadatac(napi_env env, napi_callback_info info) {
   napi_status status;
@@ -7,7 +8,8 @@ napi_value upload_set_custom_metadatac(napi_env env, napi_callback_info info) {
   napi_value args[2];
 
   uploadSetMetaObj *obj = (uploadSetMetaObj *)malloc(sizeof(uploadSetMetaObj));
-  if(obj==NULL){
+  if (obj == NULL) {
+      free(obj);
     napi_throw_error(env, NULL, "Memory allocation error");
     return NULL;
   }
@@ -15,13 +17,15 @@ napi_value upload_set_custom_metadatac(napi_env env, napi_callback_info info) {
   status = napi_get_cb_info(env, info, &argc, args, nullptr , nullptr);
   assert(status == napi_ok);
   if (argc < 2) {
+      free(obj);
     napi_throw_type_error(env,
       nullptr, "\nWrong number of arguments!! excepted 1 arguments\n");
     return NULL;
   }
 
   status = napi_create_promise(env, &obj->deferred, &promise);
-  if(status!=napi_ok){
+  if (status != napi_ok) {
+      free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
   }
 
@@ -29,6 +33,7 @@ napi_value upload_set_custom_metadatac(napi_env env, napi_callback_info info) {
   status = napi_typeof(env, args[0], &checktypeofinput);
   assert(status == napi_ok);
   if (checktypeofinput != napi_object) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong datatype !! first argument excepted to be object type\n");
     return NULL;
@@ -37,6 +42,7 @@ napi_value upload_set_custom_metadatac(napi_env env, napi_callback_info info) {
   status = napi_typeof(env, args[1], &checktypeofinput);
   assert(status == napi_ok);
   if (checktypeofinput != napi_object) {
+      free(obj);
     napi_throw_type_error(env,
       nullptr, "\nWrong datatype !! second argument excepted to be array\n");
     return NULL;
@@ -53,12 +59,14 @@ napi_value upload_set_custom_metadatac(napi_env env, napi_callback_info info) {
   status = napi_has_property(env, args[0], ObjectkeyNAPI, &propertyexists);
   assert(status == napi_ok);
   if (!propertyexists) {
+      free(obj);
     napi_throw_type_error(env, nullptr, "\nInvalid Object \n");
     return NULL;
   }
   Upload upload_result;
   upload_result._handle = getHandleValue(env, args[0]);
   if (upload_result._handle == 0) {
+      free(obj);
     napi_throw_type_error(env, nullptr, "\nWrong object passed\n");
     return NULL;
   }
@@ -74,6 +82,7 @@ napi_value upload_set_custom_metadatac(napi_env env, napi_callback_info info) {
   status = napi_has_property(env, args[1], entriesStringNAPI, &entriesExists);
   assert(status == napi_ok);
   if (!propertyexists) {
+      free(obj);
     napi_throw_type_error(
       env, nullptr, "\nWrong Object Passed In Second Parameter\n");
     return NULL;
@@ -94,6 +103,7 @@ napi_value upload_set_custom_metadatac(napi_env env, napi_callback_info info) {
   status = napi_is_array(env, entriesArrayNAPI, &isarray);
   assert(status == napi_ok);
   if (!isarray) {
+      free(obj);
     napi_throw_type_error(
       env, nullptr, "\nEntries is not array\n");
     return NULL;
@@ -183,8 +193,10 @@ napi_value upload_set_custom_metadatac(napi_env env, napi_callback_info info) {
   obj->upload_result = upload_result;
   obj->customMetadata = customMetadata;
   napi_value resource_name;
-  napi_create_string_utf8(env, "uploadSetCustomObject", NAPI_AUTO_LENGTH, &resource_name);
-  napi_create_async_work(env, NULL, resource_name, uploadSetMetaPromiseExecute, uploadSetMetaPromiseComplete, obj, &obj->work);
+  napi_create_string_utf8(env, "uploadSetCustomObject",
+  NAPI_AUTO_LENGTH, &resource_name);
+  napi_create_async_work(env, NULL, resource_name, uploadSetMetaPromiseExecute,
+  uploadSetMetaPromiseComplete, obj, &obj->work);
   napi_queue_async_work(env, obj->work);
   return promise;
 }
@@ -194,8 +206,10 @@ napi_value upload_abortc(napi_env env, napi_callback_info info) {
   napi_value promise;
   size_t argc = 1;
   napi_value args[1];
-  uploadAbortPromiseObj *obj = (uploadAbortPromiseObj *)malloc(sizeof(uploadAbortPromiseObj));
-  if(obj==NULL){
+  uploadAbortPromiseObj *obj = (uploadAbortPromiseObj *)
+  malloc(sizeof(uploadAbortPromiseObj));
+  if (obj == NULL) {
+      free(obj);
     napi_throw_error(env, NULL, "Memory allocation error");
     return NULL;
   }
@@ -203,13 +217,15 @@ napi_value upload_abortc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if (argc < 1) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong number of arguments!! excepted 1 arguments\n");
     return NULL;
   }
 
   status = napi_create_promise(env, &obj->deferred, &promise);
-  if(status!=napi_ok){
+  if (status != napi_ok) {
+      free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
   }
   napi_valuetype checktypeofinput;
@@ -217,6 +233,7 @@ napi_value upload_abortc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if (checktypeofinput != napi_object) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong datatype !! First argument excepted to be object type\n");
     return NULL;
@@ -233,6 +250,7 @@ napi_value upload_abortc(napi_env env, napi_callback_info info) {
   status = napi_has_property(env, args[0], ObjectkeyNAPI, &propertyexists);
   assert(status == napi_ok);
   if (!propertyexists) {
+      free(obj);
     napi_throw_type_error(env, nullptr, "\nInvalid Object \n");
     return NULL;
   }
@@ -242,7 +260,8 @@ napi_value upload_abortc(napi_env env, napi_callback_info info) {
   obj->upload_result = upload_result;
   napi_value resource_name;
   napi_create_string_utf8(env, "uploadAbort", NAPI_AUTO_LENGTH, &resource_name);
-  napi_create_async_work(env, NULL, resource_name, uploadAbortPromiseExecute, uploadAbortPromiseComplete, obj, &obj->work);
+  napi_create_async_work(env, NULL, resource_name, uploadAbortPromiseExecute,
+  uploadAbortPromiseComplete, obj, &obj->work);
   napi_queue_async_work(env, obj->work);
   return promise;
 }
@@ -254,7 +273,8 @@ napi_value upload_infoc(napi_env env, napi_callback_info info) {
   napi_value promise;
 
   uploadInfoObj *obj = (uploadInfoObj *)malloc(sizeof(uploadInfoObj));
-  if(obj==NULL){
+  if (obj == NULL) {
+      free(obj);
     napi_throw_error(env, NULL, "Memory allocation error");
     return NULL;
   }
@@ -263,11 +283,13 @@ napi_value upload_infoc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
   //
   status = napi_create_promise(env, &obj->deferred, &promise);
-  if(status!=napi_ok){
+  if (status != napi_ok) {
+      free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
   }
   //
   if (argc < 1) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong number of arguments!! excepted 1 arguments\n");
     return NULL;
@@ -278,6 +300,7 @@ napi_value upload_infoc(napi_env env, napi_callback_info info) {
   status = napi_typeof(env, args[0], &checktypeofinput);
   assert(status == napi_ok);
   if (checktypeofinput != napi_object) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong datatype !! first argument excepted to be object type\n");
     return NULL;
@@ -294,6 +317,7 @@ napi_value upload_infoc(napi_env env, napi_callback_info info) {
   status = napi_has_property(env, args[0], ObjectkeyNAPI, &propertyexists);
   assert(status == napi_ok);
   if (!propertyexists) {
+      free(obj);
     napi_throw_type_error(env, nullptr, "\nInvalid Object \n");
     return NULL;
   }
@@ -301,13 +325,16 @@ napi_value upload_infoc(napi_env env, napi_callback_info info) {
   Upload upload_result;
   upload_result._handle = getHandleValue(env, args[0]);
   if (upload_result._handle == 0) {
+      free(obj);
     napi_throw_type_error(env, nullptr, "\nInvalid Object\n");
     return NULL;
   }
   obj->upload_result = upload_result;
   napi_value resource_name;
-  napi_create_string_utf8(env, "upladInfoObject", NAPI_AUTO_LENGTH, &resource_name);
-  napi_create_async_work(env, NULL, resource_name, uploadInfoPromiseExecute, uploadInfoOperationComplete, obj, &obj->work);
+  napi_create_string_utf8(env, "upladInfoObject",
+  NAPI_AUTO_LENGTH, &resource_name);
+  napi_create_async_work(env, NULL, resource_name, uploadInfoPromiseExecute,
+  uploadInfoOperationComplete, obj, &obj->work);
   napi_queue_async_work(env, obj->work);
   return promise;
 }
@@ -319,7 +346,8 @@ napi_value upload_commitc(napi_env env, napi_callback_info info) {
   size_t argc = 1;
   napi_value args[1];
   uploadCommitObj *obj = (uploadCommitObj *)malloc(sizeof(uploadCommitObj));
-  if(obj==NULL){
+  if (obj == NULL) {
+      free(obj);
     napi_throw_error(env, NULL, "Memory allocation error");
     return NULL;
   }
@@ -328,13 +356,15 @@ napi_value upload_commitc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if (argc < 1) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong number of arguments!! excepted 1 arguments\n");
     return NULL;
   }
 
   status = napi_create_promise(env, &obj->deferred, &promise);
-  if(status!=napi_ok){
+  if (status != napi_ok) {
+      free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
   }
 
@@ -343,6 +373,7 @@ napi_value upload_commitc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if (checktypeofinput != napi_object) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong datatype !! First argument excepted to be object type\n");
     return NULL;
@@ -358,6 +389,7 @@ napi_value upload_commitc(napi_env env, napi_callback_info info) {
   status = napi_has_property(env, args[0], ObjectkeyNAPI, &propertyexists);
   assert(status == napi_ok);
   if (!propertyexists) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nInvalid Object \n");
     return NULL;
@@ -366,13 +398,16 @@ napi_value upload_commitc(napi_env env, napi_callback_info info) {
   Upload upload_result;
   upload_result._handle = getHandleValue(env, args[0]);
   if (upload_result._handle == 0) {
+      free(obj);
     napi_throw_type_error(env, nullptr, "\nInvalid Object \n");
     return NULL;
   }
   obj->upload_result = upload_result;
   napi_value resource_name;
-  napi_create_string_utf8(env, "uploadCommit", NAPI_AUTO_LENGTH, &resource_name);
-  napi_create_async_work(env, NULL, resource_name, uploadCommitPromiseExecute, uploadCommitOperationComplete, obj, &obj->work);
+  napi_create_string_utf8(env, "uploadCommit",
+  NAPI_AUTO_LENGTH, &resource_name);
+  napi_create_async_work(env, NULL, resource_name, uploadCommitPromiseExecute,
+  uploadCommitOperationComplete, obj, &obj->work);
   napi_queue_async_work(env, obj->work);
   return promise;
 }
@@ -385,7 +420,8 @@ napi_value upload_writec(napi_env env, napi_callback_info info) {
   napi_value args[3];
 
   uploadWriteObj *obj = (uploadWriteObj *)malloc(sizeof(uploadWriteObj));
-  if(obj==NULL){
+  if (obj == NULL) {
+      free(obj);
     napi_throw_error(env, NULL, "Memory allocation error");
     return NULL;
   }
@@ -394,11 +430,13 @@ napi_value upload_writec(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   status = napi_create_promise(env, &obj->deferred, &promise);
-  if(status!=napi_ok){
+  if (status != napi_ok) {
+      free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
   }
 
   if (argc < 3) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong number of arguments!! excepted 3 arguments\n");
     return NULL;
@@ -409,6 +447,7 @@ napi_value upload_writec(napi_env env, napi_callback_info info) {
   status = napi_typeof(env, args[0], &checktypeofinput);
   assert(status == napi_ok);
   if (checktypeofinput != napi_object) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong datatype !! first argument excepted to be object type\n");
     return NULL;
@@ -417,6 +456,7 @@ napi_value upload_writec(napi_env env, napi_callback_info info) {
   status = napi_typeof(env, args[1], &checktypeofinput);
   assert(status == napi_ok);
   if (checktypeofinput != napi_object) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
   "\nWrong datatype !! second argument excepted to be object/buffer type\n");
     return NULL;
@@ -425,6 +465,7 @@ napi_value upload_writec(napi_env env, napi_callback_info info) {
   status = napi_typeof(env, args[2], &checktypeofinput);
   assert(status == napi_ok);
   if (checktypeofinput != napi_number) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong datatype !! third argument excepted to be number type\n");
     return NULL;
@@ -448,6 +489,7 @@ napi_value upload_writec(napi_env env, napi_callback_info info) {
   Upload upload_resultRef;
   upload_resultRef._handle = getHandleValue(env, args[0]);
   if (upload_resultRef._handle == 0) {
+      free(obj);
     napi_throw_type_error(env, nullptr, "\nInvalid Object \n");
     return NULL;
   }
@@ -456,8 +498,6 @@ napi_value upload_writec(napi_env env, napi_callback_info info) {
     &buffertype1);
   assert(status == napi_ok);
   size_t lengthOfBuffer;
-
-  //uint8_t* bufferPtr = NULL;
   void* bufferPtr = NULL;
 
   status = napi_get_buffer_info(env, args[1], &bufferPtr,
@@ -469,15 +509,13 @@ napi_value upload_writec(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   size_t bytesread = (size_t)bytes64;
-
-
-  //obj->bufferPtr = bufferPtr;
   obj->bufferPtr = reinterpret_cast<uint8_t *>(bufferPtr);
   obj->bytesread = bytesread;
   obj->upload_result = upload_resultRef;
   napi_value resource_name;
   napi_create_string_utf8(env, "uploadWrite", NAPI_AUTO_LENGTH, &resource_name);
-  napi_create_async_work(env, NULL, resource_name, uploadWritePromiseExecute, uploadWriteOperationComplete, obj, &obj->work);
+  napi_create_async_work(env, NULL, resource_name, uploadWritePromiseExecute,
+  uploadWriteOperationComplete, obj, &obj->work);
   napi_queue_async_work(env, obj->work);
   return promise;
 }
@@ -489,7 +527,8 @@ napi_value upload_objectc(napi_env env, napi_callback_info info) {
   napi_value promise;
   //
   uploadobjectObj *obj = (uploadobjectObj *)malloc(sizeof(uploadobjectObj));
-  if(obj==NULL){
+  if (obj == NULL) {
+      free(obj);
     napi_throw_error(env, NULL, "Memory allocation error");
     return NULL;
   }
@@ -499,11 +538,13 @@ napi_value upload_objectc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
   //
   status = napi_create_promise(env, &obj->deferred, &promise);
-  if(status!=napi_ok){
+  if (status != napi_ok) {
+      free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
   }
   //
   if (argc < 4) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong number of arguments!! excepted 4 arguments\n");
     return NULL;
@@ -514,6 +555,7 @@ napi_value upload_objectc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if (checktypeofinput != napi_object) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong datatype !! First argument excepted to be object type\n");
     return NULL;
@@ -523,6 +565,7 @@ napi_value upload_objectc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if (checktypeofinput != napi_string) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong datatype !! Second argument excepted to be string type\n");
     return NULL;
@@ -532,6 +575,7 @@ napi_value upload_objectc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if (checktypeofinput != napi_string) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong datatype !! Third argument excepted to be string type\n");
     return NULL;
@@ -541,6 +585,7 @@ napi_value upload_objectc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if ((checktypeofinput != napi_object)&&(checktypeofinput != napi_null)) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
   "\nWrong datatype !! Fourth argument excepted to be object type or null\n");
     return NULL;
@@ -556,6 +601,7 @@ napi_value upload_objectc(napi_env env, napi_callback_info info) {
   status = napi_has_property(env, args[0], ObjectkeyNAPI, &propertyexists);
   assert(status == napi_ok);
   if (!propertyexists) {
+      free(obj);
     napi_throw_type_error(env, nullptr, "\nInvalid Object \n");
     return NULL;
   }
@@ -563,6 +609,7 @@ napi_value upload_objectc(napi_env env, napi_callback_info info) {
   Project project_result;
   project_result._handle = getHandleValue(env, args[0]);
   if (project_result._handle == 0) {
+      free(obj);
     napi_throw_type_error(env, nullptr, "\nInvalid Object \n");
     return NULL;
   }
@@ -588,8 +635,6 @@ napi_value upload_objectc(napi_env env, napi_callback_info info) {
   status = napi_get_value_string_utf8(env, args[2], objectKey,
     convertedvalue, &bufsize);
   assert(status == napi_ok);
-
-  // UploadResult upload_result;
       if (checktypeofinput == napi_null) {
           obj->uploadoptionSet = 0;
       } else {
@@ -610,8 +655,10 @@ napi_value upload_objectc(napi_env env, napi_callback_info info) {
       obj->objectkey = objectKey;
       obj->project = project_result;
       napi_value resource_name;
-      napi_create_string_utf8(env, "uploadObject", NAPI_AUTO_LENGTH, &resource_name);
-      napi_create_async_work(env, NULL, resource_name, uploadObjectExecute, uploadObjectComplete, obj, &obj->work);
+      napi_create_string_utf8(env, "uploadObject",
+      NAPI_AUTO_LENGTH, &resource_name);
+      napi_create_async_work(env, NULL, resource_name, uploadObjectExecute,
+      uploadObjectComplete, obj, &obj->work);
       napi_queue_async_work(env, obj->work);
       return promise;
 }

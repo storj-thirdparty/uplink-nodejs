@@ -1,7 +1,7 @@
 # Storj-Nodejs Changelog
 
-## [1.0.4] - 24-06-2020
-* Converted binding blocking functions to Asynchronous functions
+## [1.0.4] - 25-06-2020
+* Asyncronous function
 * Changed HelloStorj.js
 * Splitted c files
 

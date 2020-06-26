@@ -9,6 +9,7 @@ napi_value download_infoc(napi_env env, napi_callback_info info) {
 
   downloadInfoObj *obj = (downloadInfoObj *)malloc(sizeof(downloadInfoObj));
   if (obj == NULL) {
+      free(obj);
     napi_throw_error(env, NULL, "Memory allocation error");
     return NULL;
   }
@@ -19,10 +20,12 @@ napi_value download_infoc(napi_env env, napi_callback_info info) {
   //
   status = napi_create_promise(env, &obj->deferred, &promise);
   if (status != napi_ok) {
+      free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
   }
   //
   if (argc < 1) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong number of arguments!! excepted 1 arguments\n");
     return NULL;
@@ -34,6 +37,7 @@ napi_value download_infoc(napi_env env, napi_callback_info info) {
     args[0], &checktypeofinput);
   assert(status == napi_ok);
   if (checktypeofinput != napi_object) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong datatype !! first argument excepted to be object type\n");
     return NULL;
@@ -49,6 +53,7 @@ napi_value download_infoc(napi_env env, napi_callback_info info) {
   status = napi_has_property(env, args[0], ObjectkeyNAPI, &propertyexists);
   assert(status == napi_ok);
   if (!propertyexists) {
+      free(obj);
     napi_throw_type_error(env, nullptr, "\nInvalid Object \n");
     return NULL;
   }
@@ -64,7 +69,7 @@ napi_value download_infoc(napi_env env, napi_callback_info info) {
   napi_queue_async_work(env, obj->work);
   return promise;
 }
-//
+
 napi_value close_downloadc(napi_env env, napi_callback_info info) {
   napi_status status;
   napi_value promise;
@@ -73,6 +78,7 @@ napi_value close_downloadc(napi_env env, napi_callback_info info) {
 
   downloadCloseObj *obj = (downloadCloseObj *)malloc(sizeof(downloadCloseObj));
   if (obj == NULL) {
+      free(obj);
     napi_throw_error(env, NULL, "Memory allocation error");
     return NULL;
   }
@@ -80,12 +86,14 @@ napi_value close_downloadc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if (argc < 1) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong number of arguments!! excepted 1 arguments\n");
     return NULL;
   }
   status = napi_create_promise(env, &obj->deferred, &promise);
   if (status != napi_ok) {
+      free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
   }
 
@@ -94,6 +102,7 @@ napi_value close_downloadc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if (checktypeofinput != napi_object) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong datatype !! First argument excepted to be object type\n");
     return NULL;
@@ -105,10 +114,11 @@ napi_value close_downloadc(napi_env env, napi_callback_info info) {
   status = napi_create_string_utf8(env,
     const_cast<char* > (handle.c_str()), NAPI_AUTO_LENGTH , &ObjectkeyNAPI);
   assert(status == napi_ok);
-  //
+
   status = napi_has_property(env, args[0], ObjectkeyNAPI, &propertyexists);
   assert(status == napi_ok);
   if (!propertyexists) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nInvalid Object \n");
     return NULL;
@@ -134,6 +144,7 @@ napi_value download_readc(napi_env env, napi_callback_info info) {
 
   downloadReadObj *obj = (downloadReadObj *)malloc(sizeof(downloadReadObj));
   if (obj == NULL) {
+      free(obj);
     napi_throw_error(env, NULL, "Memory allocation error");
     return NULL;
   }
@@ -143,10 +154,12 @@ napi_value download_readc(napi_env env, napi_callback_info info) {
   //
   status = napi_create_promise(env, &obj->deferred, &promise);
   if (status != napi_ok) {
+      free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
   }
   //
   if (argc < 3) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong number of arguments!! excepted 3 arguments\n");
     return NULL;
@@ -158,6 +171,7 @@ napi_value download_readc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
   //
   if (checktypeofinput != napi_object) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong datatype !! first argument excepted to be object type\n");
     return NULL;
@@ -167,6 +181,7 @@ napi_value download_readc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
   //
   if (checktypeofinput != napi_object) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong datatype !! second argument excepted to be object type\n");
     return NULL;
@@ -176,6 +191,7 @@ napi_value download_readc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
   //
   if (checktypeofinput != napi_number) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong datatype !! third argument excepted to be number type\n");
     return NULL;
@@ -192,6 +208,7 @@ napi_value download_readc(napi_env env, napi_callback_info info) {
     ObjectkeyNAPI, &propertyexists);
   assert(status == napi_ok);
   if (!propertyexists) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nInvalid Object \n");
     return NULL;
@@ -205,15 +222,13 @@ napi_value download_readc(napi_env env, napi_callback_info info) {
   status = napi_get_buffer_info(env, args[1],
     &bufferPtr, &lengthOfBuffer);
   assert(status == napi_ok);
-  //
+
   uint8_t *ptrToData;
   ptrToData = reinterpret_cast<uint8_t*>(bufferPtr);
-  //
   obj->bufferPtr = reinterpret_cast<uint8_t *>(bufferPtr);
   obj->download_result = download_resulterRef;
-  //
   obj->bufferlength = lengthOfBuffer;
-  //
+
   napi_value resource_name;
   napi_create_string_utf8(env, "downloadRead",
   NAPI_AUTO_LENGTH, &resource_name);
@@ -222,16 +237,17 @@ napi_value download_readc(napi_env env, napi_callback_info info) {
   napi_queue_async_work(env, obj->work);
   return promise;
 }
-//
+
 napi_value download_objectc(napi_env env, napi_callback_info info) {
   napi_status status;
   napi_value promise;
   size_t argc = 4;
   napi_value args[4];
-  //
+
   downloadObjectObj *obj = (downloadObjectObj *)
   malloc(sizeof(downloadObjectObj));
   if (obj == NULL) {
+      free(obj);
     napi_throw_error(env, NULL, "Memory allocation error");
     return NULL;
   }
@@ -241,10 +257,12 @@ napi_value download_objectc(napi_env env, napi_callback_info info) {
   //
   status = napi_create_promise(env, &obj->deferred, &promise);
   if (status != napi_ok) {
+      free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
   }
   //
   if (argc < 4) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong number of arguments!! excepted 2 arguments\n");
     return NULL;
@@ -255,6 +273,7 @@ napi_value download_objectc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if (checktypeofinput != napi_object) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong datatype !! First argument excepted to be object type\n");
     return NULL;
@@ -264,6 +283,7 @@ napi_value download_objectc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if (checktypeofinput != napi_string) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong datatype !! Second argument excepted to be string type\n");
     return NULL;
@@ -273,6 +293,7 @@ napi_value download_objectc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if (checktypeofinput != napi_string) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong datatype !! Third argument excepted to be string type\n");
     return NULL;
@@ -282,6 +303,7 @@ napi_value download_objectc(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if ((checktypeofinput != napi_object)&&(checktypeofinput != napi_null)) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
   "\nWrong datatype !! Fourth argument excepted to be object type or null\n");
     return NULL;
@@ -297,6 +319,7 @@ napi_value download_objectc(napi_env env, napi_callback_info info) {
   status = napi_has_property(env, args[0], ObjectkeyNAPI, &propertyexists);
   assert(status == napi_ok);
   if (!propertyexists) {
+      free(obj);
     napi_throw_type_error(env, nullptr, "\nInvalid Object \n");
     return NULL;
   }
@@ -304,9 +327,11 @@ napi_value download_objectc(napi_env env, napi_callback_info info) {
   Project project_result;
   project_result._handle = getHandleValue(env, args[0]);
   if (project_result._handle == 0) {
+      free(obj);
     napi_throw_type_error(env, nullptr, "\nInvalid Object \n");
     return NULL;
   }
+
   size_t bufsize = 0;
   size_t convertedvalue = 0;
   status = napi_get_value_string_utf8(env, args[1], NULL, bufsize,

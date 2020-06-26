@@ -1,5 +1,16 @@
+// Copyright 2020 Storj Storj
+/** @mainpage Node-js bindings
+ *  It uses napi for creating node module
+ * 
+ */
 #include "access_operations.h"
-
+#include <string>
+/*!
+ \fn napi_value parse_accessc(napi_env env,
+    napi_callback_info info)
+ \brief parse_accessc function is called from the javascript file
+ parse_access parses serialized access grant string. 
+ */
 napi_value parse_accessc(napi_env env,
     napi_callback_info info) {
     napi_value promise;
@@ -11,6 +22,7 @@ napi_value parse_accessc(napi_env env,
     ParseAccessPromiseObj* obj = (ParseAccessPromiseObj*)
         malloc(sizeof(ParseAccessPromiseObj));
     if (obj == NULL) {
+        free(obj);
         napi_throw_error(env, NULL, "Memory allocation error");
         return NULL;
     }
@@ -20,6 +32,7 @@ napi_value parse_accessc(napi_env env,
     assert(status == napi_ok);
 
     if (argc < 1) {
+        free(obj);
         napi_throw_type_error(env, nullptr,
             "\nWrong number of arguments!! excepted 3 arguments\n");
         return NULL;
@@ -27,6 +40,7 @@ napi_value parse_accessc(napi_env env,
 
     status = napi_create_promise(env, &obj->deferred, &promise);
     if (status != napi_ok) {
+        free(obj);
         napi_throw_error(env, NULL, "Unable to create promise");
     }
     napi_value str;
@@ -37,6 +51,7 @@ napi_value parse_accessc(napi_env env,
     assert(status == napi_ok);
 
     if (checktypeofinput != napi_string) {
+        free(obj);
         napi_throw_type_error(env, nullptr,
             "\nWrong datatype!! argument excepted to be string type\n");
         return NULL;
@@ -64,15 +79,22 @@ napi_value parse_accessc(napi_env env,
 
     return promise;
 }
-
+/*!
+ \fn napi_value access_sharec(napi_env env, napi_callback_info info)
+ \brief parse_accessc function is called from the javascript file
+ access_share creates new access grant with specific permission. 
+  Permission will be applied to prefixes when defined.
+ */
 napi_value access_sharec(napi_env env, napi_callback_info info) {
   napi_status status;
   size_t argc = 4;
   napi_value args[4];
   napi_value promise;
   //
-  AccessSharePromiseObj *obj = (AccessSharePromiseObj *)malloc(sizeof(AccessSharePromiseObj));
-  if(obj==NULL){
+  AccessSharePromiseObj *obj = (AccessSharePromiseObj *)
+  malloc(sizeof(AccessSharePromiseObj));
+  if (obj == NULL) {
+      free(obj);
     napi_throw_error(env, NULL, "Memory allocation error");
     return NULL;
   }
@@ -81,13 +103,15 @@ napi_value access_sharec(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
   //
   if (argc < 4) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong number of arguments!! excepted 4 arguments\n");
     return NULL;
   }
   //
   status = napi_create_promise(env, &obj->deferred, &promise);
-  if(status!=napi_ok){
+  if (status != napi_ok) {
+      free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
   }
   //
@@ -96,6 +120,7 @@ napi_value access_sharec(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if ((checktypeofinput1 != napi_object)&&(checktypeofinput1 != napi_null)) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong datatype !! First argument excepted to be object type\n");
     return NULL;
@@ -105,6 +130,7 @@ napi_value access_sharec(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if (checktypeofinput != napi_object) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong datatype !! Second argument excepted to be string type\n");
     return NULL;
@@ -114,6 +140,7 @@ napi_value access_sharec(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if (checktypeofinput != napi_object) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong datatype !! Third argument excepted to be string type\n");
     return NULL;
@@ -123,6 +150,7 @@ napi_value access_sharec(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if (checktypeofinput != napi_number) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong datatype !! Fourth argument excepted to be string type\n");
     return NULL;
@@ -141,12 +169,14 @@ napi_value access_sharec(napi_env env, napi_callback_info info) {
       &propertyexists);
     assert(status == napi_ok);
     if (!propertyexists) {
+        free(obj);
       napi_throw_type_error(env, nullptr, "\nInvalid Object \n");
       return NULL;
     }
     access._handle = getHandleValue(env, args[0]);
-    obj->access=access;
+    obj->access = access;
     if (access._handle == 0) {
+        free(obj);
       napi_throw_type_error(env, nullptr, "\nInvalid Handle\n");
       return NULL;
     }
@@ -229,6 +259,7 @@ napi_value access_sharec(napi_env env, napi_callback_info info) {
   status = napi_is_array(env, args[2], &isarray);
   assert(status == napi_ok);
   if (!isarray) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong data type of 3 parameter \n");
     return NULL;
@@ -293,14 +324,21 @@ napi_value access_sharec(napi_env env, napi_callback_info info) {
   obj->SharePrefixSize = sharePrefixSize;
   obj->SharePrefixListPointer = SharePrefixListPointer;
   obj->permission = permission;
-  
+
   napi_value resource_name;
   napi_create_string_utf8(env, "accessShare", NAPI_AUTO_LENGTH, &resource_name);
-  napi_create_async_work(env, NULL, resource_name, ShareAccessPromiseExecute, ShareAccessPromiseComplete, obj, &obj->work);
+  napi_create_async_work(env, NULL, resource_name, ShareAccessPromiseExecute,
+  ShareAccessPromiseComplete, obj, &obj->work);
   napi_queue_async_work(env, obj->work);
   return promise;
-
 }
+/*!
+ \fn napi_value config_request_access_with_passphrasec(napi_env env,
+  napi_callback_info info)
+ \brief config_request_access_with_passphrasec function is called from the javascript file
+ config_request_access_with_passphrase requests for 
+ a new access grant using a passhprase..
+ */
 
 napi_value config_request_access_with_passphrasec(napi_env env,
   napi_callback_info info) {
@@ -309,8 +347,10 @@ napi_value config_request_access_with_passphrasec(napi_env env,
   napi_value args[4];
   napi_value promise;
   //
-  ConfigRequestAccessPromiseObj *obj = (ConfigRequestAccessPromiseObj *)malloc(sizeof(ConfigRequestAccessPromiseObj));
-  if(obj==NULL){
+  ConfigRequestAccessPromiseObj *obj = (ConfigRequestAccessPromiseObj *)
+  malloc(sizeof(ConfigRequestAccessPromiseObj));
+  if (obj == NULL) {
+      free(obj);
     napi_throw_error(env, NULL, "Memory allocation error");
     return NULL;
   }
@@ -319,13 +359,15 @@ napi_value config_request_access_with_passphrasec(napi_env env,
   assert(status == napi_ok);
 
   if (argc < 4) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong number of arguments!! excepted 3 arguments\n");
     return NULL;
   }
   //
   status = napi_create_promise(env, &obj->deferred, &promise);
-  if(status!=napi_ok){
+  if (status != napi_ok) {
+      free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
   }
   //
@@ -337,6 +379,7 @@ napi_value config_request_access_with_passphrasec(napi_env env,
   assert(status == napi_ok);
 
   if (checktypeofinput != napi_object) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong datatype !! First argument excepted to be object type\n");
     return NULL;
@@ -346,6 +389,7 @@ napi_value config_request_access_with_passphrasec(napi_env env,
   assert(status == napi_ok);
 
   if (checktypeofinput != napi_string) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong datatype !! Second argument excepted to be string type\n");
     return NULL;
@@ -355,6 +399,7 @@ napi_value config_request_access_with_passphrasec(napi_env env,
   assert(status == napi_ok);
 
   if (checktypeofinput != napi_string) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong datatype !! Third argument excepted to be string type\n");
     return NULL;
@@ -364,6 +409,7 @@ napi_value config_request_access_with_passphrasec(napi_env env,
   assert(status == napi_ok);
 
   if (checktypeofinput != napi_string) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong datatype !! Fourth argument excepted to be string type\n");
     return NULL;
@@ -386,6 +432,7 @@ napi_value config_request_access_with_passphrasec(napi_env env,
   assert(status == napi_ok);
 
   if (!configUserAgentExists) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nInvalid Config Object \n");
     return NULL;
@@ -402,6 +449,7 @@ napi_value config_request_access_with_passphrasec(napi_env env,
   assert(status == napi_ok);
 
   if (!configDialTimeoutMilliSecondsExists) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nInvalid Config Object \n");
     return NULL;
@@ -417,6 +465,7 @@ napi_value config_request_access_with_passphrasec(napi_env env,
   assert(status == napi_ok);
 
   if (!configTempDirectoryExists) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nInvalid Config Object \n");
     return NULL;
@@ -507,17 +556,25 @@ napi_value config_request_access_with_passphrasec(napi_env env,
   status = napi_get_value_string_utf8(env,
     args[3], passphrase, convertedvalue, &bufsize);
   assert(status == napi_ok);
-  obj->config=config;
-  obj->satellite_address=satellite_address;
-  obj->api_key=api_key;
-  obj->passphrase=passphrase;
+  obj->config = config;
+  obj->satellite_address = satellite_address;
+  obj->api_key = api_key;
+  obj->passphrase = passphrase;
   napi_value resource_name;
-  napi_create_string_utf8(env, "ConfigRequestAccess", NAPI_AUTO_LENGTH, &resource_name);
-  napi_create_async_work(env, NULL, resource_name, ConfigRequestAccessWithEncryption, ConfigRequestAccessWithEncryptionPromiseComplete, obj, &obj->work);
+  napi_create_string_utf8(env, "ConfigRequestAccess",
+  NAPI_AUTO_LENGTH, &resource_name);
+  napi_create_async_work(env, NULL, resource_name,
+  ConfigRequestAccessWithEncryption,
+  ConfigRequestAccessWithEncryptionPromiseComplete, obj, &obj->work);
   napi_queue_async_work(env, obj->work);
   return promise;
-
 }
+/*!
+ \fn napi_value request_access_with_passphrasec(napi_env env,
+  napi_callback_info info) 
+ \brief request_access_with_passphrase function is called from the javascript file
+  request_access_with_passphrasec requests for a new access grant using a passhprase.
+ */
 //
 napi_value request_access_with_passphrasec(napi_env env,
   napi_callback_info info) {
@@ -527,8 +584,10 @@ napi_value request_access_with_passphrasec(napi_env env,
   size_t argc = 3;
   napi_value args[3];
   //
-  RequestAccessPromiseObj *obj = (RequestAccessPromiseObj *)malloc(sizeof(RequestAccessPromiseObj));
-  if(obj==NULL){
+  RequestAccessPromiseObj *obj = (RequestAccessPromiseObj *)
+  malloc(sizeof(RequestAccessPromiseObj));
+  if (obj == NULL) {
+      free(obj);
     napi_throw_error(env, NULL, "Memory allocation error");
     return NULL;
   }
@@ -539,98 +598,110 @@ napi_value request_access_with_passphrasec(napi_env env,
   assert(status == napi_ok);
 
   if (argc < 3) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong number of arguments!! excepted 3 arguments\n");
     return NULL;
   }
-  
+
   status = napi_create_promise(env, &obj->deferred, &promise);
-  if(status!=napi_ok){
+  if (status != napi_ok) {
+      free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
   }
-  
+
   napi_valuetype checktypeofinput;
   status = napi_typeof(env, args[0], &checktypeofinput);
   assert(status == napi_ok);
-  
+
   if (checktypeofinput != napi_string) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong datatype !! First argument excepted to be string type\n");
     return NULL;
   }
-  
+
   status = napi_typeof(env, args[1], &checktypeofinput);
   assert(status == napi_ok);
-  
+
   if (checktypeofinput != napi_string) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong datatype !! Second argument excepted to be string type\n");
     return NULL;
   }
-  
+
   status = napi_typeof(env, args[2], &checktypeofinput);
   assert(status == napi_ok);
-  
+
   if (checktypeofinput != napi_string) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong datatype !! Third argument excepted to be string type\n");
     return NULL;
   }
-  
+
   size_t bufsize = 0;
   size_t convertedvalue = 0;
   status = napi_get_value_string_utf8(env, args[0], NULL, bufsize,
     &convertedvalue);
   assert(status == napi_ok);
   convertedvalue = convertedvalue+1;
-  
+
   char* satellite_address =  new char[convertedvalue];
   status = napi_get_value_string_utf8(env,
     args[0], satellite_address, convertedvalue, &bufsize);
   assert(status == napi_ok);
   obj->satellite_address = satellite_address;
-  
+
   bufsize = 0;
   convertedvalue = 0;
   status = napi_get_value_string_utf8(env,
     args[1], NULL, bufsize, &convertedvalue);
   assert(status == napi_ok);
   convertedvalue = convertedvalue+1;
-  
+
   char* api_key =  new char[convertedvalue];
   status = napi_get_value_string_utf8(env,
     args[1], api_key, convertedvalue, &bufsize);
   assert(status == napi_ok);
   obj->api_key = api_key;
-  
+
   bufsize = 0;
   convertedvalue = 0;
   status = napi_get_value_string_utf8(env,
     args[2], NULL, bufsize, &convertedvalue);
   assert(status == napi_ok);
   convertedvalue = convertedvalue+1;
-  
+
   char* passphrase =  new char[convertedvalue];
   status = napi_get_value_string_utf8(env,
     args[2], passphrase, convertedvalue, &bufsize);
   assert(status == napi_ok);
   obj->passphrase = passphrase;
-  
+
   napi_value resource_name;
-  napi_create_string_utf8(env, "RequestAccess", NAPI_AUTO_LENGTH, &resource_name);
-  napi_create_async_work(env, NULL, resource_name, RequestAccessWithEncryption, RequestAccessWithEncryptionPromiseComplete, obj, &obj->work);
+  napi_create_string_utf8(env, "RequestAccess",
+  NAPI_AUTO_LENGTH, &resource_name);
+  napi_create_async_work(env, NULL, resource_name, RequestAccessWithEncryption,
+  RequestAccessWithEncryptionPromiseComplete, obj, &obj->work);
   napi_queue_async_work(env, obj->work);
   return promise;
 }
-
+/*!
+ \fn napi_value access_serializec(napi_env env, napi_callback_info info)
+ \brief access_serializec function is called from the javascript file access_serialize serializes access grant into a string.
+ */
 napi_value access_serializec(napi_env env, napi_callback_info info) {
   napi_status status;
   size_t argc = 1;
   napi_value args[1];
   napi_value promise;
   //
-  accessSerializePromiseObj *obj = (accessSerializePromiseObj *)malloc(sizeof(accessSerializePromiseObj));
-  if(obj==NULL){
+  accessSerializePromiseObj *obj = (accessSerializePromiseObj *)
+  malloc(sizeof(accessSerializePromiseObj));
+  if (obj == NULL) {
+      free(obj);
     napi_throw_error(env, NULL, "Memory allocation error");
     return NULL;
   }
@@ -639,11 +710,13 @@ napi_value access_serializec(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
   //
   status = napi_create_promise(env, &obj->deferred, &promise);
-  if(status!=napi_ok){
+  if (status != napi_ok) {
+      free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
   }
   //
   if (argc < 1) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong number of arguments!! excepted 3 arguments\n");
     return NULL;
@@ -654,6 +727,7 @@ napi_value access_serializec(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   if (checktypeofinput != napi_object) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nWrong datatype !! First argument excepted to be object type\n");
     return NULL;
@@ -670,6 +744,7 @@ napi_value access_serializec(napi_env env, napi_callback_info info) {
     ObjectkeyNAPI, &propertyexists);
   assert(status == napi_ok);
   if (!propertyexists) {
+      free(obj);
     napi_throw_type_error(env, nullptr,
       "\nInvalid Object \n");
     return NULL;
@@ -678,13 +753,17 @@ napi_value access_serializec(napi_env env, napi_callback_info info) {
   Access access;
   access._handle = getHandleValue(env, args[0]);
   if (access._handle == 0) {
+      free(obj);
     napi_throw_type_error(env, nullptr, "\nInvalid Object \n");
     return NULL;
   }
   obj->access = access;
   napi_value resource_name;
-  napi_create_string_utf8(env, "accessSerialize", NAPI_AUTO_LENGTH, &resource_name);
-  napi_create_async_work(env, NULL, resource_name, accessSerializePromiseExecute, accessSerializePromiseComplete, obj, &obj->work);
+  napi_create_string_utf8(env, "accessSerialize",
+  NAPI_AUTO_LENGTH, &resource_name);
+  napi_create_async_work(env, NULL, resource_name,
+  accessSerializePromiseExecute,
+  accessSerializePromiseComplete, obj, &obj->work);
   napi_queue_async_work(env, obj->work);
   return promise;
 }

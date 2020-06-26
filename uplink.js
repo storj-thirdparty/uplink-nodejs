@@ -1,8 +1,8 @@
-const process = require('process');
+const process = require("process");
 /*eslint-disable */
 process.chdir(__dirname);
 /*eslint-enable */
-var uplink = require('bindings')('uplink');
+var uplink = require("bindings")("uplink");
 
 class ListBucketsOptions {
     constructor(cursor="") {
@@ -74,6 +74,7 @@ class Config {
         this.temp_directory=temp_directory;
     }
 }
+/*eslint-disable */
 //exporting function and object
 module.exports = {
     uplink : uplink,
@@ -87,3 +88,4 @@ module.exports = {
     SharePrefix : SharePrefix,
     Config : Config
 }
+/*eslint-enable */

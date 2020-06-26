@@ -192,7 +192,7 @@ napi_value ProjectFunction(napi_env env, napi_value projectNAPIObj) {
     status = napi_create_function(env, NULL, 0,
     download_objectc, NULL, &downloadObjectFunction);
     assert(status == napi_ok);
-    //
+
     status = napi_set_named_property(env, projectNAPIObj,
     "listbuckets", listbucketsFunction);
     assert(status == napi_ok);
@@ -220,7 +220,7 @@ napi_value ProjectFunction(napi_env env, napi_value projectNAPIObj) {
     status = napi_set_named_property(env, projectNAPIObj,
     "download_object", downloadObjectFunction);
     assert(status == napi_ok);
-    //
+
     status = napi_set_named_property(env, projectNAPIObj,
     "list_objects", listObjectFunction);
     assert(status == napi_ok);
@@ -232,7 +232,7 @@ napi_value ProjectFunction(napi_env env, napi_value projectNAPIObj) {
     assert(status == napi_ok);
     return projectNAPIObj;
 }
-//
+
 napi_value list_objectsc(napi_env env, napi_callback_info info) {
     napi_status status;
     napi_value promise;
@@ -241,17 +241,20 @@ napi_value list_objectsc(napi_env env, napi_callback_info info) {
     listObjectsPromiseObj* obj = (listObjectsPromiseObj*)
     malloc(sizeof(listObjectsPromiseObj));
     if (obj == NULL) {
+        free(obj);
         napi_throw_error(env, NULL, "Memory allocation error");
         return NULL;
     }
     status = napi_get_cb_info(env, info, &argc, args, nullptr, nullptr);
     assert(status == napi_ok);
-    //
+
     status = napi_create_promise(env, &obj->deferred, &promise);
     if (status != napi_ok) {
+        free(obj);
         napi_throw_error(env, NULL, "Unable to create promise");
     }
     if (argc < 3) {
+        free(obj);
         napi_throw_type_error(env, nullptr,
             "\nWrong number of arguments!! excepted 2 arguments\n");
         return NULL;
@@ -260,6 +263,7 @@ napi_value list_objectsc(napi_env env, napi_callback_info info) {
     status = napi_typeof(env, args[0], &checktypeofinput);
     assert(status == napi_ok);
     if (checktypeofinput != napi_object) {
+        free(obj);
         napi_throw_type_error(env, nullptr,
             "\nWrong datatype !! First argument excepted to be object type\n");
         return NULL;
@@ -267,19 +271,21 @@ napi_value list_objectsc(napi_env env, napi_callback_info info) {
     status = napi_typeof(env, args[1], &checktypeofinput);
     assert(status == napi_ok);
     if (checktypeofinput != napi_string) {
+        free(obj);
         napi_throw_type_error(env, nullptr,
             "\nWrong datatype !! Second argument excepted to be string\n");
         return NULL;
     }
-    //
+
     status = napi_typeof(env, args[2], &checktypeofinput);
     assert(status == napi_ok);
     if ((checktypeofinput != napi_object) && (checktypeofinput != napi_null)) {
+        free(obj);
         napi_throw_type_error(env, nullptr,
         "\nWrong datatype !! Second argument excepted to be object or NULL\n");
         return NULL;
     }
-    //
+
     size_t bufsize = 0;
     size_t convertedvalue = 0;
     status = napi_get_value_string_utf8(env, args[1], NULL, bufsize,
@@ -300,33 +306,32 @@ napi_value list_objectsc(napi_env env, napi_callback_info info) {
         &propertyexists);
     assert(status == napi_ok);
     if (!propertyexists) {
+        free(obj);
         napi_throw_type_error(env, nullptr, "\nInvalid Object \n");
         return NULL;
     }
     Project project_result;
     project_result._handle = getHandleValue(env, args[0]);
     if (project_result._handle == 0) {
+        free(obj);
         napi_throw_type_error(env, nullptr, "\nInvalid Object \n");
         return NULL;
     }
-    //
+
     ListObjectsOptions listObjectsOptions;
-    //
     ObjectIterator* objectIterator = nullptr;
     if (checktypeofinput == napi_null) {
         obj->listObjectSet = 0;
     } else if (checktypeofinput == napi_object) {
-        //
         napi_value cursorNAPI;
         status = napi_get_named_property(env, args[2], "cursor",
             &cursorNAPI);
         assert(status == napi_ok);
-        //
         napi_value prefixNAPI;
         status = napi_get_named_property(env, args[2], "prefix",
             &prefixNAPI);
         assert(status == napi_ok);
-        //
+
         size_t bufsize = 0;
         size_t convertedvalue = 0;
         status = napi_get_value_string_utf8(env, cursorNAPI, NULL,
@@ -338,9 +343,9 @@ napi_value list_objectsc(napi_env env, napi_callback_info info) {
             convertedvalue, &bufsize);
         assert(status == napi_ok);
         listObjectsOptions.cursor = cursor;
+
         bufsize = 0;
         convertedvalue = 0;
-        //
         status = napi_get_value_string_utf8(env, prefixNAPI, NULL,
             bufsize, &convertedvalue);
         assert(status == napi_ok);
@@ -350,34 +355,30 @@ napi_value list_objectsc(napi_env env, napi_callback_info info) {
             convertedvalue, &bufsize);
         assert(status == napi_ok);
         listObjectsOptions.prefix = prefix;
-        //
+        
         napi_value recursiveNAPI;
         status = napi_get_named_property(env, args[2], "recursive",
             &recursiveNAPI);
         assert(status == napi_ok);
-        //
         napi_value systemNAPI;
         status = napi_get_named_property(env, args[2], "system",
             &systemNAPI);
         assert(status == napi_ok);
-        //
         napi_value customNAPI;
         status = napi_get_named_property(env, args[2], "custom",
             &customNAPI);
         assert(status == napi_ok);
-        //
+
         bool recursive;
         napi_get_value_bool(env, recursiveNAPI, &recursive);
         assert(status == napi_ok);
-        //
         bool system;
         napi_get_value_bool(env, systemNAPI, &system);
         assert(status == napi_ok);
-        //
         bool custom;
         napi_get_value_bool(env, customNAPI, &custom);
         assert(status == napi_ok);
-        //
+
         listObjectsOptions.custom = custom;
         listObjectsOptions.system = system;
         listObjectsOptions.recursive = recursive;
@@ -395,15 +396,16 @@ napi_value list_objectsc(napi_env env, napi_callback_info info) {
     napi_queue_async_work(env, obj->work);
     return promise;
 }
-//
+
 napi_value list_bucketsc(napi_env env, napi_callback_info info) {
     napi_value promise;
     napi_status status;
     size_t argc = 2;
     napi_value args[2];
     ListBucketsPromiseObj* obj = (ListBucketsPromiseObj*)
-    malloc(sizeof(ListBucketsPromiseObj));
+        malloc(sizeof(ListBucketsPromiseObj));
     if (obj == NULL) {
+        free(obj);
         napi_throw_error(env, NULL, "Memory allocation error");
         return NULL;
     }
@@ -411,6 +413,7 @@ napi_value list_bucketsc(napi_env env, napi_callback_info info) {
     status = napi_get_cb_info(env, info, &argc, args, nullptr, nullptr);
     assert(status == napi_ok);
     if (argc < 2) {
+        free(obj);
         napi_throw_type_error(env, nullptr,
             "\nWrong number of arguments!! excepted 2 arguments\n");
         return NULL;
@@ -419,6 +422,7 @@ napi_value list_bucketsc(napi_env env, napi_callback_info info) {
     status = napi_typeof(env, args[0], &checktypeofinput);
     assert(status == napi_ok);
     if (checktypeofinput != napi_object) {
+        free(obj);
         napi_throw_type_error(env, nullptr,
             "\nWrong datatype !! First argument excepted to be object type\n");
         return NULL;
@@ -426,14 +430,17 @@ napi_value list_bucketsc(napi_env env, napi_callback_info info) {
     status = napi_typeof(env, args[1], &checktypeofinput);
     assert(status == napi_ok);
     if ((checktypeofinput != napi_object) && (checktypeofinput != napi_null)) {
+        free(obj);
         napi_throw_type_error(env, nullptr,
-    "\nWrong datatype !! Second argument excepted to be object type or null\n");
+            "\nWrong datatype!! Second argument excepted to be object type or null\n");
         return NULL;
     }
     ListBucketsOptions listBucketsOptions;
     if (checktypeofinput == napi_null) {
         listBucketsOptions = {};
-    } else if (checktypeofinput == napi_object) {
+        obj->listBucketOptionSet = 0;
+    }
+    else if (checktypeofinput == napi_object) {
         napi_value cursorNAPI;
         status = napi_get_named_property(env, args[1], "cursor", &cursorNAPI);
         assert(status == napi_ok);
@@ -448,44 +455,45 @@ napi_value list_bucketsc(napi_env env, napi_callback_info info) {
             convertedvalue, &bufsize);
         assert(status == napi_ok);
         listBucketsOptions.cursor = cursor;
-        delete[] cursor;
+        obj->listBucketOptionSet = 1;
     }
     obj->listBucketsOptions = listBucketsOptions;
     status = napi_create_promise(env, &obj->deferred, &promise);
     if (status != napi_ok) {
+        free(obj);
         napi_throw_error(env, NULL, "Unable to create promise");
     }
     napi_value str;
     napi_create_string_utf8(env, "Promise rejected", NAPI_AUTO_LENGTH, &str);
-    //
+
     bool propertyexists = false;
     napi_value ObjectkeyNAPI;
     string handle = "_handle";
     status = napi_create_string_utf8(env,
         const_cast<char*> (handle.c_str()), NAPI_AUTO_LENGTH, &ObjectkeyNAPI);
     assert(status == napi_ok);
-    //
     status = napi_has_property(env, args[0], ObjectkeyNAPI, &propertyexists);
     assert(status == napi_ok);
     if (!propertyexists) {
-        napi_throw_type_error(env, nullptr, "\nInvalid Object \n");
-        return NULL;
-    }
-    //
-    Project project_result;
-    project_result._handle = getHandleValue(env, args[0]);
-    if (project_result._handle == 0) {
+        free(obj);
         napi_throw_type_error(env, nullptr, "\nInvalid Object \n");
         return NULL;
     }
 
+    Project project_result;
+    project_result._handle = getHandleValue(env, args[0]);
+    if (project_result._handle == 0) {
+        free(obj);
+        napi_throw_type_error(env, nullptr, "\nInvalid Object \n");
+        return NULL;
+    }
     obj->project_result = project_result;
     napi_value resource_name;
     napi_create_string_utf8(env, "ListBuckets",
-    NAPI_AUTO_LENGTH, &resource_name);
+        NAPI_AUTO_LENGTH, &resource_name);
     napi_create_async_work(env, NULL, resource_name,
-    ListBucketsPromiseExecute, ListBucketsPromiseComplete,
-    obj, &obj->work);
+        ListBucketsPromiseExecute, ListBucketsPromiseComplete,
+        obj, &obj->work);
     napi_queue_async_work(env, obj->work);
     return promise;
 }

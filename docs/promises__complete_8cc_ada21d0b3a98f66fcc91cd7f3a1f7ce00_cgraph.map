@@ -1,0 +1,4 @@
+<map id="uploadSetMetaPromiseComplete" name="uploadSetMetaPromiseComplete">
+<area shape="rect" id="node1" title="uploadSetMetaPromiseComplete function called when async operation get complete and convert c data typ..." alt="" coords="5,5,217,32"/>
+<area shape="rect" id="node2" href="$lib_uplink_8cc.html#a56b88ea420afbcee273bbc41eaae5780" title="napi_value createError creates NAPI type error object it returns the object for which error occurred" alt="" coords="265,5,352,32"/>
+</map>
