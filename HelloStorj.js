@@ -9,24 +9,24 @@ var BUFFER_SIZE = 80000;
 // demo Storj (V3) configuration
 
 var storjConfig = {
-    apiKey    : "change-me-to-desired-storj-API-key",
+    apiKey    : "change-me-to-the-api-key-created-in-satellite-gui",
     satelliteURL   : "us-central-1.tardigrade.io:7777",
-    encryptionPassphrase  : "change-me-to-desired-encryption-phassphrase",
-    bucketName   : "change-me-to-desired-storj-bucket",
-    uploadPath   : "filepath/sample.txt",
+    encryptionPassphrase  : "you'll never guess this",
+    bucketName   : "change-me-to-desired-bucket-name",
+    uploadPath   : "optionalpath/requiredfilename",
 };
 
 // file names to be uploaded or downloaded as
 var localFullFileName = {
-    src : "change-me-to-full-filepath-on-local-system",
-    dest: "change-me-to-full-filepath-on-local-system",
+    src : "change-me-to-source-file-name-at-local-system",
+    dest: "change-me-to-destination-file-name-at-local-system",
 };
 //
-function getDateTime(unix_timestamp) {
-    var dateTime = new Date(unix_timestamp * 1000);
+function getDateTime(unixTimestamp) {
+    var dateTime = new Date(unixTimestamp * 1000);
     
     var year   = dateTime.getFullYear();
-    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
     var month  = months[dateTime.getMonth()];
     var date   = "0" + dateTime.getDate();
 
@@ -38,7 +38,7 @@ function getDateTime(unix_timestamp) {
     var seconds = "0" + dateTime.getSeconds();
 
     // Will display date time in YYYY-Mon-DD HH:MM:SS format
-    var formattedDateTime = year + '-' + month + '-' + date.substr(-2) + ' ' + hours.substr(-2) + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+    var formattedDateTime = year + "-" + month + "-" + date.substr(-2) + " " + hours.substr(-2) + ":" + minutes.substr(-2) + ":" + seconds.substr(-2);
     
     return formattedDateTime;
 }
@@ -300,7 +300,7 @@ libUplink.request_access_with_passphrase(storjConfig.satelliteURL,storjConfig.ap
             console.log("===== \t ========== \t\t ===========");
             var i = 0;
             for(var bucketinfo in bucketList){
-                console.log(i," ",getDateTime(bucketListResult.bucketList[bucketinfo].created), "\t", bucketListResult.bucketList[bucketinfo].name);
+                console.log(i," ",getDateTime(bucketList[bucketinfo].created), "\t", bucketList[bucketinfo].name);
                 i++;
             }
         }).catch((err) => {

@@ -22,6 +22,7 @@ napi_value download_infoc(napi_env env, napi_callback_info info) {
   if (status != napi_ok) {
       free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
+    return NULL;
   }
   //
   if (argc < 1) {
@@ -95,6 +96,7 @@ napi_value close_downloadc(napi_env env, napi_callback_info info) {
   if (status != napi_ok) {
       free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
+    return NULL;
   }
 
   napi_valuetype checktypeofinput;
@@ -156,6 +158,7 @@ napi_value download_readc(napi_env env, napi_callback_info info) {
   if (status != napi_ok) {
       free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
+    return NULL;
   }
   //
   if (argc < 3) {
@@ -259,6 +262,7 @@ napi_value download_objectc(napi_env env, napi_callback_info info) {
   if (status != napi_ok) {
       free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
+    return NULL;
   }
   //
   if (argc < 4) {

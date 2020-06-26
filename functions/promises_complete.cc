@@ -49,7 +49,6 @@ void openProjectPromiseComplete(napi_env env, napi_status status, void* data) {
  */
 void listObjectPromiseComplete(napi_env env, napi_status status, void* data) {
   listObjectPromiseObj *obj = (listObjectPromiseObj*)data;
-  char errorMessagePtr[] = "";
   napi_value objectList;
   //
   status = napi_create_object(env, &objectList);
@@ -72,8 +71,6 @@ void listObjectPromiseComplete(napi_env env, napi_status status, void* data) {
   if (err != NULL) {
     Error errorResult = *(err);
     char* messagePtr = errorResult.message;
-    char blank[] = "";
-    if (errorMessagePtr == NULL) { messagePtr = &blank[0];}
     status = napi_reject_deferred(env, obj->deferred,
     createError(env, errorResult.code, messagePtr));
   } else {

@@ -27,6 +27,7 @@ napi_value upload_set_custom_metadatac(napi_env env, napi_callback_info info) {
   if (status != napi_ok) {
       free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
+    return NULL;
   }
 
   napi_valuetype checktypeofinput;
@@ -227,6 +228,7 @@ napi_value upload_abortc(napi_env env, napi_callback_info info) {
   if (status != napi_ok) {
       free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
+    return NULL;
   }
   napi_valuetype checktypeofinput;
   status = napi_typeof(env, args[0], &checktypeofinput);
@@ -286,6 +288,7 @@ napi_value upload_infoc(napi_env env, napi_callback_info info) {
   if (status != napi_ok) {
       free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
+    return NULL;
   }
   //
   if (argc < 1) {
@@ -366,6 +369,7 @@ napi_value upload_commitc(napi_env env, napi_callback_info info) {
   if (status != napi_ok) {
       free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
+    return NULL;
   }
 
   napi_valuetype checktypeofinput;
@@ -433,6 +437,7 @@ napi_value upload_writec(napi_env env, napi_callback_info info) {
   if (status != napi_ok) {
       free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
+    return NULL;
   }
 
   if (argc < 3) {
@@ -541,6 +546,7 @@ napi_value upload_objectc(napi_env env, napi_callback_info info) {
   if (status != napi_ok) {
       free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
+    return NULL;
   }
   //
   if (argc < 4) {

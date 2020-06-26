@@ -113,6 +113,7 @@ napi_value access_sharec(napi_env env, napi_callback_info info) {
   if (status != napi_ok) {
       free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
+    return NULL;
   }
   //
   napi_valuetype checktypeofinput1, checktypeofinput;
@@ -608,6 +609,7 @@ napi_value request_access_with_passphrasec(napi_env env,
   if (status != napi_ok) {
       free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
+    return NULL;
   }
 
   napi_valuetype checktypeofinput;

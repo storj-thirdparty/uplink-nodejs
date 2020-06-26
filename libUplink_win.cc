@@ -252,6 +252,7 @@ napi_value list_objectsc(napi_env env, napi_callback_info info) {
     if (status != napi_ok) {
         free(obj);
         napi_throw_error(env, NULL, "Unable to create promise");
+        return NULL;
     }
     if (argc < 3) {
         free(obj);
@@ -462,6 +463,7 @@ napi_value list_bucketsc(napi_env env, napi_callback_info info) {
     if (status != napi_ok) {
         free(obj);
         napi_throw_error(env, NULL, "Unable to create promise");
+        return NULL;
     }
     napi_value str;
     napi_create_string_utf8(env, "Promise rejected", NAPI_AUTO_LENGTH, &str);

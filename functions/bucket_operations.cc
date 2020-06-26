@@ -31,6 +31,7 @@ napi_value stat_bucketc(napi_env env, napi_callback_info info) {
   if (status != napi_ok) {
       free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
+    return NULL;
   }
   //
 
@@ -135,6 +136,7 @@ napi_value create_bucketc(napi_env env, napi_callback_info info) {
   if (status != napi_ok) {
       free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
+    return NULL;
   }
   //
 
@@ -240,6 +242,7 @@ napi_value ensure_bucketc(napi_env env, napi_callback_info info) {
   if (status != napi_ok) {
       free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
+    return NULL;
   }
   //
 
@@ -345,6 +348,7 @@ napi_value delete_bucketc(napi_env env, napi_callback_info info) {
   if (status != napi_ok) {
       free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
+    return NULL;
   }
   //
 

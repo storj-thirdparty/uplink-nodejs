@@ -32,6 +32,7 @@ napi_value parse_accessc(napi_env env,
     if (status != napi_ok) {
         free(obj);
         napi_throw_error(env, NULL, "Unable to create promise");
+        return NULL;
     }
     napi_value str;
     napi_create_string_utf8(env, "Promise rejected", NAPI_AUTO_LENGTH, &str);
@@ -98,7 +99,9 @@ napi_value access_sharec(napi_env env, napi_callback_info info) {
   if (status != napi_ok) {
       free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
+    return NULL;
   }
+
   napi_valuetype checktypeofinput1, checktypeofinput;
   status = napi_typeof(env, args[0], &checktypeofinput1);
   assert(status == napi_ok);
@@ -345,6 +348,7 @@ napi_value config_request_access_with_passphrasec(napi_env env,
   if (status != napi_ok) {
       free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
+    return NULL;
   }
 
   Config config;
@@ -575,6 +579,7 @@ napi_value request_access_with_passphrasec(napi_env env,
   if (status != napi_ok) {
       free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
+    return NULL;
   }
   napi_value str;
   napi_create_string_utf8(env, "Promise rejected", NAPI_AUTO_LENGTH, &str);
@@ -679,8 +684,9 @@ napi_value access_serializec(napi_env env, napi_callback_info info) {
   if (status != napi_ok) {
       free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
+    return NULL;
   }
-  //
+
   if (argc < 1) {
       free(obj);
     napi_throw_type_error(env, nullptr,

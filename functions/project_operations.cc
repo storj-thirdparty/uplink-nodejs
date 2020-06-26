@@ -34,6 +34,7 @@ napi_value close_projectc(napi_env env, napi_callback_info info) {
   if (status != napi_ok) {
       free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
+    return NULL;
   }
 
   if (argc < 1) {
@@ -114,6 +115,7 @@ napi_value config_open_projectc(napi_env env, napi_callback_info info) {
   if (status != napi_ok) {
       free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
+    return NULL;
   }
 
   if (argc < 2) {
@@ -313,6 +315,7 @@ napi_value open_projectc(napi_env env, napi_callback_info info) {
   if (status != napi_ok) {
       free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
+    return NULL;
   }
 
   if (argc < 1) {
