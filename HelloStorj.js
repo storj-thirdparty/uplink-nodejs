@@ -2,12 +2,12 @@ const fs = require("fs");
 
 //include the Node.js-Storj bindings module
 const storj = require("uplink-nodejs");
-// object for all the function for uplink
+//object for all the function for uplink
 const libUplink = storj.uplink;
 //
 var BUFFER_SIZE = 80000;
-// demo Storj (V3) configuration
-
+//
+//demo Storj (V3) configuration
 var storjConfig = {
     apiKey    : "change-me-to-the-api-key-created-in-satellite-gui",
     satelliteURL   : "us-central-1.tardigrade.io:7777",
@@ -25,19 +25,32 @@ var localFullFileName = {
 function getDateTime(unixTimestamp) {
     var dateTime = new Date(unixTimestamp * 1000);
     
-    var year   = dateTime.getFullYear();
-    var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-    var month  = months[dateTime.getMonth()];
-    var date   = "0" + dateTime.getDate();
+    var year = dateTime.getFullYear();
+    var months = [
+"Jan",
+"Feb",
+"Mar",
+"Apr",
+"May",
+"Jun",
+"Jul",
+"Aug",
+"Sep",
+"Oct",
+"Nov",
+"Dec"
+];
+    var month = months[dateTime.getMonth()];
+    var date = "0" + dateTime.getDate();
 
-    // Hours part from the timestamp
+    //Hours part from the timestamp
     var hours = "0" + dateTime.getHours();
-    // Minutes part from the timestamp
+    //Minutes part from the timestamp
     var minutes = "0" + dateTime.getMinutes();
-    // Seconds part from the timestamp
+    //Seconds part from the timestamp
     var seconds = "0" + dateTime.getSeconds();
 
-    // Will display date time in YYYY-Mon-DD HH:MM:SS format
+    //Will display date time in YYYY-Mon-DD HH:MM:SS format
     var formattedDateTime = year + "-" + month + "-" + date.substr(-2) + " " + hours.substr(-2) + ":" + minutes.substr(-2) + ":" + seconds.substr(-2);
     
     return formattedDateTime;
@@ -93,7 +106,7 @@ async function accessshare(uplink,access){
         console.log(err);
     });
 }
-//
+/*eslint-disable */
 async function uploadfile(projectResult){
     console.log("Getting Upload Object....");
     //
@@ -129,7 +142,7 @@ async function uploadfile(projectResult){
             //Writing data on storj V3 network
             await uploadinfo.upload_write(uploadinfo.upload,buffer,bytesRead).then((writeResult) => {
                 size.actuallyWritten = writeResult.bytes_written;
-                size.totalWritten +=  size.actuallyWritten;
+                size.totalWritten = size.totalWritten + size.actuallyWritten;
                 if((size.totalWritten>0)&&(size.file>0)){
                     console.log("File Uploaded On Storj  : ",((Number(size.totalWritten)/Number(size.file))*100).toFixed(4)," %");
                 }
@@ -155,7 +168,10 @@ async function uploadfile(projectResult){
         customMetadataEntry2.value = "value1";
         customMetadataEntry2.value_length = customMetadataEntry2.value.length;
         
-        var customMetadataEntryArray =  [customMetadataEntry1,customMetadataEntry2];
+        var customMetadataEntryArray = [
+customMetadataEntry1,
+customMetadataEntry2
+];
         var customMetadata = new storj.CustomMetadata();
         customMetadata.count = customMetadataEntryArray.length;
         customMetadata.entries = customMetadataEntryArray;
@@ -188,12 +204,14 @@ async function uploadfile(projectResult){
         console.log(err);
 });
 }
+/*eslint-enable */
 //
+/*eslint-disable */
 async function downloadfile(projectResult){
     var downloadOptions = new storj.DownloadOptions();
     downloadOptions.offset = 0;
     downloadOptions.length = -1;
-    // Downloading file
+    //Downloading file
     console.log("Downloading file");
     await projectResult.download_object(projectResult.project,storjConfig.bucketName,storjConfig.uploadPath,downloadOptions).then(async (downloadresult) => {
         var objectsize =0;
@@ -208,8 +226,7 @@ async function downloadfile(projectResult){
         //
         var size = { download : 0,
             actuallyWritten : 0,
-            totalWritten    : 0
-        };
+            totalWritten    : 0};
         var buffer = new Buffer.alloc(BUFFER_SIZE);
         //
         var fileHandle = await fs.openSync(localFullFileName.dest, "w");
@@ -224,7 +241,7 @@ async function downloadfile(projectResult){
             await downloadresult.download_read(downloadresult.download,buffer,buffer.length).then(async (bytesread) => {
                 size.download = bytesread.bytes_read;
                 size.actuallyWritten = await fs.writeSync(fileHandle, buffer, 0, size.downloaded, size.totalWritten);
-                size.totalWritten += size.actuallyWritten;
+                size.totalWritten = size.totalWritten + size.actuallyWritten;
                 if(size.actuallyWritten>=objectsize){
                     loop = false;
                 }
@@ -255,7 +272,7 @@ async function downloadfile(projectResult){
     });
 
 }
-
+/*eslint-enable */
 //Connecting to storj network using Satellite Address , Storj API key , Encryption phassphrase
 console.log("Getting Access\nSatellite Address : ",storjConfig.satelliteURL,"\nAPI key : ",storjConfig.apiKey,"\nEncryption Passphrase : ",storjConfig.encryptionPassphrase);
 libUplink.request_access_with_passphrase(storjConfig.satelliteURL,storjConfig.apiKey,storjConfig.encryptionPassphrase).then((access) => {
@@ -299,9 +316,9 @@ libUplink.request_access_with_passphrase(storjConfig.satelliteURL,storjConfig.ap
             console.log("S.No. \t Created On \t\t Bucket Name");
             console.log("===== \t ========== \t\t ===========");
             var i = 0;
-            for(var bucketinfo in bucketList){
+            for(const bucketinfo in bucketList){
                 console.log(i," ",getDateTime(bucketList[bucketinfo].created), "\t", bucketList[bucketinfo].name);
-                i++;
+                i = i+1;
             }
         }).catch((err) => {
             console.log("Failed to list bucket");
@@ -324,16 +341,16 @@ libUplink.request_access_with_passphrase(storjConfig.satelliteURL,storjConfig.ap
         listObjectsOptions.recursive = true;
         listObjectsOptions.custom = true;
         listObjectsOptions.system = true;
-        listObjectsOptions.prefix ="change-me-to-desire-prefix";
+        listObjectsOptions.prefix ="change-me-to-desired-object-prefix";
 
         await projectResult.list_objects(projectResult.project,storjConfig.bucketName,listObjectsOptions).then((objectlist) => {
             console.log("S.No. \t Created On \t\t\t FileName \t\t FileSize");
             console.log("===== \t ========== \t\t\t =========== \t\t ===========");
             var i = 0;
-            for(var objectInfo in objectlist){
+            for(const objectInfo in objectlist){
                 var numb = "0" + (i + 1).toString();
                 console.log(numb.substr(-2), "  ", getDateTime(objectlist[objectInfo].system.created), "\t\t", objectlist[objectInfo].key,"\t\t",objectlist[objectInfo].system.content_length);
-                i++;
+                i = i+1;
             }
         }).catch((err) => {
             console.log("Error while listing object");

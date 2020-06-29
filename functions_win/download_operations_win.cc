@@ -226,8 +226,6 @@ napi_value download_readc(napi_env env, napi_callback_info info) {
     &bufferPtr, &lengthOfBuffer);
   assert(status == napi_ok);
 
-  uint8_t *ptrToData;
-  ptrToData = reinterpret_cast<uint8_t*>(bufferPtr);
   obj->bufferPtr = reinterpret_cast<uint8_t *>(bufferPtr);
   obj->download_result = download_resulterRef;
   obj->bufferlength = lengthOfBuffer;

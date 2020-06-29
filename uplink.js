@@ -1,7 +1,7 @@
 const process = require("process");
 /*eslint-disable */
 process.chdir(__dirname);
-/*eslint-enable */
+
 var uplink = require("bindings")("uplink");
 
 class ListBucketsOptions {
@@ -74,18 +74,17 @@ class Config {
         this.temp_directory=temp_directory;
     }
 }
-/*eslint-disable */
+/*eslint-enable */
 //exporting function and object
 module.exports = {
-    uplink : uplink,
-    DownloadOptions : DownloadOptions,
-    ListBucketsOptions : ListBucketsOptions,
-    Permission : Permission,
-    UploadOptions : UploadOptions,
-    ListObjectsOptions : ListObjectsOptions,
-    CustomMetadataEntry : CustomMetadataEntry,
-    CustomMetadata : CustomMetadata,
-    SharePrefix : SharePrefix,
-    Config : Config
+    uplink,
+    DownloadOptions,
+    ListBucketsOptions,
+    Permission,
+    UploadOptions,
+    ListObjectsOptions,
+    CustomMetadataEntry,
+    CustomMetadata,
+    SharePrefix,
+    Config
 }
-/*eslint-enable */

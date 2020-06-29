@@ -206,7 +206,6 @@ napi_value createObjectResult(napi_env env,
   status = napi_create_object(env, &returnObject);
   assert(status == napi_ok);
   if (objectPtr != NULL) {
-//
     Object object_result = *(objectPtr);
 
     status = napi_create_object(env, &objectNAPI);
@@ -222,6 +221,7 @@ napi_value createObjectResult(napi_env env,
     assert(status == napi_ok);
 
     napi_value keyObjectNAPI;
+    
     status = napi_create_string_utf8(env,
       objectPtr-> key, NAPI_AUTO_LENGTH, &keyObjectNAPI);
     assert(status == napi_ok);
@@ -234,7 +234,7 @@ napi_value createObjectResult(napi_env env,
       status = napi_create_int64(env, 0, &is_prefixNAPI);
       assert(status == napi_ok);
     }
-    //
+
     SystemMetadata systemMetadata;
     CustomMetadata customMetadata;
     CustomMetadataEntry customMetadataEntry;
@@ -247,11 +247,9 @@ napi_value createObjectResult(napi_env env,
     char empty[]="";
 
     if (customMetadata.count > 0) {
-//
       CustomMetadataEntry* CustomMetadataEntryListPointer =
       customMetadata.entries;
       for (uint32_t j=0; j < customMetadata.count; j++) {
-//
         customMetadataEntry = *(CustomMetadataEntryListPointer+j);
         napi_value key_lengthNAPI, value_lengthNAPI, keyNAPI,
         valueNAPI, customMetaNAPI;
@@ -366,8 +364,10 @@ napi_value createObjectResult(napi_env env,
     status = napi_set_named_property(env,
       objectNAPI, "key", keyObjectNAPI);
     assert(status == napi_ok);
+    return objectNAPI;
+  } else {
+    return returnObject;
   }
-  return objectNAPI;
 }
 //
 /*!
@@ -768,6 +768,7 @@ napi_value list_bucketsc(napi_env env, napi_callback_info info) {
   if (checktypeofinput == napi_null) {
     listBucketsOptions = {};
     obj->listBucketsOptions = listBucketsOptions;
+    obj->listBucketOptionSet = 0;
   } else if (checktypeofinput == napi_object) {
     napi_value cursorNAPI;
     status = napi_get_named_property(env, args[1], "cursor", &cursorNAPI);
@@ -785,7 +786,7 @@ napi_value list_bucketsc(napi_env env, napi_callback_info info) {
     assert(status == napi_ok);
     listBucketsOptions.cursor = cursor;
     obj->listBucketsOptions = listBucketsOptions;
-    delete[] cursor;
+    obj->listBucketOptionSet = 1;
   }
 
   status = napi_create_promise(env, &obj->deferred, &promise);

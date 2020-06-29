@@ -97,6 +97,8 @@ void downloadClosePromiseExecute(napi_env env, void* data) {
 
 void downloadReadPromiseExecute(napi_env env, void* data) {
     downloadReadObj* obj = reinterpret_cast<downloadReadObj*>(data);
+    uint8_t *ptrToData;
+    ptrToData = reinterpret_cast<uint8_t *>(obj->bufferPtr);
     if (!hGetProcIDDLL) {
         free(obj);
         napi_throw_type_error(env, nullptr, "\nLibrary not found \n");
@@ -112,7 +114,7 @@ void downloadReadPromiseExecute(napi_env env, void* data) {
             download_read = pICReadResult(fn);
 
             obj->read_result = download_read(&obj->download_result,
-                obj->bufferPtr, obj->bufferlength);
+                ptrToData, obj->bufferlength);
         }
     }
 }
@@ -237,7 +239,7 @@ void uploadWritePromiseExecute(napi_env env, void* data) {
             pICWriteResult upload_write;
             upload_write = pICWriteResult(fn);
             obj->write_result = upload_write(&(obj->upload_result),
-                obj->bufferPtr, obj->bytesread);
+                ptrToData, obj->bytesread);
         }
     }
 }

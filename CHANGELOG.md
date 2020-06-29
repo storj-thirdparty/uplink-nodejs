@@ -1,5 +1,9 @@
 # Storj-Nodejs Changelog
 
+## [1.0.5] - 29-06-2020
+* Bugs fixed
+* Removed docs folder
+
 ## [1.0.4] - 25-06-2020
 * Asyncronous function
 * Changed HelloStorj.js

@@ -92,7 +92,7 @@ napi_value upload_set_custom_metadatac(napi_env env, napi_callback_info info) {
   //
   status = napi_has_property(env, args[1], entriesStringNAPI, &entriesExists);
   assert(status == napi_ok);
-  if (!propertyexists) {
+  if (!entriesExists) {
       free(obj);
     napi_throw_type_error(
       env, nullptr, "\nWrong Object Passed In Second Parameter\n");

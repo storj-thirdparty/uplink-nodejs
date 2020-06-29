@@ -165,8 +165,7 @@ typedef struct{
   napi_deferred deferred;
   napi_async_work work;
   napi_value result;
-  Bucket ptrToArray;
-  napi_value BucketList, errorObject, returnObject;
+  int listBucketOptionSet;
 } ListBucketsPromiseObj;
 
 typedef struct {

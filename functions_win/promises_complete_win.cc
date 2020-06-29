@@ -20,12 +20,11 @@ void openProjectPromiseComplete(napi_env env, napi_status status, void* data) {
         napi_value projectNAPIObj = createResult(env, "project", handlevalue);
         napi_value returnObject = ProjectFunction(env, projectNAPIObj);
         //
-        status = napi_resolve_deferred(env, obj->deferred, projectNAPIObj);
+        status = napi_resolve_deferred(env, obj->deferred, returnObject);
     }
 
     if (status != napi_ok) {
-        free(obj);
-        napi_throw_error(env, NULL, "Unable to create promise result");
+        napi_throw_error(env, NULL, "Failed to return promise");
     }
 
     napi_delete_async_work(env, obj->work);
@@ -34,13 +33,11 @@ void openProjectPromiseComplete(napi_env env, napi_status status, void* data) {
 
 void ListObjectsPromiseComplete(napi_env env, napi_status status, void* data) {
     listObjectsPromiseObj* obj = (listObjectsPromiseObj*)data;
-    char errorMessagePtr[] = "";
     napi_value objectList;
     //
     status = napi_create_object(env, &objectList);
     assert(status == napi_ok);
     //
-    int count = 0;
     typedef bool (*ObjectIteratorNextFUNC)(ObjectIterator*);
     ObjectIteratorNextFUNC object_iterator_next =
         (ObjectIteratorNextFUNC)GetProcAddress(hGetProcIDDLL,
@@ -48,7 +45,8 @@ void ListObjectsPromiseComplete(napi_env env, napi_status status, void* data) {
     if (!object_iterator_next) {
         napi_throw_type_error(env, nullptr, "\nLibrary not found\n");
     } else {
-        while (object_iterator_next(obj->objectIterator)) {
+      int count = 0;
+      while (object_iterator_next(obj->objectIterator)) {
             typedef Object *(*BucketIteratorItemFUNC)(ObjectIterator*);
             BucketIteratorItemFUNC object_iterator_item =
                 (BucketIteratorItemFUNC)GetProcAddress(hGetProcIDDLL,
@@ -74,7 +72,6 @@ void ListObjectsPromiseComplete(napi_env env, napi_status status, void* data) {
         (ObjectIteratorErrFUNC)GetProcAddress(hGetProcIDDLL,
             "object_iterator_err");
     if (!object_iterator_err) {
-        free(obj);
         napi_throw_type_error(env, nullptr, "\nLibrary not found\n");
     } else {
         Error* err = object_iterator_err(obj->objectIterator);
@@ -82,7 +79,7 @@ void ListObjectsPromiseComplete(napi_env env, napi_status status, void* data) {
             Error errorResult = *(err);
             char* messagePtr = errorResult.message;
             char blank[] = "";
-            if (errorMessagePtr == NULL) { messagePtr = &blank[0]; }
+            if (messagePtr == NULL) { messagePtr = &blank[0]; }
             status = napi_reject_deferred(env, obj->deferred,
             createError(env, errorResult.code, messagePtr));
         } else {
@@ -90,8 +87,7 @@ void ListObjectsPromiseComplete(napi_env env, napi_status status, void* data) {
         }
 
         if (status != napi_ok) {
-            free(obj);
-            napi_throw_error(env, NULL, "Unable to create promise result");
+            napi_throw_error(env, NULL, "Failed to return promise");
         }
     }
     napi_delete_async_work(env, obj->work);
@@ -114,12 +110,10 @@ napi_status status, void* data) {
     napi_value objectNAPI = createObjectResult(env, object_result.object);
 
     status = napi_resolve_deferred(env, obj->deferred, objectNAPI);
-    assert(status == napi_ok);
   }
   //
   if (status != napi_ok) {
-      free(obj);
-    napi_throw_error(env, NULL, "Unable to create promise result");
+    napi_throw_error(env, NULL, "Failed to return promise");
   }
   napi_delete_async_work(env, obj->work);
   free(obj);
@@ -138,13 +132,12 @@ napi_status status, void* data) {
     //
     napi_value undefined;
     status = napi_get_undefined(env, &undefined);
+    assert(status == napi_ok);
     //
     status = napi_resolve_deferred(env, obj->deferred, undefined);
-    assert(status == napi_ok);
   }
   if (status != napi_ok) {
-      free(obj);
-    napi_throw_error(env, NULL, "Unable to create promise result");
+    napi_throw_error(env, NULL, "Failed to return promise");
   }
   napi_delete_async_work(env, obj->work);
   free(obj);
@@ -177,11 +170,9 @@ napi_status status, void* data) {
     assert(status == napi_ok);
 
     status = napi_resolve_deferred(env, obj->deferred, downloadReadNAPI);
-    assert(status == napi_ok);
   }
   if (status != napi_ok) {
-      free(obj);
-    napi_throw_error(env, NULL, "Unable to create promise result");
+    napi_throw_error(env, NULL, "Failed to return promise");
   }
   napi_delete_async_work(env, obj->work);
   free(obj);
@@ -233,11 +224,9 @@ napi_status status, void* data) {
         "download_info", downloadInfoFunction);
         assert(status == napi_ok);
         status = napi_resolve_deferred(env, obj->deferred, downloadResultNAPI);
-        assert(status == napi_ok);
     }
     if (status != napi_ok) {
-        free(obj);
-        napi_throw_error(env, NULL, "Unable to create promise result");
+        napi_throw_error(env, NULL, "Failed to return promise");
     }
     napi_delete_async_work(env, obj->work);
     free(obj);
@@ -258,13 +247,12 @@ napi_status status, void* data) {
       //
       napi_value undefined;
       status = napi_get_undefined(env, &undefined);
+      assert(status == napi_ok);
       //
       status = napi_resolve_deferred(env, obj->deferred, undefined);
-      assert(status == napi_ok);
   }
   if (status != napi_ok) {
-      free(obj);
-      napi_throw_error(env, NULL, "Unable to create promise result");
+      napi_throw_error(env, NULL, "Failed to return promise");
   }
 
   napi_delete_async_work(env, obj->work);
@@ -283,13 +271,12 @@ void uploadAbortPromiseComplete(napi_env env, napi_status status, void* data) {
   } else {
       napi_value undefined;
       status = napi_get_undefined(env, &undefined);
+      assert(status == napi_ok);
       //
       status = napi_resolve_deferred(env, obj->deferred, undefined);
-      assert(status == napi_ok);
   }
   if (status != napi_ok) {
-      free(obj);
-    napi_throw_error(env, NULL, "Unable to create promise result");
+    napi_throw_error(env, NULL, "Failed to return promise");
   }
   napi_delete_async_work(env, obj->work);
   free(obj);
@@ -310,12 +297,10 @@ void uploadInfoOperationComplete(napi_env env, napi_status status, void* data) {
     napi_value objectNAPI = createObjectResult(env, object_result.object);
 
     status = napi_resolve_deferred(env, obj->deferred, objectNAPI);
-    assert(status == napi_ok);
   }
   //
   if (status != napi_ok) {
-      free(obj);
-    napi_throw_error(env, NULL, "Unable to create promise result");
+    napi_throw_error(env, NULL, "Failed to return promise");
   }
   napi_delete_async_work(env, obj->work);
   free(obj);
@@ -334,13 +319,12 @@ napi_status status, void* data) {
     //
     napi_value undefined;
     status = napi_get_undefined(env, &undefined);
+    assert(status == napi_ok);
     //
     status = napi_resolve_deferred(env, obj->deferred, undefined);
-    assert(status == napi_ok);
   }
   if (status != napi_ok) {
-      free(obj);
-    napi_throw_error(env, NULL, "Unable to create promise result");
+    napi_throw_error(env, NULL, "Failed to return promise");
   }
   napi_delete_async_work(env, obj->work);
   free(obj);
@@ -373,11 +357,9 @@ napi_status status, void* data) {
     assert(status == napi_ok);
 
     status = napi_resolve_deferred(env, obj->deferred, uploadWriteNAPI);
-    assert(status == napi_ok);
   }
   if (status != napi_ok) {
-      free(obj);
-    napi_throw_error(env, NULL, "Unable to create promise result");
+    napi_throw_error(env, NULL, "Failed to return promise");
   }
   napi_delete_async_work(env, obj->work);
   free(obj);
@@ -444,11 +426,9 @@ void uploadObjectComplete(napi_env env, napi_status status, void* data) {
         assert(status == napi_ok);
         //
         status = napi_resolve_deferred(env, obj->deferred, uploadResultNAPI);
-        assert(status == napi_ok);
     }
     if (status != napi_ok) {
-        free(obj);
-        napi_throw_error(env, NULL, "Unable to create promise result");
+        napi_throw_error(env, NULL, "Failed to return promise");
     }
     napi_delete_async_work(env, obj->work);
     free(obj);
@@ -468,11 +448,9 @@ void objectOperationComplete(napi_env env, napi_status status, void* data) {
     napi_value objectNAPI = createObjectResult(env, object_result.object);
 
     status = napi_resolve_deferred(env, obj->deferred, objectNAPI);
-    assert(status == napi_ok);
   }
   if (status != napi_ok) {
-      free(obj);
-    napi_throw_error(env, NULL, "Unable to create promise result");
+    napi_throw_error(env, NULL, "Failed to return promise");
   }
   napi_delete_async_work(env, obj->work);
   free(obj);
@@ -495,11 +473,9 @@ void bucketOperationComplete(napi_env env, napi_status status, void* data) {
     napi_value bucketNAPI = createBucketResult(env, "bucket",
     bucketCreated, bucketNamePtr);
     status = napi_resolve_deferred(env, obj->deferred, bucketNAPI);
-    assert(status == napi_ok);
   }
   if (status != napi_ok) {
-      free(obj);
-    napi_throw_error(env, NULL, "Unable to create promise result");
+    napi_throw_error(env, NULL, "Failed to return promise");
   }
   napi_delete_async_work(env, obj->work);
   free(obj);
@@ -521,7 +497,6 @@ void ListBucketsPromiseComplete(napi_env env, napi_status status, void* data) {
     status = napi_create_object(env, &returnObject);
     assert(status == napi_ok);
 
-    int count = 0;
     typedef bool (*BucketIteratorNextFUNC)(BucketIterator*);
     BucketIteratorNextFUNC bucket_iterator_next =
         (BucketIteratorNextFUNC)GetProcAddress(hGetProcIDDLL,
@@ -530,7 +505,8 @@ void ListBucketsPromiseComplete(napi_env env, napi_status status, void* data) {
     if (!bucket_iterator_next) {
         napi_throw_type_error(env, nullptr, "\nLibrary not found\n");
     } else {
-        while (bucket_iterator_next(bucket_resultIterator)) {
+      int count = 0;
+      while (bucket_iterator_next(bucket_resultIterator)) {
             typedef Bucket* (*BucketIteratorItemFUNC)(BucketIterator*);
             BucketIteratorItemFUNC bucket_iterator_item =
                 (BucketIteratorItemFUNC)GetProcAddress(hGetProcIDDLL,
@@ -590,8 +566,7 @@ void ListBucketsPromiseComplete(napi_env env, napi_status status, void* data) {
         }
 
         if (status != napi_ok) {
-            free(obj);
-            napi_throw_error(env, NULL, "Unable to create promise result");
+            napi_throw_error(env, NULL, "Failed to return promise");
         }
     }
 
@@ -610,13 +585,12 @@ void closeProjectPromiseComplete(napi_env env, napi_status status, void* data) {
   } else {
       napi_value undefined;
       status = napi_get_undefined(env, &undefined);
+      assert(status == napi_ok);
       //
       status = napi_resolve_deferred(env, obj->deferred, undefined);
-      assert(status == napi_ok);
   }
   if (status != napi_ok) {
-      free(obj);
-    napi_throw_error(env, NULL, "Unable to create promise result");
+    napi_throw_error(env, NULL, "Failed to return promise");
   }
   napi_delete_async_work(env, obj->work);
   free(obj);
@@ -640,12 +614,10 @@ napi_status status, void* data) {
     napi_value projectNAPIObj = createResult(env, "project", handlevalue);
 
     status = napi_resolve_deferred(env, obj->deferred, projectNAPIObj);
-    assert(status == napi_ok);
   }
 //
   if (status != napi_ok) {
-      free(obj);
-    napi_throw_error(env, NULL, "Unable to create promise result");
+    napi_throw_error(env, NULL, "Failed to return promise");
   }
 //
   napi_delete_async_work(env, obj->work);
@@ -673,12 +645,10 @@ void ParseAccessPromiseComplete(napi_env env,
         napi_value returnObject = AccessFunction(env, AccessNAPIObj);
         //
         status = napi_resolve_deferred(env, obj->deferred, returnObject);
-        assert(status == napi_ok);
     }
 
     if (status != napi_ok) {
-        free(obj);
-        napi_throw_error(env, NULL, "Unable to create promise result");
+        napi_throw_error(env, NULL, "Failed to return promise");
     }
 
     napi_delete_async_work(env, obj->work);
@@ -705,11 +675,9 @@ void ShareAccessPromiseComplete(napi_env env, napi_status status, void* data) {
         napi_value returnObject = AccessFunction(env, AccessNAPIObj);
 
         status = napi_resolve_deferred(env, obj->deferred, returnObject);
-        assert(status == napi_ok);
     }
     if (status != napi_ok) {
-        free(obj);
-        napi_throw_error(env, NULL, "Unable to create promise result");
+        napi_throw_error(env, NULL, "Failed to return promise");
     }
     napi_delete_async_work(env, obj->work);
     free(obj);
@@ -737,12 +705,10 @@ napi_status status, void* data) {
         napi_value returnObject = AccessFunction(env, AccessNAPIObj);
         //
         status = napi_resolve_deferred(env, obj->deferred, returnObject);
-        assert(status == napi_ok);
     }
 
     if (status != napi_ok) {
-        free(obj);
-        napi_throw_error(env, NULL, "Unable to create promise result");
+        napi_throw_error(env, NULL, "Failed to return promise");
     }
 
     napi_delete_async_work(env, obj->work);
@@ -769,12 +735,10 @@ napi_status status, void* data) {
         napi_value AccessNAPIObj = createResult(env, "access", handlevalue);
         napi_value returnObject = AccessFunction(env, AccessNAPIObj);
         status = napi_resolve_deferred(env, obj->deferred, returnObject);
-        assert(status == napi_ok);
     }
     //
     if (status != napi_ok) {
-        free(obj);
-        napi_throw_error(env, NULL, "Unable to create promise result");
+        napi_throw_error(env, NULL, "Failed to return promise");
     }
     //
     napi_delete_async_work(env, obj->work);
@@ -801,13 +765,10 @@ napi_status status, void* data) {
         NAPI_AUTO_LENGTH, &stringNAPI);
         assert(status == napi_ok);
         //
-        //
         status = napi_resolve_deferred(env, obj->deferred, stringNAPI);
-        assert(status == napi_ok);
     }
     if (status != napi_ok) {
-        free(obj);
-        napi_throw_error(env, NULL, "Unable to create promise result");
+        napi_throw_error(env, NULL, "Failed to return promise");
     }
     napi_delete_async_work(env, obj->work);
     free(obj);

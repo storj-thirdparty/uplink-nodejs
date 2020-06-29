@@ -7,8 +7,7 @@
 #include <string>
 /*!
  \fn void openProjectPromiseComplete(napi_env env, napi_status status, void* data) 
- \brief openProjectPromiseComplete function called when async operation get 
- complete and convert c data type into NAPI type
+ \brief openProjectPromiseComplete creates the handle for open_project
   
  */
 void openProjectPromiseComplete(napi_env env, napi_status status, void* data) {
@@ -34,8 +33,7 @@ void openProjectPromiseComplete(napi_env env, napi_status status, void* data) {
   }
 
   if (status != napi_ok) {
-      free(obj);
-    napi_throw_error(env, NULL, "Unable to create promise result");
+    napi_throw_error(env, NULL, "Failed to return promise");
   }
 
   napi_delete_async_work(env, obj->work);
@@ -43,8 +41,8 @@ void openProjectPromiseComplete(napi_env env, napi_status status, void* data) {
 }
 /*!
  \fn void listObjectPromiseComplete(napi_env env, napi_status status, void* data) 
- \brief listObjectPromiseComplete used to implement the uplink-c library function
- ListObjectPromiseComplete returns list of object using promise
+ \brief listObjectPromiseComplete creates the handle for list_objects
+  it shows null if zero objects found in the list .
   
  */
 void listObjectPromiseComplete(napi_env env, napi_status status, void* data) {
@@ -71,6 +69,8 @@ void listObjectPromiseComplete(napi_env env, napi_status status, void* data) {
   if (err != NULL) {
     Error errorResult = *(err);
     char* messagePtr = errorResult.message;
+    char blank[] = "";
+    if (messagePtr == NULL) {messagePtr = &blank[0];}
     status = napi_reject_deferred(env, obj->deferred,
     createError(env, errorResult.code, messagePtr));
   } else {
@@ -78,16 +78,14 @@ void listObjectPromiseComplete(napi_env env, napi_status status, void* data) {
   }
 
   if (status != napi_ok) {
-      free(obj);
-    napi_throw_error(env, NULL, "Unable to create promise result");
+    napi_throw_error(env, NULL, "Failed to return promise");
   }
   napi_delete_async_work(env, obj->work);
   free(obj);
 }
 /*!
  \fn void downloadInfoOperationComplete(napi_env env, napi_status status, void* data) 
- \brief  downloadInfoOperationComplete used to implement the uplink-c library function
-       downloadInfoOperationComplete provides download information using promise
+ \brief  downloadInfoOperationComplete creates the handle for download_info
   
  */
 void downloadInfoOperationComplete(napi_env env,
@@ -108,13 +106,10 @@ napi_status status, void* data) {
     napi_value objectNAPI = createObjectResult(env, object_result.object);
 
     status = napi_resolve_deferred(env, obj->deferred, objectNAPI);
-    assert(status == napi_ok);
-//
   }
   //
   if (status != napi_ok) {
-      free(obj);
-    napi_throw_error(env, NULL, "Unable to create promise result");
+    napi_throw_error(env, NULL, "Failed to return promise");
   }
   napi_delete_async_work(env, obj->work);
   free(obj);
@@ -122,8 +117,7 @@ napi_status status, void* data) {
 
 /*!
  \fn void downloadCloseOperationComplete(napi_env env, napi_status status, void* data) 
- \brief  downloadCloseOperationComplete used to implement the uplink-c library function
-         downloadClosePromiseComplete close downloads using promise 
+ \brief  downloadCloseOperationComplete creates the handle for close_download .
   
  */
 void downloadCloseOperationComplete(napi_env env,
@@ -141,22 +135,20 @@ napi_status status, void* data) {
     //
     napi_value undefined;
     status = napi_get_undefined(env, &undefined);
+    assert(status == napi_ok);
     //
     status = napi_resolve_deferred(env, obj->deferred, undefined);
-    assert(status == napi_ok);
-//
+    //
   }
   if (status != napi_ok) {
-      free(obj);
-    napi_throw_error(env, NULL, "Unable to create promise result");
+    napi_throw_error(env, NULL, "Failed to return promise");
   }
   napi_delete_async_work(env, obj->work);
   free(obj);
 }
 /*!
  \fn void downloadReadOperationComplete(napi_env env, napi_status status, void* data) 
- \brief  downloadReadOperationComplete used to implement the uplink-c library function
-         downloadReadPromiseComplete reads downloads using promise 
+ \brief  downloadReadOperationComplete creates the handle for download_read
   
  */
 void downloadReadOperationComplete(napi_env env,
@@ -188,19 +180,17 @@ napi_status status, void* data) {
     assert(status == napi_ok);
 
     status = napi_resolve_deferred(env, obj->deferred, downloadReadNAPI);
-    assert(status == napi_ok);
   }
   if (status != napi_ok) {
-      free(obj);
-    napi_throw_error(env, NULL, "Unable to create promise result");
+    napi_throw_error(env, NULL, "Failed to return promise");
   }
   napi_delete_async_work(env, obj->work);
   free(obj);
 }
 /*!
  \fn void downloadObjectOperationComplete(napi_env env, napi_status status, void* data) 
- \brief  downloadobjectOperationComplete used to implement the uplink-c library function
-         downloadClosePromiseComplete  downloads objects using promise 
+ \brief  downloadobjectOperationComplete creates the handle for download_object
+it shows null if download has zero options.
   
  */
 
@@ -249,21 +239,18 @@ napi_status status, void* data) {
     status = napi_set_named_property(env, downloadResultNAPI,
     "download_info", downloadInfoFunction);
     assert(status == napi_ok);
-    ///**/
+    //
     status = napi_resolve_deferred(env, obj->deferred, downloadResultNAPI);
-    assert(status == napi_ok);
   }
   if (status != napi_ok) {
-      free(obj);
-    napi_throw_error(env, NULL, "Unable to create promise result");
+    napi_throw_error(env, NULL, "Failed to return promise");
   }
   napi_delete_async_work(env, obj->work);
   free(obj);
 }
 /*!
  \fn void uploadSetMetaPromiseComplete(napi_env env, napi_status status, void* data) 
- \brief  uploadSetMetaPromiseComplete used to implement the uplink-c library function
-         uploadSetMetaPromiseComplete uploads the metadata using limit
+ \brief  uploadSetMetaPromiseComplete creates the handle for upload_set_custom_metadata
   
  */
 void uploadSetMetaPromiseComplete(napi_env env,
@@ -281,21 +268,19 @@ napi_status status, void* data) {
     //
     napi_value undefined;
     status = napi_get_undefined(env, &undefined);
+    assert(status == napi_ok);
     //
     status = napi_resolve_deferred(env, obj->deferred, undefined);
-    assert(status == napi_ok);
   }
   if (status != napi_ok) {
-      free(obj);
-    napi_throw_error(env, NULL, "Unable to create promise result");
+    napi_throw_error(env, NULL, "Failed to return promise");
   }
   napi_delete_async_work(env, obj->work);
   free(obj);
 }
 /*!
  \fn void uploadAbortPromiseComplete(napi_env env, napi_status status, void* data) 
- \brief  uploadAbortPromiseComplete used to implement the uplink-c library function
-         uploadAbortPromiseComplete aborts the upload using promise
+ \brief  uploadAbortPromiseComplete creates the handle for upload_abort
   
  */
 
@@ -310,24 +295,22 @@ void uploadAbortPromiseComplete(napi_env env, napi_status status, void* data) {
     status = napi_reject_deferred(env, obj->deferred,
     createError(env, errorResult.code, errorMessagePtr));
   } else {
-    // TO DO : Paste Code
+    //
     napi_value undefined;
     status = napi_get_undefined(env, &undefined);
+    assert(status == napi_ok);
     //
     status = napi_resolve_deferred(env, obj->deferred, undefined);
-    assert(status == napi_ok);
   }
   if (status != napi_ok) {
-      free(obj);
-    napi_throw_error(env, NULL, "Unable to create promise result");
+    napi_throw_error(env, NULL, "Failed to return promise");
   }
   napi_delete_async_work(env, obj->work);
   free(obj);
 }
 /*!
  \fn void uploadInfoOperationComplete(napi_env env, napi_status status, void* data) 
- \brief  uploadInfoOperationComplete used to implement the uplink-c library function
-         uploadInfoOperationComplete uploads the information using promise
+ \brief  uploadInfoOperationComplete creates the handle for upload_info
   
  */
 void uploadInfoOperationComplete(napi_env env, napi_status status, void* data) {
@@ -347,20 +330,17 @@ void uploadInfoOperationComplete(napi_env env, napi_status status, void* data) {
     napi_value objectNAPI = createObjectResult(env, object_result.object);
 
     status = napi_resolve_deferred(env, obj->deferred, objectNAPI);
-    assert(status == napi_ok);
   }
   //
   if (status != napi_ok) {
-      free(obj);
-    napi_throw_error(env, NULL, "Unable to create promise result");
+    napi_throw_error(env, NULL, "Failed to return promise");
   }
   napi_delete_async_work(env, obj->work);
   free(obj);
 }
 /*!
  \fn void uploadCommitOperationComplete(napi_env env, napi_status status, void* data) 
- \brief  uploadCommitOperationComplete used to implement the uplink-c library function
-         uploadCommitOperationComplete commits the upload using promise
+ \brief  uploadCommitOperationComplete creates the handle for upload_commit
   
  */
 void uploadCommitOperationComplete(napi_env env,
@@ -378,22 +358,19 @@ napi_status status, void* data) {
     //
     napi_value undefined;
     status = napi_get_undefined(env, &undefined);
+    assert(status == napi_ok);
     //
     status = napi_resolve_deferred(env, obj->deferred, undefined);
-    assert(status == napi_ok);
-//
   }
   if (status != napi_ok) {
-      free(obj);
-    napi_throw_error(env, NULL, "Unable to create promise result");
+    napi_throw_error(env, NULL, "Failed to return promise");
   }
   napi_delete_async_work(env, obj->work);
   free(obj);
 }
 /*!
  \fn void uploadWriteOperationComplete(napi_env env, napi_status status, void* data) 
- \brief  uploadWriteOperationComplete used to implement the uplink-c library function
-         uploadWriteOperationComplete writes the upload using promise
+ \brief  uploadWriteOperationComplete creates the handle for upload_write
   
  */
 void uploadWriteOperationComplete(napi_env env,
@@ -425,20 +402,17 @@ napi_status status, void* data) {
     assert(status == napi_ok);
 
     status = napi_resolve_deferred(env, obj->deferred, uploadWriteNAPI);
-    assert(status == napi_ok);
   }
   if (status != napi_ok) {
-      free(obj);
-    napi_throw_error(env, NULL, "Unable to create promise result");
+    napi_throw_error(env, NULL, "Failed to return promise");
   }
   napi_delete_async_work(env, obj->work);
   free(obj);
 }
 /*!
  \fn void uploadObjectComplete(napi_env env, napi_status status, void* data) 
- \brief  uploadObjectComplete used to implement the uplink-c library function
-         uploadObjectComplete uploads the object using promise
-  
+ \brief  uploadObjectComplete creates the handle for upload_object .
+ it shows null if upload option set contains zero object.  
  */
 void uploadObjectComplete(napi_env env, napi_status status, void* data) {
   uploadobjectObj *obj = (uploadobjectObj*)data;
@@ -501,12 +475,10 @@ void uploadObjectComplete(napi_env env, napi_status status, void* data) {
     assert(status == napi_ok);
     //
     status = napi_resolve_deferred(env, obj->deferred, uploadResultNAPI);
-    assert(status == napi_ok);
 //
   }
   if (status != napi_ok) {
-      free(obj);
-    napi_throw_error(env, NULL, "Unable to create promise result");
+    napi_throw_error(env, NULL, "Failed to return promise");
   }
   napi_delete_async_work(env, obj->work);
   free(obj);
@@ -530,16 +502,13 @@ void objectOperationComplete(napi_env env, napi_status status, void* data) {
       createError(env, error_result.code, errorMessagePtr));
     }
   } else {
-    // Object object = *(object_result.object);
     napi_value objectNAPI = createObjectResult(env, object_result.object);
-
+    //
     status = napi_resolve_deferred(env, obj->deferred, objectNAPI);
-    assert(status == napi_ok);
-//
+    //
   }
   if (status != napi_ok) {
-      free(obj);
-    napi_throw_error(env, NULL, "Unable to create promise result");
+    napi_throw_error(env, NULL, "Failed to return promise");
   }
   napi_delete_async_work(env, obj->work);
   free(obj);
@@ -570,19 +539,16 @@ void bucketOperationComplete(napi_env env, napi_status status, void* data) {
     "bucket", bucketCreated, bucketNamePtr);
 
     status = napi_resolve_deferred(env, obj->deferred, bucketNAPI);
-    assert(status == napi_ok);
   }
   if (status != napi_ok) {
-      free(obj);
-    napi_throw_error(env, NULL, "Unable to create promise result");
+    napi_throw_error(env, NULL, "Failed to return promise");
   }
   napi_delete_async_work(env, obj->work);
   free(obj);
 }
 /*!
  \fn void ListBucketPromiseComplete(napi_env env, napi_status status, void* data) 
- \brief  ListBucketPromiseComplete used to implement the uplink-c library function
-      ListBucketPromiseComplete provide buckets list using promise
+ \brief  ListBucketPromiseComplete creates the handle for list_buckets
   
  */
 void ListBucketsPromiseComplete(napi_env env, napi_status status, void* data) {
@@ -600,11 +566,7 @@ void ListBucketsPromiseComplete(napi_env env, napi_status status, void* data) {
 
   status = napi_create_object(env, &returnObject);
   assert(status == napi_ok);
-
-  obj->BucketList = BucketList;
-  obj->errorObject = errorObject;
-  obj->returnObject = returnObject;
-
+  
   int count = 0;
   while (bucket_iterator_next(bucket_resultIterator)) {
     Bucket *bucket_result = bucket_iterator_item(bucket_resultIterator);
@@ -640,14 +602,11 @@ void ListBucketsPromiseComplete(napi_env env, napi_status status, void* data) {
     status = napi_set_named_property(env, returnObject, "bucketList",
     BucketList);
     assert(status == napi_ok);
-    // Resolve
+    //
     status = napi_resolve_deferred(env, obj->deferred, returnObject);
   }
-  //
-
   if (status != napi_ok) {
-      free(obj);
-    napi_throw_error(env, NULL, "Unable to create promise result");
+    napi_throw_error(env, NULL, "Failed to return promise");
   }
 
   napi_delete_async_work(env, obj->work);
@@ -655,8 +614,7 @@ void ListBucketsPromiseComplete(napi_env env, napi_status status, void* data) {
 }
 /*!
  \fn void closeProjectPromiseComplete(napi_env env, napi_status status, void* data) 
- \brief  closeProjectPromiseComplete used to implement the uplink-c library function
-      closeProjectPromiseComplete closes the project using promise
+ \brief  closeProjectPromiseComplete creates the handle for close_project
   
  */
 void closeProjectPromiseComplete(napi_env env, napi_status status, void* data) {
@@ -673,21 +631,19 @@ void closeProjectPromiseComplete(napi_env env, napi_status status, void* data) {
     //
     napi_value undefined;
     status = napi_get_undefined(env, &undefined);
+    assert(status == napi_ok);
     //
     status = napi_resolve_deferred(env, obj->deferred, undefined);
-    assert(status == napi_ok);
   }
   if (status != napi_ok) {
-      free(obj);
-    napi_throw_error(env, NULL, "Unable to create promise result");
+    napi_throw_error(env, NULL, "Failed to return promise");
   }
   napi_delete_async_work(env, obj->work);
   free(obj);
 }
 /*!
  \fn void configOpenProjectPromiseComplete(napi_env env, napi_status status, void* data) 
- \brief  configOpenProjectPromiseComplete used to implement the uplink-c library function
-      configOpenProjectPromiseComplete opens project using access grant 
+ \brief  configOpenProjectPromiseComplete creates the handle for config_open_project
   
  */
 void configOpenProjectPromiseComplete(napi_env env,
@@ -710,14 +666,11 @@ napi_status status, void* data) {
     napi_value projectNAPIObj = createResult(env, "project", handlevalue);
     napi_value returnObject = ProjectFunction(env, projectNAPIObj);
     //
-    //
     status = napi_resolve_deferred(env, obj->deferred, returnObject);
-//
   }
 
   if (status != napi_ok) {
-      free(obj);
-    napi_throw_error(env, NULL, "Unable to create promise result");
+    napi_throw_error(env, NULL, "Failed to return promise");
   }
 
   napi_delete_async_work(env, obj->work);
@@ -725,8 +678,7 @@ napi_status status, void* data) {
 }
 /*!
  \fn void ParseAccessPromiseComplete(napi_env env, napi_status status, void* data) 
- \brief  ParseAccessPromiseComplete used to implement the uplink-c library function
-        ParseAccessPromiseComplete  parses serialized access grant string. 
+ \brief  ParseAccessPromiseComplete creates the handle for parse_access
   
  */
 void ParseAccessPromiseComplete(napi_env env,
@@ -750,21 +702,17 @@ void ParseAccessPromiseComplete(napi_env env,
         napi_value returnObject = AccessFunction(env, AccessNAPIObj);
         //
         status = napi_resolve_deferred(env, obj->deferred, returnObject);
-        assert(status == napi_ok);
     }
 
     if (status != napi_ok) {
-        free(obj);
-        napi_throw_error(env, NULL, "Unable to create promise result");
+        napi_throw_error(env, NULL, "Failed to return promise");
     }
-
     napi_delete_async_work(env, obj->work);
     free(obj);
 }
 /*!
  \fn void ShareAccessPromiseComplete(napi_env env, napi_status status, void* data) 
- \brief  ShareAccessPromiseComplete used to implement the uplink-c library function
-        ShareAccessPromiseComplete creates new access grant with specific permission. 
+ \brief  ShareAccessPromiseComplete creates the handle for access_share
   
  */
 void ShareAccessPromiseComplete(napi_env env, napi_status status, void* data) {
@@ -787,19 +735,16 @@ void ShareAccessPromiseComplete(napi_env env, napi_status status, void* data) {
     napi_value returnObject = AccessFunction(env, AccessNAPIObj);
 
     status = napi_resolve_deferred(env, obj->deferred, returnObject);
-    assert(status == napi_ok);
   }
   if (status != napi_ok) {
-      free(obj);
-    napi_throw_error(env, NULL, "Unable to create promise result");
+    napi_throw_error(env, NULL, "Failed to return promise");
   }
   napi_delete_async_work(env, obj->work);
   free(obj);
 }
 /*!
  \fn void ConfigRequestAccessWithEncryptionPromiseComplete(napi_env env, napi_status status, void* data) 
- \brief  ConfigRequestAccessWithEncryptionPromiseComplete used to implement the uplink-c library function
-        ConfigRequestAccessWithEncryptionPromiseComplete requests for a new access grant using encryption
+ \brief  ConfigRequestAccessWithEncryptionPromiseComplete creates the handle for config_request_access_with_passphrase
   
  */
 void ConfigRequestAccessWithEncryptionPromiseComplete
@@ -824,12 +769,10 @@ void ConfigRequestAccessWithEncryptionPromiseComplete
     napi_value returnObject = AccessFunction(env, AccessNAPIObj);
     //
     status = napi_resolve_deferred(env, obj->deferred, returnObject);
-    assert(status == napi_ok);
   }
 
   if (status != napi_ok) {
-      free(obj);
-    napi_throw_error(env, NULL, "Unable to create promise result");
+    napi_throw_error(env, NULL, "Failed to return promise");
   }
 
   napi_delete_async_work(env, obj->work);
@@ -837,8 +780,7 @@ void ConfigRequestAccessWithEncryptionPromiseComplete
 }
 /*!
  \fn void RequestAccessWithEncryptionPromiseComplete(napi_env env, napi_status status, void* data) 
- \brief  RequestAccessWithEncryptionPromiseComplete used to implement the uplink-c library function
-        RequestAccessWithEncryptionPromiseComplete requests for a new access grant using encryption
+ \brief  RequestAccessWithEncryptionPromiseComplete creates the handle for request_access_with_passphrase
   
  */
 void RequestAccessWithEncryptionPromiseComplete
@@ -861,12 +803,10 @@ void RequestAccessWithEncryptionPromiseComplete
     napi_value AccessNAPIObj = createResult(env, "access", handlevalue);
     napi_value returnObject = AccessFunction(env, AccessNAPIObj);
     status = napi_resolve_deferred(env, obj->deferred, returnObject);
-    assert(status == napi_ok);
   }
   //
   if (status != napi_ok) {
-      free(obj);
-    napi_throw_error(env, NULL, "Unable to create promise result");
+    napi_throw_error(env, NULL, "Failed to return promise");
   }
   //
   napi_delete_async_work(env, obj->work);
@@ -874,8 +814,7 @@ void RequestAccessWithEncryptionPromiseComplete
 }
 /*!
  \fn void accessSerializePromiseComplete(napi_env env, napi_status status, void* data) 
- \brief  accessSerializePromiseComplete used to implement the uplink-c library function
-        accessSerializePromiseComplete  serializes access grant into a string.
+ \brief  accessSerializePromiseComplete creates the handle for access_serialize
   
  */
 
@@ -899,13 +838,10 @@ napi_status status, void* data) {
     NAPI_AUTO_LENGTH, &stringNAPI);
     assert(status == napi_ok);
     //
-    //
     status = napi_resolve_deferred(env, obj->deferred, stringNAPI);
-    assert(status == napi_ok);
   }
   if (status != napi_ok) {
-      free(obj);
-    napi_throw_error(env, NULL, "Unable to create promise result");
+    napi_throw_error(env, NULL, "Failed to return promise");
   }
   napi_delete_async_work(env, obj->work);
   free(obj);

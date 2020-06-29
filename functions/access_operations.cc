@@ -42,6 +42,7 @@ napi_value parse_accessc(napi_env env,
     if (status != napi_ok) {
         free(obj);
         napi_throw_error(env, NULL, "Unable to create promise");
+        return NULL;
     }
     napi_value str;
     napi_create_string_utf8(env, "Promise rejected", NAPI_AUTO_LENGTH, &str);
@@ -370,6 +371,7 @@ napi_value config_request_access_with_passphrasec(napi_env env,
   if (status != napi_ok) {
       free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
+    return NULL;
   }
   //
 
@@ -715,6 +717,7 @@ napi_value access_serializec(napi_env env, napi_callback_info info) {
   if (status != napi_ok) {
       free(obj);
     napi_throw_error(env, NULL, "Unable to create promise");
+    return NULL;
   }
   //
   if (argc < 1) {

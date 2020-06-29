@@ -7,18 +7,19 @@
 #include <string>
 /*!
  \fn void openProjectPromiseExecute(napi_env env, void* data) 
- \brief openProjectPromiseExecute creates the handle for open_project
+ \brief openProjectPromiseExecute function called when async operation get 
+ complete and convert c data type into NAPI type 
   
  */
+
 void openProjectPromiseExecute(napi_env env, void* data) {
   openProjectPromiseObj *obj = (openProjectPromiseObj*)data;
-  ProjectResult project_result = open_project(&(obj->access));
-  obj->project_Result = project_result;
+  obj->project_Result = open_project(&(obj->access));
 }
 /*!
  \fn void listObjectPromiseExecute(napi_env env, void* data) 
- \brief listObjectPromiseExecute creates the handle for list_objects
-  it shows null if zero objects found in the list
+ \brief listObjectPromiseExecute used to implement the uplink-c library function
+ ListObjectPromiseExecute returns list of object using promise
  */
 void listObjectPromiseExecute(napi_env env, void* data) {
   listObjectPromiseObj *obj = (listObjectPromiseObj*)data;
@@ -32,18 +33,19 @@ void listObjectPromiseExecute(napi_env env, void* data) {
 }
 /*!
  \fn void downloadInfoPromiseExecute(napi_env env, void* data) 
- \brief downloadInfoPromiseExecute creates the handle for download_info
+ \brief downloadInfoPromiseExecute used to implement the uplink-c library function
+       downloadInfoPromiseExecute provides download information using promise
+  
   
  */
 void downloadInfoPromiseExecute(napi_env env, void* data) {
   downloadInfoObj *obj = (downloadInfoObj*)data;
-  ObjectResult object_result = download_info(&(obj->download_result));
-  obj->object_result = object_result;
+  obj->object_result = download_info(&(obj->download_result));
 }
 /*!
  \fn void downloadClosePromiseExecute(napi_env env, void* data) 
- \brief downloadClosePromiseExecute creates the handle for close_download
-  
+ \brief downloadClosePromiseExecute used to implement the uplink-c library function
+         downloadClosePromiseExecute close downloads using promise   
  */
 
 void downloadClosePromiseExecute(napi_env env, void* data) {
@@ -52,72 +54,71 @@ void downloadClosePromiseExecute(napi_env env, void* data) {
 }
 /*!
  \fn void downloadReadPromiseExecute(napi_env env, void* data) 
- \brief downloadReadPromiseExecute creates the handle for download_read
-  
+ \brief downloadReadPromiseExecute used to implement the uplink-c library function
+         downloadReadPromiseExecute reads downloads using promise 
+
  */
 
 void downloadReadPromiseExecute(napi_env env, void* data) {
   downloadReadObj *obj = (downloadReadObj*)data;
   uint8_t *ptrToData;
   ptrToData = reinterpret_cast<uint8_t *>(obj->bufferPtr);
-  ReadResult read_result = download_read(&(obj->download_result),
+  obj->read_result = download_read(&(obj->download_result),
     ptrToData, obj->bufferlength);
-  obj->read_result = read_result;
 }
 
 /*!
  \fn void downloadObjectPromiseExecute(napi_env env, void* data) 
- \brief downloadObjectPromiseExecute creates the handle for download_object
-it shows null if download has zero options. 
+ \brief downloadObjectPromiseExecute used to implement the uplink-c library function
+         downloadClosePromiseExecute downloads objects using promise  
  */
 void downloadObjectPromiseExecute(napi_env env, void* data) {
   downloadObjectObj *obj = (downloadObjectObj*)data;
-  DownloadResult download_result;
   if (obj->downloadoptionSet == 0) {
-    download_result = download_object(&(obj->project), obj->bucketname,
+    obj->download_result = download_object(&(obj->project), obj->bucketname,
           obj->objectkey, NULL);
   } else {
-    download_result = download_object(&(obj->project), obj->bucketname,
+    obj->download_result = download_object(&(obj->project), obj->bucketname,
           obj->objectkey, &(obj->downloadOption));
   }
-  obj->download_result = download_result;
 }
 /*!
  \fn void uploadSetMetaPromiseExecute(napi_env env, void* data) 
- \brief uploadSetMetaPromiseExecute creates the handle for upload_set_custom_metadata
+ \brief uploadSetMetaPromiseExecute used to implement the uplink-c library function
+         uploadSetMetaPromiseExecute uploads the metadata using limit
 
  */
 
 void uploadSetMetaPromiseExecute(napi_env env, void* data) {
   uploadSetMetaObj *obj = (uploadSetMetaObj*)data;
-  Error* error_result = upload_set_custom_metadata(
+  obj->error_result = upload_set_custom_metadata(
     &(obj->upload_result), obj->customMetadata);
-  obj->error_result = error_result;
 }
 /*!
  \fn void uploadAbortPromiseExecute(napi_env env, void* data) 
- \brief uploadAbortPromiseExecute creates the handle for upload_abort
+ \brief uploadAbortPromiseExecute used to implement the uplink-c library function
+         uploadAbortPromiseExecute aborts the upload using promise
 
  */
 void uploadAbortPromiseExecute(napi_env env, void* data) {
   uploadAbortPromiseObj *obj = (uploadAbortPromiseObj*)data;
-  Error* error_result = upload_abort(&(obj->upload_result));
-  obj->error_result = error_result;
+  obj->error_result = upload_abort(&(obj->upload_result));
 }
 /*!
  \fn void uploadInfoPromiseExecute(napi_env env, void* data) 
- \brief uploadInfoPromiseExecute creates the handle for upload_info
+ \brief uploadInfoPromiseExecute used to implement the uplink-c library function
+         uploadInfoPromiseExecute uploads the information using promise
 
  */
 void uploadInfoPromiseExecute(napi_env env, void* data) {
   uploadInfoObj *obj = (uploadInfoObj*)data;
-  ObjectResult object_result = upload_info(&(obj->upload_result));
-  obj->object_result = object_result;
+  obj->object_result = upload_info(&(obj->upload_result));
 }
 
 /*!
  \fn void uploadCommitPromiseExecute(napi_env env, void* data) 
- \brief uploadCommitPromiseExecute creates the handle for upload_commit
+ \brief uploadCommitPromiseExecute used to implement the uplink-c library function
+         uploadCommitPromiseExecute commits the upload using promise
 
  */
 void uploadCommitPromiseExecute(napi_env env, void* data) {
@@ -126,34 +127,32 @@ void uploadCommitPromiseExecute(napi_env env, void* data) {
 }
 /*!
  \fn void uploadWritePromiseExecute(napi_env env, void* data) 
- \brief uploadWritePromiseExecute creates the handle for upload_write
+ \brief uploadWritePromiseExecute used to implement the uplink-c library function
+         uploadWritePromiseExecute writes the upload using promise
 
  */
 void uploadWritePromiseExecute(napi_env env, void* data) {
   uploadWriteObj *obj = (uploadWriteObj*)data;
   uint8_t *ptrToData;
   ptrToData = reinterpret_cast<uint8_t *>(obj->bufferPtr);
-  WriteResult write_result = upload_write(&(obj->upload_result),
+  obj->write_result = upload_write(&(obj->upload_result),
   ptrToData, obj->bytesread);
-  obj->write_result = write_result;
 }
 /*!
  \fn void uploadObjectExecute(napi_env env, void* data) 
- \brief uploadObjectExecute creates the handle for upload_object .
- it shows null if upload option set contains zero object.
+ \brief uploadObjectExecute used to implement the uplink-c library function
+         uploadObjectExecute uploads the object using promise
 
  */
 void uploadObjectExecute(napi_env env, void* data) {
   uploadobjectObj *obj = (uploadobjectObj*)data;
-  UploadResult upload_result;
   if (obj->uploadoptionSet == 0) {
-    upload_result = upload_object(&(obj->project), obj->bucketname,
+    obj->upload_result = upload_object(&(obj->project), obj->bucketname,
           obj->objectkey, NULL);
   } else {
-    upload_result = upload_object(&(obj->project), obj->bucketname,
+    obj->upload_result = upload_object(&(obj->project), obj->bucketname,
           obj->objectkey, &(obj->uploadOptions));
   }
-  obj->upload_result = upload_result;
 }
 /*!
  \fn void stateObjectPromiseExecute(napi_env env, void* data) 
@@ -162,9 +161,8 @@ void uploadObjectExecute(napi_env env, void* data) {
  */
 void stateObjectPromiseExecute(napi_env env, void* data) {
   objectOperationObj *obj = (objectOperationObj*)data;
-  ObjectResult object_result = stat_object(&(obj->project),
+  obj->object_result = stat_object(&(obj->project),
   obj->bucketname, obj->objectkey);
-  obj->object_result = object_result;
 }
 /*!
  \fn void deleteObjectPromiseExecute(napi_env env, void* data) 
@@ -174,9 +172,8 @@ void stateObjectPromiseExecute(napi_env env, void* data) {
 //
 void deleteObjectPromiseExecute(napi_env env, void* data) {
   objectOperationObj *obj = (objectOperationObj*)data;
-  ObjectResult object_result = delete_object(&(obj->project),
+  obj->object_result = delete_object(&(obj->project),
   obj->bucketname, obj->objectkey);
-  obj->object_result = object_result;
 }
 /*!
  \fn void stateBucketPromiseExecute(napi_env env, void* data) 
@@ -184,8 +181,7 @@ void deleteObjectPromiseExecute(napi_env env, void* data) {
  */
 void stateBucketPromiseExecute(napi_env env, void* data) {
   bucketOperationObj *obj = (bucketOperationObj*)data;
-  BucketResult bucket_result = stat_bucket(&(obj->project), obj->bucketname);
-  obj->bucket_Result = bucket_result;
+  obj->bucket_Result = stat_bucket(&(obj->project), obj->bucketname);
 }
 /*!
  \fn void createBucketPromiseExecute(napi_env env, void* data) 
@@ -193,8 +189,7 @@ void stateBucketPromiseExecute(napi_env env, void* data) {
  */
 void createBucketPromiseExecute(napi_env env, void* data) {
   bucketOperationObj *obj = (bucketOperationObj*)data;
-  BucketResult bucket_result = create_bucket(&(obj->project), obj->bucketname);
-  obj->bucket_Result = bucket_result;
+  obj->bucket_Result = create_bucket(&(obj->project), obj->bucketname);
 }
 /*!
  \fn void ensureBucketPromiseExecute(napi_env env, void* data) 
@@ -202,8 +197,7 @@ void createBucketPromiseExecute(napi_env env, void* data) {
  */
 void ensureBucketPromiseExecute(napi_env env, void* data) {
   bucketOperationObj *obj = (bucketOperationObj*)data;
-  BucketResult bucket_result = ensure_bucket(&(obj->project), obj->bucketname);
-  obj->bucket_Result = bucket_result;
+  obj->bucket_Result = ensure_bucket(&(obj->project), obj->bucketname);
 }
 /*!
  \fn void deleteBucketPromiseExecute(napi_env env, void* data) 
@@ -211,84 +205,86 @@ void ensureBucketPromiseExecute(napi_env env, void* data) {
  */
 void deleteBucketPromiseExecute(napi_env env, void* data) {
   bucketOperationObj *obj = (bucketOperationObj*)data;
-  BucketResult bucket_result = delete_bucket(&(obj->project), obj->bucketname);
-  obj->bucket_Result = bucket_result;
+  obj->bucket_Result = delete_bucket(&(obj->project), obj->bucketname);
 }
 /*!
  \fn void ListBucketsPromiseExecute(napi_env env, void* data) 
- \brief ListBucketPromiseExecute creates the handle for list_buckets
+ \brief ListBucketPromiseExecute used to implement the uplink-c library function
+      ListBucketPromiseExecute provide buckets list using promise
 
  */
 void ListBucketsPromiseExecute(napi_env env, void* data) {
   ListBucketsPromiseObj *obj = (ListBucketsPromiseObj*)data;
-  BucketIterator *bucket_resultIterator =
-  list_buckets(&(obj->project_result), NULL);
-  obj->bucket_resultIterator = bucket_resultIterator;
+  if (obj->listBucketOptionSet == 0) {
+    obj->bucket_resultIterator = list_buckets(&(obj->project_result), NULL);
+  } else {
+    obj->bucket_resultIterator = list_buckets(&(obj->project_result), &(obj->listBucketsOptions));
+  }
 }
 /*!
  \fn void closeProjectPromiseExecute(napi_env env, void* data) 
- \brief closeProjectPromiseExecute creates the handle for close_project
+ \brief closeProjectPromiseExecute used to implement the uplink-c library function
+      closeProjectPromiseExecute closes the project using promise
  */
 void closeProjectPromiseExecute(napi_env env, void* data) {
   closeProjectPromiseObj *obj = (closeProjectPromiseObj*)data;
-  Error* error_result = close_project(&(obj->project_result));
-  obj->error_result = error_result;
+  obj->error_result = close_project(&(obj->project_result));
 }
 /*!
  \fn void configOpenProjectPromiseExecute(napi_env env, void* data) 
- \brief configOpenProjectPromiseExecute creates the handle for config_open_project
+ \brief configOpenProjectPromiseExecute used to implement the uplink-c library function
+      configOpenProjectPromiseExecute opens project using access grant 
  */
 void configOpenProjectPromiseExecute(napi_env env, void* data) {
   configOpenProjectPromiseObj *obj = (configOpenProjectPromiseObj*)data;
-  ProjectResult project_result = config_open_project
+  obj->project_Result = config_open_project
   (obj->config, &(obj->access));
-  obj->project_Result = project_result;
 }
 /*!
  \fn void ParseAccess(napi_env env, void* data) 
- \brief ParseAccess creates the handle for parse_access
+ \brief ParseAccess used to implement the uplink-c library function
+        ParseAccess parses serialized access grant string. 
  */
 void ParseAccess(napi_env env, void* data) {
   ParseAccessPromiseObj* obj = (ParseAccessPromiseObj*)data;
-  AccessResult access_Result = parse_access(obj->accessString);
-  obj->access_Result = access_Result;
+  obj->access_Result = parse_access(obj->accessString);
 }
 /*!
  \fn void ShareAccessPromiseExecute(napi_env env, void* data) 
- \brief ShareAccessPromiseExecute creates the handle for access_share
+ \brief ShareAccessPromiseExecute used to implement the uplink-c library function
+        ShareAccessPromiseExecute creates new access grant with specific permission. 
  */
 void ShareAccessPromiseExecute(napi_env env, void* data) {
   AccessSharePromiseObj* obj = (AccessSharePromiseObj*)data;
-  AccessResult access_Result = access_share(&(obj->access), obj->permission,
+  obj->access_Result = access_share(&(obj->access), obj->permission,
   obj->SharePrefixListPointer, obj->SharePrefixSize);
-  obj->access_Result = access_Result;
 }
 /*!
  \fn void ConfigRequestAccessWithEncryption(napi_env env, void* data) 
- \brief ConfigRequestAccessWithEncryption creates the handle for config_request_access_with_passphrase
+ \brief ConfigRequestAccessWithEncryption used to implement the uplink-c library function
+        ConfigRequestAccessWithEncryption requests for a new access grant using encryption
  */
 void ConfigRequestAccessWithEncryption(napi_env env, void* data) {
   ConfigRequestAccessPromiseObj *obj = (ConfigRequestAccessPromiseObj*)data;
-  AccessResult access_Result = config_request_access_with_passphrase
+  obj->access_Result = config_request_access_with_passphrase
   (obj->config, obj->satellite_address, obj->api_key, obj->passphrase);
-  obj->access_Result = access_Result;
 }
 /*!
  \fn void RequestAccessWithEncryption(napi_env env, void* data) 
- \brief RequestAccessWithEncryption creates the handle for request_access_with_passphrase
+ \brief RequestAccessWithEncryption used to implement the uplink-c library function
+        RequestAccessWithEncryption requests for a new access grant using encryption
  */
 void RequestAccessWithEncryption(napi_env env, void* data) {
   RequestAccessPromiseObj *obj = (RequestAccessPromiseObj*)data;
-  AccessResult access_Result = request_access_with_passphrase
+  obj->access_Result = request_access_with_passphrase
   (obj->satellite_address, obj->api_key, obj->passphrase);
-  obj->access_Result = access_Result;
 }
 /*!
  \fn void accessSerializePromiseExecute(napi_env env, void* data) 
- \brief accessSerializePromiseExecute creates the handle for access_serialize
+ \brief accessSerializePromiseExecute used to implement the uplink-c library function
+        accessSerializePromiseExecute serializes access grant into a string.
  */
 void accessSerializePromiseExecute(napi_env env, void* data) {
   accessSerializePromiseObj *obj = (accessSerializePromiseObj*)data;
-  StringResult string_result = access_serialize(&(obj->access));
-  obj->string_result = string_result;
+  obj->string_result = access_serialize(&(obj->access));
 }
