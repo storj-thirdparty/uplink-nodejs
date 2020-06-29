@@ -316,10 +316,12 @@ libUplink.request_access_with_passphrase(storjConfig.satelliteURL,storjConfig.ap
             console.log("S.No. \t Created On \t\t Bucket Name");
             console.log("===== \t ========== \t\t ===========");
             var i = 0;
+            /*eslint-disable */
             for(const bucketinfo in bucketList){
                 console.log(i," ",getDateTime(bucketList[bucketinfo].created), "\t", bucketList[bucketinfo].name);
                 i = i+1;
             }
+            /*eslint-enable */
         }).catch((err) => {
             console.log("Failed to list bucket");
             console.log(err);
@@ -347,11 +349,13 @@ libUplink.request_access_with_passphrase(storjConfig.satelliteURL,storjConfig.ap
             console.log("S.No. \t Created On \t\t\t FileName \t\t FileSize");
             console.log("===== \t ========== \t\t\t =========== \t\t ===========");
             var i = 0;
+            /*eslint-disable */
             for(const objectInfo in objectlist){
                 var numb = "0" + (i + 1).toString();
                 console.log(numb.substr(-2), "  ", getDateTime(objectlist[objectInfo].system.created), "\t\t", objectlist[objectInfo].key,"\t\t",objectlist[objectInfo].system.content_length);
                 i = i+1;
             }
+            /*eslint-enable */
         }).catch((err) => {
             console.log("Error while listing object");
             console.log(err);
