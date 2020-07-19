@@ -1,5 +1,9 @@
 # Storj-Nodejs Changelog
 
+## [1.0.5] - 13-07-2020
+* Added Testcases
+* Updates documentation
+
 ## [1.0.5] - 29-06-2020
 * Bugs fixed
 * Removed docs folder
