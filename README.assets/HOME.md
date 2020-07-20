@@ -18,10 +18,10 @@
 	* inputs: Config(Object), Satellite Address(String), API key(String), Passphrase(String)
 	* output: Access(Object) or Error(Object)
 
-####  arse_access(String)
-	* function parse_access to parses serialized access grant string
+####  parse_access(String)
+	* function parse_access to parse serialized access grant string
 	* pre-requisites: None
-	* inputs: Serialized AccessString)
+	* inputs: Serialized Access (String)
 	* output: Access(Object) or Error(Object)
 
 #### Access Related Functions
