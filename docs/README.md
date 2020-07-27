@@ -36,3 +36,33 @@ $ npm install uplink-nodejs
 ## <b>Flow Diagram</b>
 
 ![](/_images/arch.drawio.png ':include :type=iframe width=100% height=1000px')
+
+## Testing
+
+Create file with name secret.txt at uplink-nodejs module root directory and paste storj API key in same file.
+
+* Run testcases
+```
+npm test
+```
+
+> NOTE: Please ensure *npm install* command is already executed.
+
+* The project has been tested on the following operating systems:
+
+```
+* Windows
+	* Version: 10 Pro
+	* Processor: Intel(R) Core(TM) i3-5005U CPU @ 2.00GHz 2.00GHz
+	* Node version : v10.18.1
+
+* macOS Catalina
+	* Version: 10.15.4
+	* Processor: 2.5 GHz Dual-Core Intel Core i5
+	* Node version : 13.6.0
+
+* ubuntu
+	* Version: 16.04 LTS
+	* Processor: AMD A6-7310 APU with AMD Radeon R4 Graphics × 4
+	* Node version : 10.12.0
+```
