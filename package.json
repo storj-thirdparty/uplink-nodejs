@@ -4,7 +4,7 @@
   "description": "Storj-NodeJS bindings package",
   "main": "uplink.js",
   "scripts": {
-    "test": "mocha",
+    "test": "mocha --timeout 10000",
     "preinstall": "make",
     "install": "(node-gyp configure) && (node-gyp rebuild)"
   },
@@ -25,7 +25,9 @@
     "url": "https://github.com/storj-thirdparty/uplink-nodejs/issues"
   },
   "homepage": "https://github.com/storj-thirdparty/uplink-nodejs#readme",
-  "devDependencies": {},
+  "devDependencies": {
+    "eslint": "^7.6.0"
+  },
   "dependencies": {
     "bindings": "^1.5.0",
     "chai": "^4.2.0",

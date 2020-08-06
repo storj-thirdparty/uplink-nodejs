@@ -3,7 +3,9 @@ const fs = require("fs");
 //include the Node.js-Storj bindings module
 const storj = require("uplink-nodejs");
 //object for all the function for uplink
-const libUplink = storj.uplink;
+const libUplink = new storj.uplink();
+//Object for all error for uplink
+const uplinkError = storj.errorhandle;
 //
 var BUFFER_SIZE = 80000;
 //
@@ -57,25 +59,25 @@ function getDateTime(unixTimestamp) {
 }
 //
 async function accessshare(uplink,access){
-    var permission = new storj.Permission(true,true,true,true,0,0);
+    var permission = new storj.Permission(true,true,true,false,0,0);
     var sharePrefix = storj.SharePrefix;
     var sharePrefixListArray = [];
     sharePrefix.bucket = "change-me-to-desired-bucket-name";
-    sharePrefix.prefix ="change-me-to-desired-object-prefix";
+    sharePrefix.prefix ="change-me-to-desired-object-prefix-with-/";
     sharePrefixListArray.push(sharePrefix);
-    await access.access_share(access.access,permission,sharePrefixListArray,sharePrefixListArray.length).then(async (sharedAccess) => {
+    await access.share(permission,sharePrefixListArray,sharePrefixListArray.length).then(async (sharedAccess) => {
         //
         console.log("Serilazing share access");
-        await sharedAccess.access_serialize(sharedAccess.access).then(async (stringResult) => {
+        await sharedAccess.serialize().then(async (stringResult) => {
             //
             console.log("Parsing access share...");
             await uplink.parse_access(stringResult).then(async (parsedSharedAccess) => {
                 //
                 console.log("Opening project using paresed shared access");
-                await parsedSharedAccess.open_project(parsedSharedAccess.access).then(async (project) => {
+                await parsedSharedAccess.open_project().then(async (project) => {
                     //
                     console.log("\nOpened Project using share access");
-                    await project.delete_object(project.project,storjConfig.bucketName,storjConfig.uploadPath).then((objectInfo) => {
+                    await project.delete_object(storjConfig.bucketName,storjConfig.uploadPath).then((objectInfo) => {
                         console.log("\nObject Deleted successfully !!");
                         console.log("Object Name : ",objectInfo.key,"Object Size : ",objectInfo.system.content_length);
                     }).catch((err) => {
@@ -83,7 +85,7 @@ async function accessshare(uplink,access){
                         console.log(err);
                     });
                     //
-                    await project.close_project(project.project).then(() => {
+                    await project.close().then(() => {
                         console.log("Project Closed !!");
                     }).catch((err) => {
                         console.log("Failed to close project");
@@ -107,14 +109,14 @@ async function accessshare(uplink,access){
     });
 }
 /*eslint-disable */
-async function uploadfile(projectResult){
+async function uploadfile(project){
     console.log("Getting Upload Object....");
     //
     var uploadOptions = new storj.UploadOptions();
     //
     uploadOptions.expires = 0;
     //Uploading object on storj V3 network
-    await projectResult.upload_object(projectResult.project,storjConfig.bucketName,storjConfig.uploadPath,uploadOptions).then(async (uploadinfo) => {
+    await project.upload_object(storjConfig.bucketName,storjConfig.uploadPath,uploadOptions).then(async (upload) => {
         console.log(localFullFileName.src, " File: UPLOADED as ", storjConfig.uploadPath, "!");
         var fileHandle = await fs.openSync(localFullFileName.src, "rs");
         var size = {
@@ -140,7 +142,7 @@ async function uploadfile(projectResult){
             bytesRead = await fs.readSync(fileHandle, buffer, 0, size.toWrite, size.totalWritten);
             //
             //Writing data on storj V3 network
-            await uploadinfo.upload_write(uploadinfo.upload,buffer,bytesRead).then((writeResult) => {
+            await upload.write(buffer,bytesRead).then((writeResult) => {
                 size.actuallyWritten = writeResult.bytes_written;
                 size.totalWritten = size.totalWritten + size.actuallyWritten;
                 if((size.totalWritten>0)&&(size.file>0)){
@@ -176,21 +178,21 @@ customMetadataEntry2
         customMetadata.count = customMetadataEntryArray.length;
         customMetadata.entries = customMetadataEntryArray;
         //Adding custom meta to upload object
-        await uploadinfo.upload_set_custom_metadata(uploadinfo.upload,customMetadata).then(() => {
+        await upload.set_custom_metadata(customMetadata).then(() => {
             console.log("\nCustom Metadata set successfully");
         }).catch((err) => {
             console.log("Failed to set custom metadata");
             console.log(err);
         });
         //Commiting object on storj V3 network
-        await uploadinfo.upload_commit(uploadinfo.upload).then(() => {
+        await upload.commit().then(() => {
             console.log("\nObject on storj V3 network successfully");
         }).catch((err) => {
             console.log("Failed to commit object on storj V3 network");
             console.log(err);
         });
         //Fetching info of uploaded object on storj V3 network
-        await uploadinfo.upload_info(uploadinfo.upload).then((object) => {
+        await upload.info().then((object) => {
             console.log("\nObject Info");
             console.log("Object Name : ",object.key,"\nObject Size : ",object.system.content_length);
         }).catch((err) => {
@@ -207,17 +209,17 @@ customMetadataEntry2
 /*eslint-enable */
 //
 /*eslint-disable */
-async function downloadfile(projectResult){
+async function downloadfile(project){
     var downloadOptions = new storj.DownloadOptions();
     downloadOptions.offset = 0;
     downloadOptions.length = -1;
     //Downloading file
     console.log("Downloading file");
-    await projectResult.download_object(projectResult.project,storjConfig.bucketName,storjConfig.uploadPath,downloadOptions).then(async (downloadresult) => {
+    await project.download_object(storjConfig.bucketName,storjConfig.uploadPath,downloadOptions).then(async (download) => {
         var objectsize =0;
         //
         console.log("Fetching download object info");
-        await downloadresult.download_info(downloadresult.download).then((objectInfo) => {
+        await download.info().then((objectInfo) => {
             objectsize = objectInfo.system.content_length;
         }).catch((err) => {
             console.log("Failed to get downloading object info");
@@ -238,7 +240,7 @@ async function downloadfile(projectResult){
                 buffer = new Buffer.alloc(objectsize-size.totalWritten);
             }
             //Reading data from storj V3 network
-            await downloadresult.download_read(downloadresult.download,buffer,buffer.length).then(async (bytesread) => {
+            await download.read(buffer,buffer.length).then(async (bytesread) => {
                 size.download = bytesread.bytes_read;
                 size.actuallyWritten = await fs.writeSync(fileHandle, buffer, 0, size.downloaded, size.totalWritten);
                 size.totalWritten = size.totalWritten + size.actuallyWritten;
@@ -260,7 +262,7 @@ async function downloadfile(projectResult){
         }
         fs.closeSync(fileHandle);
         //Closing download
-        await downloadresult.close_download(downloadresult.download).then(() => {
+        await download.close().then(() => {
             console.log("Object Downloaded Successfully");
         }).catch((err) => {
             console.log("Failed to download object");
@@ -272,20 +274,20 @@ async function downloadfile(projectResult){
     });
 
 }
-/*eslint-enable */
+
+//
 //Connecting to storj network using Satellite Address , Storj API key , Encryption phassphrase
 console.log("Getting Access\nSatellite Address : ",storjConfig.satelliteURL,"\nAPI key : ",storjConfig.apiKey,"\nEncryption Passphrase : ",storjConfig.encryptionPassphrase);
-libUplink.request_access_with_passphrase(storjConfig.satelliteURL,storjConfig.apiKey,storjConfig.encryptionPassphrase).then((access) => {
+var access = libUplink.request_access_with_passphrase(storjConfig.satelliteURL,storjConfig.apiKey,storjConfig.encryptionPassphrase).then((access)=>{
     console.log("Access : Granted !!");
-    //
     //Opening project on storj V3 network using created access.
     console.log("Opening Storj Project...");
-    access.open_project(access.access).then(async (projectResult) => {
+    access.open_project().then(async (project)=>{
         console.log("Desired Storj Project: OPENED!");
         //Fetching bucket info from the storj V3 network
         console.log("Fetching Information About Bucket : ",storjConfig.bucketName);
         //
-        await projectResult.stat_bucket(projectResult.project,storjConfig.bucketName).then((bucketInfo) => {
+        await project.stat_bucket(storjConfig.bucketName).then((bucketInfo) => {
             console.log("\nBucket Information : \n Bucket Name : ",bucketInfo.name,"\n Bucket Created : ",getDateTime(bucketInfo.created));
         }).catch((err) => {
             console.log("Failed to get bucket Info");
@@ -293,16 +295,16 @@ libUplink.request_access_with_passphrase(storjConfig.satelliteURL,storjConfig.ap
         });
         //
         //Creating bucket on storj V3 Network
-        console.log("Creating Bucket : ",storjConfig.bucketName);
-        await projectResult.create_bucket(projectResult.project,storjConfig.bucketName).then((bucketInfo) => {
+        console.log("\nCreating Bucket : ",storjConfig.bucketName);
+        await project.create_bucket(storjConfig.bucketName).then((bucketInfo) => {
             console.log("\nBucket Information : \n Bucket Name : ",bucketInfo.name,"\n Bucket Created : ",getDateTime(bucketInfo.created));
         }).catch((err) => {
             console.log("Failed to create bucket on storj V3 network");
             console.log(err);
         });
         //Ensuring bucket exists on storj V3 network
-        console.log("Fetching Info of newly created bucket");
-        await projectResult.ensure_bucket(projectResult.project,storjConfig.bucketName).then((bucketInfo) => {
+        console.log("\nFetching Info of newly created bucket");
+        await project.ensure_bucket(storjConfig.bucketName).then((bucketInfo) => {
             console.log("\nBucket Information : \n Bucket Name : ",bucketInfo.name,"\n Bucket Created : ",getDateTime(bucketInfo.created));
         }).catch((err) => {
             console.log("Failed to fetch bucket Info");
@@ -311,7 +313,7 @@ libUplink.request_access_with_passphrase(storjConfig.satelliteURL,storjConfig.ap
         //
         //Listing buckets on storj V3 network
         var listBucketsOptions = new storj.ListBucketsOptions();
-        await projectResult.listbuckets(projectResult.project,listBucketsOptions).then(async (bucketListResult) => {
+        await project.listbuckets(listBucketsOptions).then(async (bucketListResult) => {
             var bucketList = bucketListResult.bucketList;
             console.log("S.No. \t Created On \t\t Bucket Name");
             console.log("===== \t ========== \t\t ===========");
@@ -327,11 +329,11 @@ libUplink.request_access_with_passphrase(storjConfig.satelliteURL,storjConfig.ap
             console.log(err);
         });
         //Uploading file on storj V3 network
-        await uploadfile(projectResult);
+        await uploadfile(project);
         //
         //Fetching info of uploaded object
         console.log("Fetching object Info...");
-        await projectResult.stat_object(projectResult.project,storjConfig.bucketName,storjConfig.uploadPath).then((objectinfo) => {
+        await project.stat_object(storjConfig.bucketName,storjConfig.uploadPath).then((objectinfo) => {
             console.log("Object : ",objectinfo.key,"\nSize : ",objectinfo.system.content_length,"\nCreated : ",getDateTime(objectinfo.system.created));
         }).catch((err) => {
             console.log("Failed to fetch object info");
@@ -343,59 +345,73 @@ libUplink.request_access_with_passphrase(storjConfig.satelliteURL,storjConfig.ap
         listObjectsOptions.recursive = true;
         listObjectsOptions.custom = true;
         listObjectsOptions.system = true;
-        listObjectsOptions.prefix ="change-me-to-desired-object-prefix";
+        listObjectsOptions.prefix ="change-me-to-desired-object-prefix-with-/";
 
-        await projectResult.list_objects(projectResult.project,storjConfig.bucketName,listObjectsOptions).then((objectlist) => {
+        await project.list_objects(storjConfig.bucketName,listObjectsOptions).then((objectlist) => {
             console.log("S.No. \t Created On \t\t\t FileName \t\t FileSize");
             console.log("===== \t ========== \t\t\t =========== \t\t ===========");
             var i = 0;
-            /*eslint-disable */
+            /*eslint-disable*/
             for(const objectInfo in objectlist){
                 var numb = "0" + (i + 1).toString();
                 console.log(numb.substr(-2), "  ", getDateTime(objectlist[objectInfo].system.created), "\t\t", objectlist[objectInfo].key,"\t\t",objectlist[objectInfo].system.content_length);
                 i = i+1;
             }
-            /*eslint-enable */
+            /*eslint-enable*/
         }).catch((err) => {
             console.log("Error while listing object");
             console.log(err);
         });
         //Downloading object from storj v3 network
-        await downloadfile(projectResult,libUplink);
+        await downloadfile(project,libUplink);
         //Creating share access
         await accessshare(libUplink,access);
         //
-        //Delete object from the network
-        console.log("Deleting Object...");
-        await projectResult.delete_object(projectResult.project,storjConfig.bucketName,storjConfig.uploadPath).then((objectinfo) => {
-            console.log("Object ",storjConfig.uploadPath," Deleted");
-            console.log("Object Size : ",objectinfo.system.created);
-        }).catch((err) => {
-            console.log("Failed to delete object");
-            console.log(err);
-        });
-        //
         //Deleting bucket from the storj V3 network
         console.log("Deleting Bucket : ",storjConfig.bucketName);
-        await projectResult.delete_bucket(projectResult.project,storjConfig.bucketName).then((bucketInfo) => {
+        await project.delete_bucket(storjConfig.bucketName).then((bucketInfo) => {
             console.log("\nBucket Deleted : \n Bucket Name : ",bucketInfo.name,"\n Bucket Created : ",getDateTime(bucketInfo.created));
-        }).catch((err) => {
+        }).catch(async (err) => {
+            //Checking error type
+            if (err instanceof uplinkError.BucketNotEmptyError) {
+                //Delete object from the network
+                console.log("Bucket is not empty !!\nDeleting object from storj V3 bucket...");
+                await project.delete_object(storjConfig.bucketName,storjConfig.uploadPath).then((objectinfo) => {
+                    console.log("Object ",storjConfig.uploadPath," Deleted");
+                    console.log("Object Size : ",objectinfo.system.content_length);
+                }).catch((err) => {
+                    console.log("Failed to delete object");
+                    console.log(err);
+                });        
+            } else {
+                console.log("Failed to delete bucket");
+                console.log(err);
+            }
+        });
+        //
+        //
+        console.log("Deleting Bucket : ",storjConfig.bucketName);
+        await project.delete_bucket(storjConfig.bucketName).then((bucketInfo) => {
+            console.log("\nBucket Deleted : \n Bucket Name : ",bucketInfo.name,"\n Bucket Created : ",getDateTime(bucketInfo.created));
+        }).catch((err) => { 
             console.log("Failed to delete bucket");
             console.log(err);
         });
         //
+        //
         //Closing opened project
-        await projectResult.close_project(projectResult.project).then(() => {
+        await project.close().then(() => {
             console.log("\nProject closed successfully");
         }).catch((err) => {
             console.log("Failed to close project");
             console.log(err);
         });
-    }).catch((err) => {
+    }).catch((err)=>{
         console.log("Failed to open project");
         console.log(err);
     });
-}).catch((err) => {
+
+}).catch((err)=>{
     console.log("Failed to get access");
     console.log(err);
 });

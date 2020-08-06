@@ -24,7 +24,7 @@
 */
 var NAVTREE =
 [
-  [ "Node-js bindings", "index.html", [
+  [ "Node JS Bindings", "index.html", [
     [ "Node-js bindings", "index.html", null ],
     [ "Files", "files.html", [
       [ "File List", "files.html", "files_dup" ],

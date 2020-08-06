@@ -18,9 +18,9 @@ void openProjectPromiseComplete(napi_env env, napi_status status, void* data) {
         size_t handlevalue = project._handle;
 
         napi_value projectNAPIObj = createResult(env, "project", handlevalue);
-        napi_value returnObject = ProjectFunction(env, projectNAPIObj);
+      
         //
-        status = napi_resolve_deferred(env, obj->deferred, returnObject);
+        status = napi_resolve_deferred(env, obj->deferred, projectNAPIObj);
     }
 
     if (status != napi_ok) {
@@ -195,34 +195,10 @@ napi_status status, void* data) {
         Download download = *(download_result.download);
         size_t handlevalue = download._handle;
 
-        napi_value downloadReadFunction, downloadCloseFunction,
-        downloadInfoFunction;
 
         napi_value downloadResultNAPI = createResult(env, "download",
         handlevalue);
 
-        status = napi_create_function(env, NULL, 0, download_readc, NULL,
-        &downloadReadFunction);
-        assert(status == napi_ok);
-        //
-        status = napi_create_function(env, NULL, 0, close_downloadc, NULL,
-        &downloadCloseFunction);
-        assert(status == napi_ok);
-        //
-        status = napi_create_function(env, NULL, 0, download_infoc, NULL,
-        &downloadInfoFunction);
-        assert(status == napi_ok);
-        //
-        status = napi_set_named_property(env, downloadResultNAPI,
-        "download_read", downloadReadFunction);
-        assert(status == napi_ok);
-        //
-        status = napi_set_named_property(env, downloadResultNAPI,
-        "close_download", downloadCloseFunction);
-        assert(status == napi_ok);
-        status = napi_set_named_property(env, downloadResultNAPI,
-        "download_info", downloadInfoFunction);
-        assert(status == napi_ok);
         status = napi_resolve_deferred(env, obj->deferred, downloadResultNAPI);
     }
     if (status != napi_ok) {
@@ -380,50 +356,9 @@ void uploadObjectComplete(napi_env env, napi_status status, void* data) {
     } else {
         Upload upload = *(upload_result.upload);
         size_t handlevalue = upload._handle;
-        napi_value uploadwriteFunction, uploadcommitFunction,
-        uploadInfoFunction, uploadAbortFunction, uploadSetCustomMetaFunction;
 
         napi_value uploadResultNAPI = createResult(env, "upload", handlevalue);
 
-        status = napi_create_function(env, NULL, 0, upload_writec, NULL,
-        &uploadwriteFunction);
-        assert(status == napi_ok);
-        //
-        status = napi_create_function(env, NULL, 0, upload_commitc, NULL,
-        &uploadcommitFunction);
-        assert(status == napi_ok);
-        //
-        status = napi_create_function(env, NULL, 0, upload_infoc, NULL,
-        &uploadInfoFunction);
-        assert(status == napi_ok);
-        //
-        status = napi_create_function(env, NULL, 0, upload_abortc, NULL,
-        &uploadAbortFunction);
-        assert(status == napi_ok);
-        //
-        status = napi_create_function(env, NULL, 0, upload_set_custom_metadatac,
-        NULL, &uploadSetCustomMetaFunction);
-        assert(status == napi_ok);
-        //
-        status = napi_set_named_property(env, uploadResultNAPI,
-        "upload_write", uploadwriteFunction);
-        assert(status == napi_ok);
-        //
-        status = napi_set_named_property(env, uploadResultNAPI,
-        "upload_commit", uploadcommitFunction);
-        assert(status == napi_ok);
-        //
-        status = napi_set_named_property(env, uploadResultNAPI,
-        "upload_info", uploadInfoFunction);
-        assert(status == napi_ok);
-        //
-        status = napi_set_named_property(env, uploadResultNAPI,
-        "upload_abort", uploadAbortFunction);
-        assert(status == napi_ok);
-        //
-        status = napi_set_named_property(env, uploadResultNAPI,
-        "upload_set_custom_metadata", uploadSetCustomMetaFunction);
-        assert(status == napi_ok);
         //
         status = napi_resolve_deferred(env, obj->deferred, uploadResultNAPI);
     }
@@ -459,14 +394,12 @@ void objectOperationComplete(napi_env env, napi_status status, void* data) {
 void bucketOperationComplete(napi_env env, napi_status status, void* data) {
   bucketOperationObj *obj = (bucketOperationObj*)data;
   BucketResult bucket_result = obj->bucket_Result;
-  if (bucket_result.bucket == NULL) {
     if (bucket_result.error != NULL) {
       Error error_result = *(bucket_result.error);
       char* errorMessagePtr = error_result.message;
       status = napi_reject_deferred(env, obj->deferred,
       createError(env, error_result.code, errorMessagePtr));
-    }
-  } else {
+    }else {
     Bucket bucket = *(bucket_result.bucket);
     char* bucketNamePtr = bucket.name;
     int64_t bucketCreated = bucket.created;
@@ -642,9 +575,9 @@ void ParseAccessPromiseComplete(napi_env env,
         size_t handlevalue = access._handle;
 
         napi_value AccessNAPIObj = createResult(env, "access", handlevalue);
-        napi_value returnObject = AccessFunction(env, AccessNAPIObj);
+ 
         //
-        status = napi_resolve_deferred(env, obj->deferred, returnObject);
+        status = napi_resolve_deferred(env, obj->deferred, AccessNAPIObj);
     }
 
     if (status != napi_ok) {
@@ -672,9 +605,8 @@ void ShareAccessPromiseComplete(napi_env env, napi_status status, void* data) {
         size_t handlevalue = access._handle;
 
         napi_value AccessNAPIObj = createResult(env, "access", handlevalue);
-        napi_value returnObject = AccessFunction(env, AccessNAPIObj);
 
-        status = napi_resolve_deferred(env, obj->deferred, returnObject);
+        status = napi_resolve_deferred(env, obj->deferred, AccessNAPIObj);
     }
     if (status != napi_ok) {
         napi_throw_error(env, NULL, "Failed to return promise");
@@ -701,10 +633,9 @@ napi_status status, void* data) {
         size_t handlevalue = access._handle;
 
         napi_value AccessNAPIObj = createResult(env, "access", handlevalue);
+        
         //
-        napi_value returnObject = AccessFunction(env, AccessNAPIObj);
-        //
-        status = napi_resolve_deferred(env, obj->deferred, returnObject);
+        status = napi_resolve_deferred(env, obj->deferred, AccessNAPIObj);
     }
 
     if (status != napi_ok) {
@@ -733,8 +664,10 @@ napi_status status, void* data) {
         size_t handlevalue = access._handle;
 
         napi_value AccessNAPIObj = createResult(env, "access", handlevalue);
-        napi_value returnObject = AccessFunction(env, AccessNAPIObj);
-        status = napi_resolve_deferred(env, obj->deferred, returnObject);
+ 
+        status = napi_resolve_deferred(env, obj->deferred, AccessNAPIObj
+        
+        );
     }
     //
     if (status != napi_ok) {

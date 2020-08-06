@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Node-js bindings: bucket_operations.cc File Reference</title>
+<title>Node JS Bindings: bucket_operations.cc File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -30,7 +30,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Node-js bindings
+   <div id="projectname">Node JS Bindings
    </div>
   </td>
    <td>        <div id="MSearchBox" class="MSearchBoxInactive">
@@ -97,9 +97,7 @@ $(document).ready(function(){initNavTree('bucket__operations_8cc.html',''); init
 <div class="title">bucket_operations.cc File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;bucket_operations.h&quot;</code><br />
-<code>#include &lt;string&gt;</code><br />
-</div><div class="textblock"><div class="dynheader">
+<div class="textblock"><div class="dynheader">
 Include dependency graph for bucket_operations.cc:</div>
 <div class="dyncontent">
 <div class="center"><img src="bucket__operations_8cc__incl.png" border="0" usemap="#bucket__operations_8cc" alt=""/></div>
@@ -113,16 +111,12 @@ Include dependency graph for bucket_operations.cc:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a4d7e31696e654549a3b5b799f03c99c6"><td class="memItemLeft" align="right" valign="top">napi_value&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bucket__operations_8cc.html#a4d7e31696e654549a3b5b799f03c99c6">stat_bucketc</a> (napi_env env, napi_callback_info info)</td></tr>
-<tr class="memdesc:a4d7e31696e654549a3b5b799f03c99c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">stat_bucket function is called from the javascript file stat_bucket returns information about a bucket.  <a href="bucket__operations_8cc.html#a4d7e31696e654549a3b5b799f03c99c6">More...</a><br /></td></tr>
 <tr class="separator:a4d7e31696e654549a3b5b799f03c99c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae71b54239e182c072b747d16b057c5be"><td class="memItemLeft" align="right" valign="top">napi_value&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bucket__operations_8cc.html#ae71b54239e182c072b747d16b057c5be">create_bucketc</a> (napi_env env, napi_callback_info info)</td></tr>
-<tr class="memdesc:ae71b54239e182c072b747d16b057c5be"><td class="mdescLeft">&#160;</td><td class="mdescRight">stat_bucket function is called from the javascript file create_bucket creates a new bucket. When bucket already exists it returns a valid Bucket and ErrBucketExists.  <a href="bucket__operations_8cc.html#ae71b54239e182c072b747d16b057c5be">More...</a><br /></td></tr>
 <tr class="separator:ae71b54239e182c072b747d16b057c5be"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a52f6abad2725d06efa100cc28ba6a6b5"><td class="memItemLeft" align="right" valign="top">napi_value&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bucket__operations_8cc.html#a52f6abad2725d06efa100cc28ba6a6b5">ensure_bucketc</a> (napi_env env, napi_callback_info info)</td></tr>
-<tr class="memdesc:a52f6abad2725d06efa100cc28ba6a6b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">ensure_bucket function is called from the javascript file ensure_bucket creates a new bucket and ignores the error when it already exists. When bucket already exists it returns a valid Bucket and ErrBucketExists.  <a href="bucket__operations_8cc.html#a52f6abad2725d06efa100cc28ba6a6b5">More...</a><br /></td></tr>
 <tr class="separator:a52f6abad2725d06efa100cc28ba6a6b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0541fcd6deaa815c027a557f33c7c44f"><td class="memItemLeft" align="right" valign="top">napi_value&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bucket__operations_8cc.html#a0541fcd6deaa815c027a557f33c7c44f">delete_bucketc</a> (napi_env env, napi_callback_info info)</td></tr>
-<tr class="memdesc:a0541fcd6deaa815c027a557f33c7c44f"><td class="mdescLeft">&#160;</td><td class="mdescRight">delete_bucket function is called from the javascript file delete_bucket deletes the bucket. When bucket is not empty it returns ErrBucketNotEmpty.  <a href="bucket__operations_8cc.html#a0541fcd6deaa815c027a557f33c7c44f">More...</a><br /></td></tr>
 <tr class="separator:a0541fcd6deaa815c027a557f33c7c44f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
@@ -171,22 +165,8 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="bucket__operations_8cc_ae71b54239e182c072b747d16b057c5be_icgraph.png" border="0" usemap="#bucket__operations_8cc_ae71b54239e182c072b747d16b057c5be_icgraph" alt=""/></div>
 <map name="bucket__operations_8cc_ae71b54239e182c072b747d16b057c5be_icgraph" id="bucket__operations_8cc_ae71b54239e182c072b747d16b057c5be_icgraph">
-<area shape="rect" title="stat_bucket function is called from the javascript file create_bucket creates a new bucket...." alt="" coords="1341,130,1452,157"/>
-<area shape="rect" href="lib_uplink_8cc.html#aac381155b5b8f1d813e4eeae26f68a6b" title="ProjectFunction helps to use functions list_bucketsc, stat_bucketc, create_bucketc,..." alt="" coords="1180,130,1293,157"/>
-<area shape="rect" href="promises__complete_8cc.html#a5f37a32796714208333df7d0f34f6a1a" title="configOpenProjectPromiseComplete creates the handle for config_open_project" alt="" coords="947,93,1123,135"/>
-<area shape="rect" href="promises__complete_8cc.html#abbd7d817a0fbb3730accb682e09951d9" title="openProjectPromiseComplete creates the handle for open_project" alt="" coords="937,159,1132,186"/>
-<area shape="rect" href="project__operations_8cc.html#a670c23ed754f6cfa811b357c09935538" title="config_open_projectc function is called from the javascript file config_open_project opens project us..." alt="" coords="745,103,889,130"/>
-<area shape="rect" href="lib_uplink_8cc.html#a0dd001df23d7f135da9f824539db3ed5" title="AccessFunction helps to use function open_projectc ,access_serializec, access_sharec,..." alt="" coords="581,130,697,157"/>
-<area shape="rect" href="promises__complete_8cc.html#a6c5e1478f8570826522b03cafc999aab" title="ConfigRequestAccessWithEncryptionPromiseComplete creates the handle for config_request_access_with_pa..." alt="" coords="295,5,533,47"/>
-<area shape="rect" href="promises__complete_8cc.html#a551f241ba659821a9690c7e1cc54806c" title="ParseAccessPromiseComplete creates the handle for parse_access." alt="" coords="313,71,515,98"/>
-<area shape="rect" href="promises__complete_8cc.html#ab68333b4939d887d65bf194794b8f404" title="RequestAccessWithEncryptionPromiseComplete creates the handle for request_access_with_passphrase." alt="" coords="313,123,515,164"/>
-<area shape="rect" href="promises__complete_8cc.html#a82c14e41ec15a1d0c58b4352b6d7d3e0" title="ShareAccessPromiseComplete creates the handle for access_share." alt="" coords="313,189,515,215"/>
-<area shape="rect" href="access__operations_8cc.html#ad1ad6e328d17546077efb9cad66351da" title="config_request_access_with_passphrasec function is called from the javascript file config_request_acc..." alt="" coords="92,5,247,47"/>
-<area shape="rect" href="lib_uplink_8cc.html#a2a8628282ff7cc746345d7a7afb2884d" title="This is main function 1) request_access_with_passphrase requests satellite for a new access grant usi..." alt="" coords="5,71,44,98"/>
-<area shape="rect" href="access__operations_8cc.html#a7bc1930fa62634db41978a6ed56ae3c9" title="parse_accessc function is called from the javascript file parse_access parses serialized access grant..." alt="" coords="114,71,225,98"/>
-<area shape="rect" href="access__operations_8cc.html#a1b24e58dd7f4843b6d3d9e1b7422158e" title="request_access_with_passphrase function is called from the javascript file request_access_with_passph..." alt="" coords="97,123,241,164"/>
-<area shape="rect" href="access__operations_8cc.html#ac2d6031216e6786399943d5b80d2e250" title="parse_accessc function is called from the javascript file access_share creates new access grant with ..." alt="" coords="114,214,225,241"/>
-<area shape="rect" href="project__operations_8cc.html#a1a505b76764b166689fe978433d60bcb" title="open_projectc function is called from the javascript file open_projectc opens the project" alt="" coords="766,155,869,182"/>
+<area shape="rect" title="stat_bucket function is called from the javascript file create_bucket creates a new bucket...." alt="" coords="92,5,203,32"/>
+<area shape="rect" href="lib_uplink_8cc.html#a2a8628282ff7cc746345d7a7afb2884d" title="This is main function 1) request_access_with_passphrase requests satellite for a new access grant usi..." alt="" coords="5,5,44,32"/>
 </map>
 </div>
 
@@ -237,22 +217,8 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="bucket__operations_8cc_a0541fcd6deaa815c027a557f33c7c44f_icgraph.png" border="0" usemap="#bucket__operations_8cc_a0541fcd6deaa815c027a557f33c7c44f_icgraph" alt=""/></div>
 <map name="bucket__operations_8cc_a0541fcd6deaa815c027a557f33c7c44f_icgraph" id="bucket__operations_8cc_a0541fcd6deaa815c027a557f33c7c44f_icgraph">
-<area shape="rect" title="delete_bucket function is called from the javascript file delete_bucket deletes the bucket...." alt="" coords="1341,130,1452,157"/>
-<area shape="rect" href="lib_uplink_8cc.html#aac381155b5b8f1d813e4eeae26f68a6b" title="ProjectFunction helps to use functions list_bucketsc, stat_bucketc, create_bucketc,..." alt="" coords="1180,130,1293,157"/>
-<area shape="rect" href="promises__complete_8cc.html#a5f37a32796714208333df7d0f34f6a1a" title="configOpenProjectPromiseComplete creates the handle for config_open_project" alt="" coords="947,93,1123,135"/>
-<area shape="rect" href="promises__complete_8cc.html#abbd7d817a0fbb3730accb682e09951d9" title="openProjectPromiseComplete creates the handle for open_project" alt="" coords="937,159,1132,186"/>
-<area shape="rect" href="project__operations_8cc.html#a670c23ed754f6cfa811b357c09935538" title="config_open_projectc function is called from the javascript file config_open_project opens project us..." alt="" coords="745,103,889,130"/>
-<area shape="rect" href="lib_uplink_8cc.html#a0dd001df23d7f135da9f824539db3ed5" title="AccessFunction helps to use function open_projectc ,access_serializec, access_sharec,..." alt="" coords="581,130,697,157"/>
-<area shape="rect" href="promises__complete_8cc.html#a6c5e1478f8570826522b03cafc999aab" title="ConfigRequestAccessWithEncryptionPromiseComplete creates the handle for config_request_access_with_pa..." alt="" coords="295,5,533,47"/>
-<area shape="rect" href="promises__complete_8cc.html#a551f241ba659821a9690c7e1cc54806c" title="ParseAccessPromiseComplete creates the handle for parse_access." alt="" coords="313,71,515,98"/>
-<area shape="rect" href="promises__complete_8cc.html#ab68333b4939d887d65bf194794b8f404" title="RequestAccessWithEncryptionPromiseComplete creates the handle for request_access_with_passphrase." alt="" coords="313,123,515,164"/>
-<area shape="rect" href="promises__complete_8cc.html#a82c14e41ec15a1d0c58b4352b6d7d3e0" title="ShareAccessPromiseComplete creates the handle for access_share." alt="" coords="313,189,515,215"/>
-<area shape="rect" href="access__operations_8cc.html#ad1ad6e328d17546077efb9cad66351da" title="config_request_access_with_passphrasec function is called from the javascript file config_request_acc..." alt="" coords="92,5,247,47"/>
-<area shape="rect" href="lib_uplink_8cc.html#a2a8628282ff7cc746345d7a7afb2884d" title="This is main function 1) request_access_with_passphrase requests satellite for a new access grant usi..." alt="" coords="5,71,44,98"/>
-<area shape="rect" href="access__operations_8cc.html#a7bc1930fa62634db41978a6ed56ae3c9" title="parse_accessc function is called from the javascript file parse_access parses serialized access grant..." alt="" coords="114,71,225,98"/>
-<area shape="rect" href="access__operations_8cc.html#a1b24e58dd7f4843b6d3d9e1b7422158e" title="request_access_with_passphrase function is called from the javascript file request_access_with_passph..." alt="" coords="97,123,241,164"/>
-<area shape="rect" href="access__operations_8cc.html#ac2d6031216e6786399943d5b80d2e250" title="parse_accessc function is called from the javascript file access_share creates new access grant with ..." alt="" coords="114,214,225,241"/>
-<area shape="rect" href="project__operations_8cc.html#a1a505b76764b166689fe978433d60bcb" title="open_projectc function is called from the javascript file open_projectc opens the project" alt="" coords="766,155,869,182"/>
+<area shape="rect" title="delete_bucket function is called from the javascript file delete_bucket deletes the bucket...." alt="" coords="92,5,203,32"/>
+<area shape="rect" href="lib_uplink_8cc.html#a2a8628282ff7cc746345d7a7afb2884d" title="This is main function 1) request_access_with_passphrase requests satellite for a new access grant usi..." alt="" coords="5,5,44,32"/>
 </map>
 </div>
 
@@ -303,22 +269,8 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="bucket__operations_8cc_a52f6abad2725d06efa100cc28ba6a6b5_icgraph.png" border="0" usemap="#bucket__operations_8cc_a52f6abad2725d06efa100cc28ba6a6b5_icgraph" alt=""/></div>
 <map name="bucket__operations_8cc_a52f6abad2725d06efa100cc28ba6a6b5_icgraph" id="bucket__operations_8cc_a52f6abad2725d06efa100cc28ba6a6b5_icgraph">
-<area shape="rect" title="ensure_bucket function is called from the javascript file ensure_bucket creates a new bucket and igno..." alt="" coords="1341,130,1456,157"/>
-<area shape="rect" href="lib_uplink_8cc.html#aac381155b5b8f1d813e4eeae26f68a6b" title="ProjectFunction helps to use functions list_bucketsc, stat_bucketc, create_bucketc,..." alt="" coords="1180,130,1293,157"/>
-<area shape="rect" href="promises__complete_8cc.html#a5f37a32796714208333df7d0f34f6a1a" title="configOpenProjectPromiseComplete creates the handle for config_open_project" alt="" coords="947,93,1123,135"/>
-<area shape="rect" href="promises__complete_8cc.html#abbd7d817a0fbb3730accb682e09951d9" title="openProjectPromiseComplete creates the handle for open_project" alt="" coords="937,159,1132,186"/>
-<area shape="rect" href="project__operations_8cc.html#a670c23ed754f6cfa811b357c09935538" title="config_open_projectc function is called from the javascript file config_open_project opens project us..." alt="" coords="745,103,889,130"/>
-<area shape="rect" href="lib_uplink_8cc.html#a0dd001df23d7f135da9f824539db3ed5" title="AccessFunction helps to use function open_projectc ,access_serializec, access_sharec,..." alt="" coords="581,130,697,157"/>
-<area shape="rect" href="promises__complete_8cc.html#a6c5e1478f8570826522b03cafc999aab" title="ConfigRequestAccessWithEncryptionPromiseComplete creates the handle for config_request_access_with_pa..." alt="" coords="295,5,533,47"/>
-<area shape="rect" href="promises__complete_8cc.html#a551f241ba659821a9690c7e1cc54806c" title="ParseAccessPromiseComplete creates the handle for parse_access." alt="" coords="313,71,515,98"/>
-<area shape="rect" href="promises__complete_8cc.html#ab68333b4939d887d65bf194794b8f404" title="RequestAccessWithEncryptionPromiseComplete creates the handle for request_access_with_passphrase." alt="" coords="313,123,515,164"/>
-<area shape="rect" href="promises__complete_8cc.html#a82c14e41ec15a1d0c58b4352b6d7d3e0" title="ShareAccessPromiseComplete creates the handle for access_share." alt="" coords="313,189,515,215"/>
-<area shape="rect" href="access__operations_8cc.html#ad1ad6e328d17546077efb9cad66351da" title="config_request_access_with_passphrasec function is called from the javascript file config_request_acc..." alt="" coords="92,5,247,47"/>
-<area shape="rect" href="lib_uplink_8cc.html#a2a8628282ff7cc746345d7a7afb2884d" title="This is main function 1) request_access_with_passphrase requests satellite for a new access grant usi..." alt="" coords="5,71,44,98"/>
-<area shape="rect" href="access__operations_8cc.html#a7bc1930fa62634db41978a6ed56ae3c9" title="parse_accessc function is called from the javascript file parse_access parses serialized access grant..." alt="" coords="114,71,225,98"/>
-<area shape="rect" href="access__operations_8cc.html#a1b24e58dd7f4843b6d3d9e1b7422158e" title="request_access_with_passphrase function is called from the javascript file request_access_with_passph..." alt="" coords="97,123,241,164"/>
-<area shape="rect" href="access__operations_8cc.html#ac2d6031216e6786399943d5b80d2e250" title="parse_accessc function is called from the javascript file access_share creates new access grant with ..." alt="" coords="114,214,225,241"/>
-<area shape="rect" href="project__operations_8cc.html#a1a505b76764b166689fe978433d60bcb" title="open_projectc function is called from the javascript file open_projectc opens the project" alt="" coords="766,155,869,182"/>
+<area shape="rect" title="ensure_bucket function is called from the javascript file ensure_bucket creates a new bucket and igno..." alt="" coords="92,5,207,32"/>
+<area shape="rect" href="lib_uplink_8cc.html#a2a8628282ff7cc746345d7a7afb2884d" title="This is main function 1) request_access_with_passphrase requests satellite for a new access grant usi..." alt="" coords="5,5,44,32"/>
 </map>
 </div>
 
@@ -369,22 +321,8 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="bucket__operations_8cc_a4d7e31696e654549a3b5b799f03c99c6_icgraph.png" border="0" usemap="#bucket__operations_8cc_a4d7e31696e654549a3b5b799f03c99c6_icgraph" alt=""/></div>
 <map name="bucket__operations_8cc_a4d7e31696e654549a3b5b799f03c99c6_icgraph" id="bucket__operations_8cc_a4d7e31696e654549a3b5b799f03c99c6_icgraph">
-<area shape="rect" title="stat_bucket function is called from the javascript file stat_bucket returns information about a bucke..." alt="" coords="1341,130,1439,157"/>
-<area shape="rect" href="lib_uplink_8cc.html#aac381155b5b8f1d813e4eeae26f68a6b" title="ProjectFunction helps to use functions list_bucketsc, stat_bucketc, create_bucketc,..." alt="" coords="1180,130,1293,157"/>
-<area shape="rect" href="promises__complete_8cc.html#a5f37a32796714208333df7d0f34f6a1a" title="configOpenProjectPromiseComplete creates the handle for config_open_project" alt="" coords="947,93,1123,135"/>
-<area shape="rect" href="promises__complete_8cc.html#abbd7d817a0fbb3730accb682e09951d9" title="openProjectPromiseComplete creates the handle for open_project" alt="" coords="937,159,1132,186"/>
-<area shape="rect" href="project__operations_8cc.html#a670c23ed754f6cfa811b357c09935538" title="config_open_projectc function is called from the javascript file config_open_project opens project us..." alt="" coords="745,103,889,130"/>
-<area shape="rect" href="lib_uplink_8cc.html#a0dd001df23d7f135da9f824539db3ed5" title="AccessFunction helps to use function open_projectc ,access_serializec, access_sharec,..." alt="" coords="581,130,697,157"/>
-<area shape="rect" href="promises__complete_8cc.html#a6c5e1478f8570826522b03cafc999aab" title="ConfigRequestAccessWithEncryptionPromiseComplete creates the handle for config_request_access_with_pa..." alt="" coords="295,5,533,47"/>
-<area shape="rect" href="promises__complete_8cc.html#a551f241ba659821a9690c7e1cc54806c" title="ParseAccessPromiseComplete creates the handle for parse_access." alt="" coords="313,71,515,98"/>
-<area shape="rect" href="promises__complete_8cc.html#ab68333b4939d887d65bf194794b8f404" title="RequestAccessWithEncryptionPromiseComplete creates the handle for request_access_with_passphrase." alt="" coords="313,123,515,164"/>
-<area shape="rect" href="promises__complete_8cc.html#a82c14e41ec15a1d0c58b4352b6d7d3e0" title="ShareAccessPromiseComplete creates the handle for access_share." alt="" coords="313,189,515,215"/>
-<area shape="rect" href="access__operations_8cc.html#ad1ad6e328d17546077efb9cad66351da" title="config_request_access_with_passphrasec function is called from the javascript file config_request_acc..." alt="" coords="92,5,247,47"/>
-<area shape="rect" href="lib_uplink_8cc.html#a2a8628282ff7cc746345d7a7afb2884d" title="This is main function 1) request_access_with_passphrase requests satellite for a new access grant usi..." alt="" coords="5,71,44,98"/>
-<area shape="rect" href="access__operations_8cc.html#a7bc1930fa62634db41978a6ed56ae3c9" title="parse_accessc function is called from the javascript file parse_access parses serialized access grant..." alt="" coords="114,71,225,98"/>
-<area shape="rect" href="access__operations_8cc.html#a1b24e58dd7f4843b6d3d9e1b7422158e" title="request_access_with_passphrase function is called from the javascript file request_access_with_passph..." alt="" coords="97,123,241,164"/>
-<area shape="rect" href="access__operations_8cc.html#ac2d6031216e6786399943d5b80d2e250" title="parse_accessc function is called from the javascript file access_share creates new access grant with ..." alt="" coords="114,214,225,241"/>
-<area shape="rect" href="project__operations_8cc.html#a1a505b76764b166689fe978433d60bcb" title="open_projectc function is called from the javascript file open_projectc opens the project" alt="" coords="766,155,869,182"/>
+<area shape="rect" title="stat_bucket function is called from the javascript file stat_bucket returns information about a bucke..." alt="" coords="92,5,189,32"/>
+<area shape="rect" href="lib_uplink_8cc.html#a2a8628282ff7cc746345d7a7afb2884d" title="This is main function 1) request_access_with_passphrase requests satellite for a new access grant usi..." alt="" coords="5,5,44,32"/>
 </map>
 </div>
 
@@ -395,7 +333,7 @@ Here is the caller graph for this function:</div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_d522931ffa1371640980b621734a4381.html">Users</a></li><li class="navelem"><a class="el" href="dir_edfddb57d3c9efe47a6579991ed75062.html">storj</a></li><li class="navelem"><a class="el" href="dir_8800713eabc9c6b532d31645a0958ff0.html">Desktop</a></li><li class="navelem"><a class="el" href="dir_314d068a345e9b698f18b5fc5c15d924.html">Node-js bindings</a></li><li class="navelem"><a class="el" href="bucket__operations_8cc.html">bucket_operations.cc</a></li>
+    <li class="navelem"><a class="el" href="dir_d522931ffa1371640980b621734a4381.html">Users</a></li><li class="navelem"><a class="el" href="dir_edfddb57d3c9efe47a6579991ed75062.html">Storj</a></li><li class="navelem"><a class="el" href="dir_8800713eabc9c6b532d31645a0958ff0.html">Desktop</a></li><li class="navelem"><a class="el" href="dir_5cc9734393de21020600475b0d09877d.html">node-js binding</a></li><li class="navelem"><a class="el" href="bucket__operations_8cc.html">bucket_operations.cc</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
