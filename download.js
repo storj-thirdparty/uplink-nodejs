@@ -12,7 +12,7 @@ class DownloadResultStruct{
     // Output : ReadResult (Int)
     async read(buffer,length){
         var bytesread = await uplink.download_read(this.download,buffer,length).catch((error) => {
-            errorhandle.storj_exception(error.error.code,error.error.message);
+            errorhandle.storjException(error.error.code,error.error.message);
         });
         return bytesread;
     }
@@ -22,7 +22,7 @@ class DownloadResultStruct{
     // Output : ObjectInfo (Object)
     async info(){
         var objectInfo = await uplink.download_info(this.download).catch((error) => {
-            errorhandle.storj_exception(error.error.code,error.error.message);
+            errorhandle.storjException(error.error.code,error.error.message);
         });
         return objectInfo;
     }
@@ -32,7 +32,7 @@ class DownloadResultStruct{
     // Output : None
     async close(){
         await uplink.close_download(this.download).catch((error) => {
-            errorhandle.storj_exception(error.error.code,error.error.message);
+            errorhandle.storjException(error.error.code,error.error.message);
         });
     }
 }

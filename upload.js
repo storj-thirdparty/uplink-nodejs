@@ -12,7 +12,7 @@ class UploadResultStruct{
     // Output : WriteResult (Int)
     async write(buffer,bytesread){
         var writeResult = await uplink.upload_write(this.upload,buffer,bytesread).catch((error) => {
-            errorhandle.storj_exception(error.error.code,error.error.message);
+            errorhandle.storjException(error.error.code,error.error.message);
         });
         return writeResult;
     }
@@ -22,7 +22,7 @@ class UploadResultStruct{
     // Output : None
     async setCustomMetadata(customMetadata){
         await uplink.upload_set_custom_metadata(this.upload,customMetadata).catch((error) => {
-            errorhandle.storj_exception(error.error.code,error.error.message);
+            errorhandle.storjException(error.error.code,error.error.message);
         });
     }
 
@@ -31,7 +31,7 @@ class UploadResultStruct{
     // Output : None
     async commit(){
         await uplink.upload_commit(this.upload).catch((error) => {
-            errorhandle.storj_exception(error.error.code,error.error.message);
+            errorhandle.storjException(error.error.code,error.error.message);
         });
     }
 
@@ -40,7 +40,7 @@ class UploadResultStruct{
     // Output : ObjectInfo
     async info(){
         var object = await uplink.upload_info(this.upload).catch((error) => {
-            errorhandle.storj_exception(error.error.code,error.error.message);
+            errorhandle.storjException(error.error.code,error.error.message);
         });
         return object;
     }
@@ -50,7 +50,7 @@ class UploadResultStruct{
     // Output : ObjectInfo
     async abort(){
         var object = await uplink.upload_abort(this.upload).catch((error) => {
-            errorhandle.storj_exception(error.error.code,error.error.message);
+            errorhandle.storjException(error.error.code,error.error.message);
         });
         return object;
     }

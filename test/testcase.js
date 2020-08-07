@@ -27,7 +27,7 @@ function readAPIKey(){
     throw (e.message);
   }
 }
-//readAPIKey();
+readAPIKey();
 
 //String to be uploaded on storj V3 network
 var str = "Hello Storj";
@@ -40,9 +40,9 @@ var should = chai.should();
 function deleteObject(project){
   //
   describe('Delete Object',function(){
-    return new Promise(async (resolve,reject)=>{
+    return new Promise(async (resolve,reject) => {
       it("Delete Object from storj V3 network",async function(){
-        return new Promise(async (resolve,reject)=>{
+        return new Promise(async (resolve,reject) => {
           await project.deleteObject(storjConfig.bucketName,storjConfig.uploadPath).then((objectinfo) => { 
             describe('Delete object result', function() {
               it('Should have object info ',function(){
@@ -50,7 +50,7 @@ function deleteObject(project){
               })
             })
             resolve(true);
-          }).catch((err)=>{
+          }).catch((err) => {
             reject(err);
           });
           resolve(true);
@@ -65,12 +65,12 @@ function deleteObject(project){
 function deleteBucket(project){
   //Test case
   describe('Delete Bucket',function(){
-    return new Promise(async (resolve,reject)=>{
+    return new Promise(async (resolve,reject) => {
       it("Delete Bucket",async function(){
-        return new Promise(async (resolve,reject)=>{
+        return new Promise(async (resolve,reject) => {
           await project.deleteBucket(storjConfig.bucketName).then((bucketInfo) => { 
             resolve(true);
-          }).catch((err)=>{
+          }).catch((err) => {
              reject(err);
           });
           resolve(true);
@@ -85,12 +85,12 @@ function deleteBucket(project){
 function closeProject(project){
   //Test case
   describe('Close project',function(){
-    return new Promise(async (resolve,reject)=>{
+    return new Promise(async (resolve,reject) => {
       it("Close project",async function(){
-        return new Promise(async (resolve,reject)=>{
+        return new Promise(async (resolve,reject) => {
           await project.close().then(() => {
             resolve(true);
-          }).catch((err)=>{
+          }).catch((err) => {
             reject(err);
           });
           resolve(true);
@@ -105,9 +105,9 @@ function closeProject(project){
 function parsedAccess(stringResult){
   //Test case
   describe('Parsed',function(){
-    return new Promise(async (resolve,reject)=>{
+    return new Promise(async (resolve,reject) => {
       it("Access Shared",async function(){
-        return new Promise(async (resolve,reject)=>{
+        return new Promise(async (resolve,reject) => {
           await libUplink.parseAccess(stringResult).then(async (parsedAccess) => {
             describe('parsed access share Result',function(){
               it("should have prase access",function(){
@@ -140,7 +140,7 @@ function parsedAccess(stringResult){
             });
 
             resolve(true);
-          }).catch((err)=>{
+          }).catch((err) => {
             reject(err);
           });
           resolve(true);
@@ -153,13 +153,13 @@ function parsedAccess(stringResult){
 //Access serialiazed testcases
 function serializeAccess(sharedAccess){
   describe('Access Shared',function(){
-    return new Promise(async (resolve,reject)=>{
+    return new Promise(async (resolve,reject) => {
       it("Access Shared",async function(){
-        return new Promise(async (resolve,reject)=>{
+        return new Promise(async (resolve,reject) => {
           await sharedAccess.serialize(sharedAccess.access).then(async (stringResult) => {
             parsedAccess(stringResult);
             resolve(true);
-          }).catch((err)=>{
+          }).catch((err) => {
             reject(err);
           });
           resolve(true);
@@ -173,9 +173,9 @@ function serializeAccess(sharedAccess){
 //Access share testcases
 function accessShare(access){
   describe('Access Shared',function(){
-    return new Promise(async (resolve,reject)=>{
+    return new Promise(async (resolve,reject) => {
       it("Access Shared",async function(){
-        return new Promise(async (resolve,reject)=>{
+        return new Promise(async (resolve,reject) => {
           var permission = new storj.Permission(true,true,true,true,0,0);
           var sharePrefix = storj.SharePrefix;
           var sharePrefixListArray = [];
@@ -211,7 +211,7 @@ function accessShare(access){
             //
             serializeAccess(sharedAccess);
             resolve(true);
-          }).catch((err)=>{
+          }).catch((err) => {
             reject(err);
           });
           resolve(true);
@@ -225,9 +225,9 @@ function accessShare(access){
 //Download read testcases
 function downloadRead(downloadresult){
   describe('Download Result Function',function(){
-    return new Promise(async (resolve,reject)=>{
+    return new Promise(async (resolve,reject) => {
       it("Download",async function(){
-        return new Promise(async (resolve,reject)=>{
+        return new Promise(async (resolve,reject) => {
           var buffer = new Buffer.alloc(BUFFER_SIZE);
           await downloadresult.read(buffer,buffer.length).then(async (bytesread) => {
             describe('Close Download', function() {
@@ -244,7 +244,7 @@ function downloadRead(downloadresult){
             });
             //
             resolve(true);
-          }).catch((err)=>{
+          }).catch((err) => {
             reject(err);
           });
           resolve(true);
@@ -258,9 +258,9 @@ function downloadRead(downloadresult){
 //Download object testcases
 function downloadObject(project){
   describe('Download Object Function',function(){
-    return new Promise(async (resolve,reject)=>{
+    return new Promise(async (resolve,reject) => {
       it("Download",async function(){
-        return new Promise(async (resolve,reject)=>{
+        return new Promise(async (resolve,reject) => {
           var downloadOptions = new storj.DownloadOptions();
           downloadOptions.offset = 0;
           downloadOptions.length = -1;
@@ -295,7 +295,7 @@ function downloadObject(project){
             closeProject(project);
             //
             resolve(true);
-          }).catch((err)=>{
+          }).catch((err) => {
             reject(err);
           });
           resolve(true);
@@ -308,9 +308,9 @@ function downloadObject(project){
 //
 function listObject(project){
   describe('list object function',function(){
-    return new Promise(async (resolve,reject)=>{
+    return new Promise(async (resolve,reject) => {
       it("List Object function",async function(){
-        return new Promise(async (resolve,reject)=>{
+        return new Promise(async (resolve,reject) => {
           var listObjectsOptions = new storj.ListObjectsOptions();
           await project.listObjects(storjConfig.bucketName,listObjectsOptions).then(async (objectlist) => {
            
@@ -320,7 +320,7 @@ function listObject(project){
               })
             })
             resolve(true);
-          }).catch((err)=>{
+          }).catch((err) => {
             reject(err);
           });
           resolve(true);
@@ -333,9 +333,9 @@ function listObject(project){
 //
 function statObject(project){
   describe('Download Object Function',function(){
-    return new Promise(async (resolve,reject)=>{
+    return new Promise(async (resolve,reject) => {
       it("Download",async function(){
-        return new Promise(async (resolve,reject)=>{
+        return new Promise(async (resolve,reject) => {
           await project.statObject(storjConfig.bucketName,storjConfig.uploadPath).then((objectinfo) => {
           //
           describe('stat object Result ',function(){
@@ -358,9 +358,9 @@ function statObject(project){
 // Upload write test cases
 function uploadWrite(upload,project,accessResult){
   describe('Upload Write',function(){
-    return new Promise(async (resolve,reject)=>{
+    return new Promise(async (resolve,reject) => {
       it("Upload Write",async function(){
-        return new Promise(async (resolve,reject)=>{
+        return new Promise(async (resolve,reject) => {
           var buf = Buffer.from(str, 'utf-8')
           var bytesRead = buf.write(str, 0, buf.size, 'utf-8')
 
@@ -371,7 +371,7 @@ function uploadWrite(upload,project,accessResult){
               });
             });
             resolve(true);
-          }).catch((err)=>{
+          }).catch((err) => {
             reject(err);
           });
           //
@@ -452,9 +452,9 @@ function uploadWrite(upload,project,accessResult){
 // Upload object test cases
 function uploadObject(project,accessResult){
   describe('Upload Object',function(){
-    return new Promise(async (resolve,reject)=>{
+    return new Promise(async (resolve,reject) => {
       it("Upload Object",async function(){
-        return new Promise(async (resolve,reject)=>{
+        return new Promise(async (resolve,reject) => {
           var uploadOptions = new storj.UploadOptions();
           uploadOptions.expires = 0;
           await project.uploadObject(storjConfig.bucketName,storjConfig.uploadPath,uploadOptions).then(async (upload) => {
@@ -498,7 +498,7 @@ function uploadObject(project,accessResult){
             //
             resolve(true);
             //
-          }).catch((err)=>{
+          }).catch((err) => {
             reject(err);
           });
           resolve(true);
@@ -512,9 +512,9 @@ function uploadObject(project,accessResult){
 // List bucket test cases
 function listBucket(project){
   describe('List Bucket',function(){
-    return new Promise(async (resolve,reject)=>{
+    return new Promise(async (resolve,reject) => {
       it("Listing Bucket",async function(){
-        return new Promise(async (resolve,reject)=>{
+        return new Promise(async (resolve,reject) => {
           var listBucketsOptions = new storj.ListBucketsOptions();
           await project.listBuckets(listBucketsOptions).then(async (bucketListResult) => {
             describe('list bucket Result',function(){
@@ -523,7 +523,7 @@ function listBucket(project){
               });
             });
             resolve(true);
-          }).catch((err)=>{
+          }).catch((err) => {
             reject(err);
           });
           resolve(true);
@@ -537,9 +537,9 @@ function listBucket(project){
 // Ensured Bucket testcases
 function ensureBucket(project){
   describe('Ensure Bucket',function(){
-    return new Promise(async (resolve,reject)=>{
+    return new Promise(async (resolve,reject) => {
       it("Ensure Bucket",async function(){
-        return new Promise(async (resolve,reject)=>{
+        return new Promise(async (resolve,reject) => {
           await project.ensureBucket(storjConfig.bucketName).then(async (bucketInfo) => {
             describe('ensure bucket Result',function(){
               it("should have information",function(){
@@ -547,7 +547,7 @@ function ensureBucket(project){
               });
             });
             resolve(true);
-          }).catch((err)=>{
+          }).catch((err) => {
             reject(err);
           });
           resolve(true);
@@ -561,9 +561,9 @@ function ensureBucket(project){
 // Stat Bucket test cases
 function statBucket(project){
   describe('Stat Bucket',function(){
-    return new Promise(async (resolve,reject)=>{
+    return new Promise(async (resolve,reject) => {
       it("Stat Bucket",async function(){
-        return new Promise(async (resolve,reject)=>{
+        return new Promise(async (resolve,reject) => {
           await project.statBucket(storjConfig.bucketName).then(async (bucketInfo) => {
             describe('stat bucket Result',function(){
               it("should have information",function(){
@@ -572,7 +572,7 @@ function statBucket(project){
             });
 
             resolve(true);
-          }).catch((err)=>{
+          }).catch((err) => {
             reject(err);
           });
           resolve(true);
@@ -586,9 +586,9 @@ function statBucket(project){
 // Create bucket test cases
 function createBucket(project,accessResult){
   describe('Create Bucket',function(){
-    return new Promise(async (resolve,reject)=>{
+    return new Promise(async (resolve,reject) => {
       it("Creating Bucket",async function(){
-        return new Promise(async (resolve,reject)=>{
+        return new Promise(async (resolve,reject) => {
           await project.createBucket(storjConfig.bucketName).then(async (bucketInfo) => {
             describe('create bucket Result',function(){
               it("should have information",function(){
@@ -606,7 +606,7 @@ function createBucket(project,accessResult){
             //
             resolve(true);
             //
-          }).catch((err)=>{
+          }).catch((err) => {
             reject(err);
           });
           resolve(true);
@@ -620,9 +620,9 @@ function createBucket(project,accessResult){
 // Open project test case
 function openProject(accessResult){
   describe('Open Project Function',function(){
-    return new Promise(async (resolve,reject)=>{
+    return new Promise(async (resolve,reject) => {
       it("Opening project",async function(){
-        return new Promise(async (resolve,reject)=>{
+        return new Promise(async (resolve,reject) => {
           await accessResult.openProject().then(async (project) => {
             describe('Project Result', function() {
               it('Should have project',function(){
@@ -699,7 +699,7 @@ function openProject(accessResult){
             createBucket(project,accessResult);
             //
             resolve(true);
-          }).catch((err)=>{
+          }).catch((err) => {
             reject(err);
           });
           resolve(true);
@@ -717,7 +717,7 @@ describe('Uplink NodeJS Test',function(){
     it("Request Access",function() {
         return new Promise(async (resolve, reject) => {
           //
-          await libUplink.requestAccessWithPassphrase(storjConfig.satelliteURL,storjConfig.apiKey,storjConfig.encryptionPassphrase).then(async (access)=>{
+          await libUplink.requestAccessWithPassphrase(storjConfig.satelliteURL,storjConfig.apiKey,storjConfig.encryptionPassphrase).then(async (access) => {
             //
             describe('Access Result', function() {
               it('Should have access',function(){
@@ -754,7 +754,7 @@ describe('Uplink NodeJS Test',function(){
             resolve(true);
             //
           });
-        }).catch((err)=>{
+        }).catch((err) => {
           reject(err);
         });
         //

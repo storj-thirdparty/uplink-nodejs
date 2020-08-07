@@ -17,7 +17,7 @@ class ProjectResultStruct {
     // Output : None
     async close(){
         await uplink.close_project(this.project).catch((error) => {
-            errorhandle.storj_exception(error.error.code,error.error.message);
+            errorhandle.storjException(error.error.code,error.error.message);
         });
         
     }
@@ -27,7 +27,7 @@ class ProjectResultStruct {
     // Onput : Download (Object)
     async downloadObject(bucketName,uploadPath,downloadOptions){
         var download = await uplink.download_object(this.project,bucketName,uploadPath,downloadOptions).catch((error) => {
-            errorhandle.storj_exception(error.error.code,error.error.message);
+            errorhandle.storjException(error.error.code,error.error.message);
         });
         var downloadResultReturn = new DownloadResultStruct(download.download);
         return(downloadResultReturn);
@@ -38,7 +38,7 @@ class ProjectResultStruct {
     // Onput : Upload (Object)
     async uploadObject(bucketName,uploadPath,uploadOptions){
         var upload = await uplink.upload_object(this.project,bucketName,uploadPath,uploadOptions).catch((error) => {
-            errorhandle.storj_exception(error.error.code,error.error.message);
+            errorhandle.storjException(error.error.code,error.error.message);
         });
         var uploadResultReturn = new UploadResultStruct(upload.upload);
         return(uploadResultReturn);
@@ -49,7 +49,7 @@ class ProjectResultStruct {
     //Output : ObjectList (Object)
     async listObjects(bucketName,listObjectsOptions){
        var objectlist = await uplink.list_objects(this.project,bucketName,listObjectsOptions).catch((error) => {
-        errorhandle.storj_exception(error.error.code,error.error.message);   
+        errorhandle.storjException(error.error.code,error.error.message);   
         });
         return objectlist;
     }
@@ -59,7 +59,7 @@ class ProjectResultStruct {
     //Output : ObjectInfo (Object)
     async deleteObject(bucketName,uploadPath){
         var objectinfo = await uplink.delete_object(this.project,bucketName,uploadPath).catch((error) => {
-            errorhandle.storj_exception(error.error.code,error.error.message);
+            errorhandle.storjException(error.error.code,error.error.message);
         });
         return objectinfo;
     }
@@ -69,7 +69,7 @@ class ProjectResultStruct {
     //Output : ObjectInfo (Object)
     async statObject(bucketName,uploadPath){
         var objectinfo = await uplink.stat_object(this.project,bucketName,uploadPath).catch((error) => {
-            errorhandle.storj_exception(error.error.code,error.error.message);
+            errorhandle.storjException(error.error.code,error.error.message);
         });
         return objectinfo;
     }
@@ -79,7 +79,7 @@ class ProjectResultStruct {
     // Output : BucketInfo (Object)
     async statBucket(bucketName){
         var bucketInfo = await uplink.stat_bucket(this.project,bucketName).catch((error) => {
-            errorhandle.storj_exception(error.error.code,error.error.message);
+            errorhandle.storjException(error.error.code,error.error.message);
         });
         return bucketInfo;
     }
@@ -89,7 +89,7 @@ class ProjectResultStruct {
     // Output : BucketInfo (Object)
     async createBucket(bucketName){
         var bucketInfo = await uplink.create_bucket(this.project,bucketName).catch((error) => {
-            errorhandle.storj_exception(error.error.code,error.error.message);
+            errorhandle.storjException(error.error.code,error.error.message);
         });
         return bucketInfo;
     }
@@ -100,7 +100,7 @@ class ProjectResultStruct {
     // Output : BucketInfo (Object)
     async ensureBucket(bucketName){
         var bucketInfo = await uplink.ensure_bucket(this.project,bucketName).catch((error) => {
-            errorhandle.storj_exception(error.error.code,error.error.message);
+            errorhandle.storjException(error.error.code,error.error.message);
         });
         return bucketInfo;
     }
@@ -110,7 +110,7 @@ class ProjectResultStruct {
     // Output : List of Bucket Info (Object)
     async listBuckets(listBucketsOptions){
         var bucketListResult =  await uplink.list_buckets(this.project,listBucketsOptions).catch((error) => {
-            errorhandle.storj_exception(error.error.code,error.error.message);
+            errorhandle.storjException(error.error.code,error.error.message);
         });
         return bucketListResult;
     }
@@ -121,7 +121,7 @@ class ProjectResultStruct {
     // Output : BucketInfo (Object)
     async deleteBucket(bucketName){
         var bucketInfo = await uplink.delete_bucket(this.project,bucketName).catch((error) => {
-            errorhandle.storj_exception(error.error.code,error.error.message);
+            errorhandle.storjException(error.error.code,error.error.message);
         });
         return bucketInfo;
     }

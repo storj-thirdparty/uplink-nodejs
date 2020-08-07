@@ -21,6 +21,7 @@ Config defines configuration for using uplink library.
 ```js
 const storj = require('uplink-nodejs') 
 config = new storj.Config();
+const uplinkError = storj.errorhandle;
 config = Config(user_agent="UserAgent")
 try{	
 	access.config_open_project(config).then(async (project) => {
@@ -30,7 +31,7 @@ try{
     });
 }
 catch(err){
-    throw new StorjException(message,code,details)
+  uplinkError.storjException(code,message);
 }
 ```
 
@@ -57,6 +58,7 @@ Permission defines what actions can be used to share.
 
 ```js
 const storj = require('uplink-nodejs') 
+const uplinkError = storj.errorhandle;
 
 const permissions = new storj.Permission(allow_list=True, allow_delete=False)
 try{	
@@ -67,8 +69,8 @@ try{
     });
 }
 catch(err){
-    throw new StorjException(message,code,details)
-}
+	uplinkError.storjException(code,message);
+			
 ```
 
 ### SharePrefix(String, String)
@@ -89,7 +91,8 @@ SharePrefix defines a prefix that will be shared.
 #### Usage Example
 
 ```js
-const storj = require('uplink-nodejs') 
+const storj = require('uplink-nodejs')
+const uplinkError = storj.errorhandle; 
 
 const shared_prefix = new storj.SharePrefix(bucket=bucketname, prefix="");
 try{	
@@ -100,7 +103,7 @@ try{
     });
 }
 catch(err){
-    throw new StorjException(message,code,details)
+     uplinkError.storjException(code,message);
 }
 ```
 
@@ -122,7 +125,8 @@ CustomMetadata contains a list of CustomMetadataEntry about the object.
 
 ```js
 try{	
-    const storj = require('uplink-nodejs')
+	const storj = require('uplink-nodejs')
+	const uplinkError = storj.errorhandle;
     	custom_metadata = new storj.CustomMetadata(CustomMetadataEntry(key="", key_length=0, value="", value_length=0), 1)
     
     upload.set_custom_metadata(custom_metadata).then(() => {
@@ -132,7 +136,7 @@ try{
     });
 }
 catch(err){
-    throw new StorjException(message,code,details)
+     uplinkError.storjException(code,message);
 }
 ```
 ### CustomMetadataEntry(String, Int, String, Int)
@@ -161,7 +165,8 @@ get_dict() -> convert CustomMetadataEntry object to python dictionary
 
 ```js
 try:
-       const storj = require('uplink-nodejs')
+	   const storj = require('uplink-nodejs')
+	   const uplinkError = storj.errorhandle;
     const custom_metadata_entries = new storj.CustomMetadataEntry(key="", key_length=0, value="", value_length=0), CustomMetadataEntry(key="", key_length=0, value="", value_length=0)
     
 	const custom_metadata = new storj.CustomMetadata(custom_metadata_entries, 2)
@@ -173,7 +178,7 @@ try:
     });
 }
 catch(err){
-    throw new StorjException(message,code,details)
+     uplinkError.storjException(code,message);
 }
 ```
 
@@ -203,7 +208,8 @@ ListObjectsOptions defines object listing options.
 ```js
 try:
 
-        const storj = require('uplink-nodejs')
+		const storj = require('uplink-nodejs')
+		const uplinkError = storj.errorhandle;
 	const listobjectoptions = new storj.ListObjectsOptions(recursive=True)
     
     project.list_objects(bucketName,listObjectsOptions).then((objectlist) => {
@@ -212,7 +218,7 @@ try:
     ....//some code//....
     });
 catch(err){
-    throw new StorjException(message,code,details)
+     uplinkError.storjException(code,message);
 }
 ```
 
@@ -233,7 +239,8 @@ ListBucketsOptions defines bucket listing options.
 
 ```js
 try:
-    const storj = require('uplink-nodejs')
+	const storj = require('uplink-nodejs')
+	const uplinkError = storj.errorhandle;
     const listbucketsoptions = new storj.ListBucketsOptions(cursor="")
     project.listbuckets(listBucketsOptions).then(async (bucketListResult) => {
 	...//some_code//...
@@ -241,7 +248,7 @@ try:
     ....//some code//....
     });
 catch(err){
-    throw new StorjException(message,code,details)
+     uplinkError.storjException(code,message);
 }
 ```
 
@@ -262,6 +269,7 @@ UploadOptions contains additional options for uploading.
 ```js
 try:
 	const storj = require('uplink-nodejs')
+	const uplinkError = storj.errorhandle;
 	const uploadOptions = new storj.UploadOptions(expires=0)
     project.upload_object(bucketName,objectName,uploadOptions).then(async (upload) => {  
 		...//some_code//...
@@ -269,7 +277,7 @@ try:
 	....//some code//....
     });
 catch(err){
-    throw new StorjException(message,code,details)
+     uplinkError.storjException(code,message);
 }
 ```
 
@@ -291,6 +299,7 @@ DownloadOptions contains additional options for downloading.
 ```js
 try:
 	const storj = require('uplink-nodejs')
+	const uplinkError = storj.errorhandle;
 	const downloadOptions = DownloadOptions(length=-1)
 	project.download_object(bucketName,objectName,downloadOptions).then(async (download) => {
 	...//some_code//...
@@ -298,7 +307,7 @@ try:
 	....//some code//....
     });
 catch(err){
-    throw new StorjException(message,code,details)
+     uplinkError.storjException(code,message);
 }
 ```
 ## Errors
@@ -322,14 +331,15 @@ It can be used to catch error thrown from uplink when one does not know what exc
 
 ```js
 try{
+	const uplinkError = storj.errorhandle;
     // function calls
 }
 catch(err){
-    throw new StorjException(message,code,details)
+     uplinkError.storjException(code,message);
 }
 ```
 
-StorjException is further sub-categorized into various error specific classes, These classes inherit all their properties from the base class, i.e. StorjException:
+StorjException class is further sub-categorized into various error specific classes, These classes inherit all their properties from the base class, i.e. StorjException:
 
     InternalError
 	BandwidthLimitExceededError

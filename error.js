@@ -31,7 +31,7 @@ class InternalError extends StorjException {
 
 class CancelledError extends StorjException {
     constructor(details) {
-      super("operation cancelled", ERROR_CANCELED, details)
+      super("operation cancelled", ERROR_CANCELED, details);
     }
   }
 
@@ -104,7 +104,7 @@ class UploadDoneError extends StorjException {
 }
 
 module.exports={
-  storj_exception : function storjEexception(code, details) {
+  storjException : function storjException(code, details) {
     switch(code) {
       case 0x02:throw new InternalError(details);
       case 0x03:throw new CancelledError(details);

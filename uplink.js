@@ -88,7 +88,7 @@ class Uplink {
     // Output : Access (Object)
     async requestAccessWithPassphrase(satelliteURL,apiKey,encryptionPassphrase){
         var access = await uplink.request_access_with_passphrase(satelliteURL,apiKey,encryptionPassphrase).catch((error) => {
-            errorhandle.storj_exception(error.error.code,error.error.message);
+            errorhandle.storjException(error.error.code,error.error.message);
         });
         var accessResultReturn = new AccessResultStruct(access.access);
         return(accessResultReturn);
@@ -101,7 +101,7 @@ class Uplink {
     // Output : Access (Object)
     async parseAccess(stringResult){
         var parsedSharedAccess = await uplink.parse_access(stringResult).catch((error) => {
-            errorhandle.storj_exception(error.error.code,error.error.message);
+            errorhandle.storjException(error.error.code,error.error.message);
         });
         var accessResultReturn = new AccessResultStruct(parsedSharedAccess.access);
         return(accessResultReturn);
@@ -116,7 +116,7 @@ class Uplink {
     // Output : Access (Object)
     async configRequestAccessWithPassphrase(config,satelliteURL,apiKey,encryptionPassphrase){
         var access = await uplink.config_request_access_with_passphrase(config,satelliteURL,apiKey,encryptionPassphrase).catch((error) => {
-            errorhandle.storj_exception(error.error.code,error.error.message);
+            errorhandle.storjException(error.error.code,error.error.message);
         });
         var accessResultReturn = new AccessResultStruct(access.access);
         return(accessResultReturn);

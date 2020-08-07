@@ -171,8 +171,8 @@ async function uploadfile(project){
         customMetadataEntry2.value_length = customMetadataEntry2.value.length;
         
         var customMetadataEntryArray = [
-customMetadataEntry1,
-customMetadataEntry2
+        customMetadataEntry1,
+        customMetadataEntry2
 ];
         var customMetadata = new storj.CustomMetadata();
         customMetadata.count = customMetadataEntryArray.length;
@@ -278,11 +278,11 @@ async function downloadfile(project){
 //
 //Connecting to storj network using Satellite Address , Storj API key , Encryption phassphrase
 console.log("Getting Access\nSatellite Address : ",storjConfig.satelliteURL,"\nAPI key : ",storjConfig.apiKey,"\nEncryption Passphrase : ",storjConfig.encryptionPassphrase);
-var access = libUplink.requestAccessWithPassphrase(storjConfig.satelliteURL,storjConfig.apiKey,storjConfig.encryptionPassphrase).then((access)=>{
+var access = libUplink.requestAccessWithPassphrase(storjConfig.satelliteURL,storjConfig.apiKey,storjConfig.encryptionPassphrase).then((access) => {
     console.log("Access : Granted !!");
     //Opening project on storj V3 network using created access.
     console.log("Opening Storj Project...");
-    access.openProject().then(async (project)=>{
+    access.openProject().then(async (project) => {
         console.log("Desired Storj Project: OPENED!");
         //Fetching bucket info from the storj V3 network
         console.log("Fetching Information About Bucket : ",storjConfig.bucketName);
@@ -406,12 +406,12 @@ var access = libUplink.requestAccessWithPassphrase(storjConfig.satelliteURL,stor
             console.log("Failed to close project");
             console.log(err);
         });
-    }).catch((err)=>{
+    }).catch((err) => {
         console.log("Failed to open project");
         console.log(err);
     });
 
-}).catch((err)=>{
+}).catch((err) => {
     console.log("Failed to get access");
     console.log(err);
 });
