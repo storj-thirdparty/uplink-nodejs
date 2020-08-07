@@ -1,7 +1,7 @@
 var uplink = require("bindings")("uplink");
 const errorhandle = require('./error.js');
 
-class downloadResultStruct{
+class DownloadResultStruct{
     constructor(download){
         this.download = download;
     }
@@ -11,8 +11,8 @@ class downloadResultStruct{
     // Input : Buffer (Buf), Buffer length (Int)
     // Output : ReadResult (Int)
     async read(buffer,length){
-        var bytesread = await uplink.download_read(this.download,buffer,length).catch((error)=>{
-            errorhandle.storj_exception(error.error.code,error.error.message)
+        var bytesread = await uplink.download_read(this.download,buffer,length).catch((error) => {
+            errorhandle.storj_exception(error.error.code,error.error.message);
         });
         return bytesread;
     }
@@ -21,8 +21,8 @@ class downloadResultStruct{
     // Input : None
     // Output : ObjectInfo (Object)
     async info(){
-        var objectInfo = await uplink.download_info(this.download).catch((error)=>{
-            errorhandle.storj_exception(error.error.code,error.error.message)
+        var objectInfo = await uplink.download_info(this.download).catch((error) => {
+            errorhandle.storj_exception(error.error.code,error.error.message);
         });
         return objectInfo;
     }
@@ -31,10 +31,10 @@ class downloadResultStruct{
     // Input : None
     // Output : None
     async close(){
-        await uplink.close_download(this.download).catch((error)=>{
-            errorhandle.storj_exception(error.error.code,error.error.message)
+        await uplink.close_download(this.download).catch((error) => {
+            errorhandle.storj_exception(error.error.code,error.error.message);
         });
     }
 }
 
-module.exports = downloadResultStruct;
+module.exports = DownloadResultStruct;

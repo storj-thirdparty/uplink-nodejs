@@ -2,7 +2,7 @@
 var expect = require("chai").expect;
 let chai = require("chai");
 const storj = require("../uplink.js");
-const libUplink = new storj.uplink();
+const libUplink = new storj.Uplink();
 const fs = require("fs");
 //
 //Storj V3
@@ -27,7 +27,7 @@ function readAPIKey(){
     throw (e.message);
   }
 }
-readAPIKey();
+//readAPIKey();
 
 //String to be uploaded on storj V3 network
 var str = "Hello Storj";
@@ -43,7 +43,7 @@ function deleteObject(project){
     return new Promise(async (resolve,reject)=>{
       it("Delete Object from storj V3 network",async function(){
         return new Promise(async (resolve,reject)=>{
-          await project.delete_object(storjConfig.bucketName,storjConfig.uploadPath).then((objectinfo) => { 
+          await project.deleteObject(storjConfig.bucketName,storjConfig.uploadPath).then((objectinfo) => { 
             describe('Delete object result', function() {
               it('Should have object info ',function(){
                 objectinfo.should.be.a('object');
@@ -68,7 +68,7 @@ function deleteBucket(project){
     return new Promise(async (resolve,reject)=>{
       it("Delete Bucket",async function(){
         return new Promise(async (resolve,reject)=>{
-          await project.delete_bucket(storjConfig.bucketName).then((bucketInfo) => { 
+          await project.deleteBucket(storjConfig.bucketName).then((bucketInfo) => { 
             resolve(true);
           }).catch((err)=>{
              reject(err);
@@ -108,7 +108,7 @@ function parsedAccess(stringResult){
     return new Promise(async (resolve,reject)=>{
       it("Access Shared",async function(){
         return new Promise(async (resolve,reject)=>{
-          await libUplink.parse_access(stringResult).then(async (parsedAccess) => {
+          await libUplink.parseAccess(stringResult).then(async (parsedAccess) => {
             describe('parsed access share Result',function(){
               it("should have prase access",function(){
                 parsedAccess.access._handle.should.be.a('number');
@@ -123,13 +123,13 @@ function parsedAccess(stringResult){
 
             describe('parsed access share Result',function(){
               it("should have open project function",function(){
-               parsedAccess.should.have.property('open_project');
+               parsedAccess.should.have.property('openProject');
               });
             });
        
             describe(' parsed access share Result',function(){
               it("should have config open project function",function(){
-               parsedAccess.should.have.property('config_open_project');
+               parsedAccess.should.have.property('configOpenProject');
               });
             });
 
@@ -195,12 +195,12 @@ function accessShare(access){
             });
             describe('access share Result',function(){
               it("should have open project function",function(){
-                sharedAccess.should.have.property('open_project');
+                sharedAccess.should.have.property('openProject');
               });
             });
             describe('access share Result',function(){
               it("should have config open project function",function(){
-                sharedAccess.should.have.property('config_open_project');
+                sharedAccess.should.have.property('configOpenProject');
               });
             });
             describe('access share Result',function(){
@@ -264,7 +264,7 @@ function downloadObject(project){
           var downloadOptions = new storj.DownloadOptions();
           downloadOptions.offset = 0;
           downloadOptions.length = -1;
-          await project.download_object(storjConfig.bucketName,storjConfig.uploadPath,downloadOptions).then(async (downloadresult) => {
+          await project.downloadObject(storjConfig.bucketName,storjConfig.uploadPath,downloadOptions).then(async (downloadresult) => {
             var buffer = new Buffer.alloc(BUFFER_SIZE)
             describe('download object Result',function(){
               it('Should get download handle',function(){
@@ -312,7 +312,7 @@ function listObject(project){
       it("List Object function",async function(){
         return new Promise(async (resolve,reject)=>{
           var listObjectsOptions = new storj.ListObjectsOptions();
-          await project.list_objects(storjConfig.bucketName,listObjectsOptions).then(async (objectlist) => {
+          await project.listObjects(storjConfig.bucketName,listObjectsOptions).then(async (objectlist) => {
            
             describe('list object Result',function(){
               it('Should get list of object',function(){
@@ -336,7 +336,7 @@ function statObject(project){
     return new Promise(async (resolve,reject)=>{
       it("Download",async function(){
         return new Promise(async (resolve,reject)=>{
-          await project.stat_object(storjConfig.bucketName,storjConfig.uploadPath).then((objectinfo) => {
+          await project.statObject(storjConfig.bucketName,storjConfig.uploadPath).then((objectinfo) => {
           //
           describe('stat object Result ',function(){
             it('Should get information of object',function(){
@@ -395,7 +395,7 @@ function uploadWrite(upload,project,accessResult){
           describe('upload set custom metadata', function(err) {
             it("Upload set custom metadata function", async function() {
               return new Promise(async (resolve, reject) => {
-                await upload.set_custom_metadata(customMetadata).then(() => {
+                await upload.setCustomMetadata(customMetadata).then(() => {
         
                 }).catch((err) => {
                     reject(err)
@@ -457,7 +457,7 @@ function uploadObject(project,accessResult){
         return new Promise(async (resolve,reject)=>{
           var uploadOptions = new storj.UploadOptions();
           uploadOptions.expires = 0;
-          await project.upload_object(storjConfig.bucketName,storjConfig.uploadPath,uploadOptions).then(async (upload) => {
+          await project.uploadObject(storjConfig.bucketName,storjConfig.uploadPath,uploadOptions).then(async (upload) => {
             describe('upload Result', function() {
               it('Should have upload',function(){
                 expect(upload.upload._handle).to.be.a('number');
@@ -490,7 +490,7 @@ function uploadObject(project,accessResult){
             //
             describe('upload Result', function() {
               it('Should have upload set custom metadata function',function(){
-                upload.should.have.property('set_custom_metadata')
+                upload.should.have.property('setCustomMetadata')
               });
             });
             //
@@ -516,7 +516,7 @@ function listBucket(project){
       it("Listing Bucket",async function(){
         return new Promise(async (resolve,reject)=>{
           var listBucketsOptions = new storj.ListBucketsOptions();
-          await project.listbuckets(listBucketsOptions).then(async (bucketListResult) => {
+          await project.listBuckets(listBucketsOptions).then(async (bucketListResult) => {
             describe('list bucket Result',function(){
               it("should have information",function(){
                 bucketListResult.should.be.a('object');
@@ -540,7 +540,7 @@ function ensureBucket(project){
     return new Promise(async (resolve,reject)=>{
       it("Ensure Bucket",async function(){
         return new Promise(async (resolve,reject)=>{
-          await project.ensure_bucket(storjConfig.bucketName).then(async (bucketInfo) => {
+          await project.ensureBucket(storjConfig.bucketName).then(async (bucketInfo) => {
             describe('ensure bucket Result',function(){
               it("should have information",function(){
                 bucketInfo.name.should.equal(storjConfig.bucketName);
@@ -564,7 +564,7 @@ function statBucket(project){
     return new Promise(async (resolve,reject)=>{
       it("Stat Bucket",async function(){
         return new Promise(async (resolve,reject)=>{
-          await project.stat_bucket(storjConfig.bucketName).then(async (bucketInfo) => {
+          await project.statBucket(storjConfig.bucketName).then(async (bucketInfo) => {
             describe('stat bucket Result',function(){
               it("should have information",function(){
                 bucketInfo.name.should.equal(storjConfig.bucketName);
@@ -589,7 +589,7 @@ function createBucket(project,accessResult){
     return new Promise(async (resolve,reject)=>{
       it("Creating Bucket",async function(){
         return new Promise(async (resolve,reject)=>{
-          await project.create_bucket(storjConfig.bucketName).then(async (bucketInfo) => {
+          await project.createBucket(storjConfig.bucketName).then(async (bucketInfo) => {
             describe('create bucket Result',function(){
               it("should have information",function(){
                 bucketInfo.name.should.equal(storjConfig.bucketName);
@@ -623,7 +623,7 @@ function openProject(accessResult){
     return new Promise(async (resolve,reject)=>{
       it("Opening project",async function(){
         return new Promise(async (resolve,reject)=>{
-          await accessResult.open_project().then(async (project) => {
+          await accessResult.openProject().then(async (project) => {
             describe('Project Result', function() {
               it('Should have project',function(){
                 expect(project.project._handle).to.be.a('number');
@@ -632,61 +632,61 @@ function openProject(accessResult){
             //
             describe('Project Result', function() {
               it('Should have stat bucket function',function(){
-                project.should.have.property('stat_bucket');
+                project.should.have.property('statBucket');
               });
             });
             //
             describe('Project Result', function() {
               it('Should have create bucket function',function(){
-                project.should.have.property('create_bucket')
+                project.should.have.property('createBucket')
               });
             });
             //
             describe('Project Result', function() {
               it('Should have ensure bucket function',function(){
-                project.should.have.property('ensure_bucket')
+                project.should.have.property('ensureBucket')
               });
             });
             //
             describe('Project Result', function() {
               it('Should have list bucket function',function(){
-                project.should.have.property('listbuckets')
+                project.should.have.property('listBuckets')
               });
             });
             //
             describe('Project Result', function() {
               it('Should have download object function',function(){
-                project.should.have.property('download_object')
+                project.should.have.property('downloadObject')
               });
             });
             //
             describe('Project Result', function() {
               it('Should have upload object function',function(){
-                project.should.have.property('upload_object')
+                project.should.have.property('uploadObject')
               });
             });
             //
             describe('Project Result', function() {
               it('Should have stat object function',function(){
-                project.should.have.property('stat_object')
+                project.should.have.property('statObject')
               });
             });
             //
             describe('Project Result', function() {
               it('Should have list object function',function(){
-                project.should.have.property('list_objects')
+                project.should.have.property('listObjects')
               });
             });
             //
             describe('Project Result', function() {
               it('Should have delete object function',function(){
-                project.should.have.property('delete_object')
+                project.should.have.property('deleteObject')
               });
             });
             //
             describe('Project Result', function() {
               it('Should have delete bucket function',function(){
-                project.should.have.property('delete_bucket')
+                project.should.have.property('deleteBucket')
               });
             });
             //
@@ -717,7 +717,7 @@ describe('Uplink NodeJS Test',function(){
     it("Request Access",function() {
         return new Promise(async (resolve, reject) => {
           //
-          await libUplink.request_access_with_passphrase(storjConfig.satelliteURL,storjConfig.apiKey,storjConfig.encryptionPassphrase).then(async (access)=>{
+          await libUplink.requestAccessWithPassphrase(storjConfig.satelliteURL,storjConfig.apiKey,storjConfig.encryptionPassphrase).then(async (access)=>{
             //
             describe('Access Result', function() {
               it('Should have access',function(){
@@ -727,13 +727,13 @@ describe('Uplink NodeJS Test',function(){
 
             describe('Access Result', function() {
               it('Should have open project function',function(){
-                access.should.have.property('open_project');
+                access.should.have.property('openProject');
               });
             });
 
             describe('Access Result', function() {
               it('Should have config open project function',function(){
-                access.should.have.property('config_open_project')
+                access.should.have.property('configOpenProject')
               });
             });
 

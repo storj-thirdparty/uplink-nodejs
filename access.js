@@ -1,9 +1,9 @@
 var uplink = require("bindings")("uplink");
-const projectResultStruct = require('./project.js');
+const ProjectResultStruct = require('./project.js');
 const errorhandle = require('./error.js');
 
 //
-class accessResultStruct {
+class AccessResultStruct {
     constructor(access){
         this.access = access;
     }
@@ -11,22 +11,22 @@ class accessResultStruct {
     //function opens Storj(V3) project using access grant.
     //Input : None
     //Output : Project(Object)
-    async open_project(){
-        var project = await uplink.open_project(this.access).catch((error)=>{
-            errorhandle.storj_exception(error.error.code,error.error.message)
+    async openProject(){
+        var project = await uplink.open_project(this.access).catch((error) => {
+            errorhandle.storj_exception(error.error.code,error.error.message);
         });
-        var projectResultReturn = new projectResultStruct(project.project);
+        var projectResultReturn = new ProjectResultStruct(project.project);
         return(projectResultReturn);
     }
 
     //function opens Storj(V3) project using access grant and custom configuration.
     //Input : None
     //Output : Project(Object)
-    async config_open_project(){
-        var project = await uplink.config_open_project(this.access).catch((error)=>{
-            errorhandle.storj_exception(error.error.code,error.error.message)
+    async configOpenProject(){
+        var project = await uplink.config_open_project(this.access).catch((error) => {
+            errorhandle.storj_exception(error.error.code,error.error.message);
         });
-        var projectResultReturn = new projectResultStruct(project.project);
+        var projectResultReturn = new ProjectResultStruct(project.project);
         return(projectResultReturn);
     }
     
@@ -40,10 +40,10 @@ class accessResultStruct {
     //Input : Permission (Object) , sharePrefixListArray (Array) , sharePrefixListArraylength (Int)
     //Output : Project(Object)
     async share(permission,sharePrefixListArray,sharePrefixListArraylength){
-        var sharedAccess = await uplink.access_share(this.access,permission,sharePrefixListArray,sharePrefixListArraylength).catch((error)=>{
-            errorhandle.storj_exception(error.error.code,error.error.message)
+        var sharedAccess = await uplink.access_share(this.access,permission,sharePrefixListArray,sharePrefixListArraylength).catch((error) => {
+            errorhandle.storj_exception(error.error.code,error.error.message);
         });
-        var sharedAccessResultReturn = new accessResultStruct(sharedAccess.access);
+        var sharedAccessResultReturn = new AccessResultStruct(sharedAccess.access);
         return(sharedAccessResultReturn);
     }
 
@@ -51,10 +51,10 @@ class accessResultStruct {
     //Input : None
     //Output : SharedString (String)
     async serialize(){
-        var stringResult = await uplink.access_serialize(this.access).catch((error)=>{
-            errorhandle.storj_exception(error.error.code,error.error.message)
+        var stringResult = await uplink.access_serialize(this.access).catch((error) => {
+            errorhandle.storj_exception(error.error.code,error.error.message);
         });
         return stringResult;
     }
 }
-module.exports = accessResultStruct;
+module.exports = AccessResultStruct;

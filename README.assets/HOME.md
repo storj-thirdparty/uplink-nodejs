@@ -10,11 +10,11 @@
 
 ## Uplink Functions
 
-### request_access_with_passphrase(String, String, String)
+### requestAccessWithPassphrase(String, String, String)
 
 #### Description
 
-This function request_access_with_passphrase  requests satellite for a new access grant
+This function requestAccessWithPassphrase  requests satellite for a new access grant
 using a passhprase, there is no pre-requisites required for this function.\
 This function accepts 3 arguments Satellite URL, API Key and  encryptionpassphrase
 and returns an access object on successful execution which can be used to 
@@ -33,12 +33,12 @@ An access grant is always associated with exactly one Project on one Satellite.
 |<code>passphrase</code>| Any passphrase |<code>string</code> |
 
 
-### config_request_access_with_passphrase(Object, String, String, String)
+### configRequestAccessWithPassphrase(Object, String, String, String)
 
 
 #### Description
 
-This function config_request_access_with_passphrase requests satellite for a new access grant 
+This function configRequestAccessWithPassphrase requests satellite for a new access grant 
 using a passhprase and config.\
 There is no pre-requisites required for this function.\
 This function accepts 4 arguments Satellite URL, API Key, encryptionpassphrase and config object and returns an access object on successful execution which can be used to call other functions which are bound to it.
@@ -108,23 +108,23 @@ to call other functions which are bound to it.
 |<code>SharePrefix</code>| Create using storj library |<code>object</code> |
 |<code>PrefixCount</code>|count of share prefix |<code>Int</code> |
 
-### open_project()
+### openProject()
 
 #### Description
 
 Once you have a valid access grant, you can open a Project with the access that access grant,
-open_project function opens project using access grant.\
-request_access_with_passphrase or config_request_access_with_passphrase function is required as a pre-requisite.\
+openProject function opens project using access grant.\
+requestAccessWithPassphrase or configRequestAccessWithPassphrase function is required as a pre-requisite.\
 it returns an project object on successful execution which can be used to call 
 other functions which are bound to it.\
 It allows you to manage buckets and objects within buckets.
 
-### config_open_project(Object)
+### configOpenProject(Object)
 
 ##### Description
 
-config_open_project function opens project using access grant and config.\
-request_access_with_passphrase or config_request_access_with_passphrase function
+configOpenProject function opens project using access grant and config.\
+requestAccessWithPassphrase or configRequestAccessWithPassphrase function
 is required as a pre-requisite. This function accepts 1 argument config(object) which is access from storj
 library.\
 it returns an project object on successful execution which can be used to call 
@@ -144,15 +144,15 @@ These functions require Project(Object) for calling.
 
 #### Description
 
-close function closes the project and open_project function is required as a pre-requisite.\
+close function closes the project and openProject function is required as a pre-requisite.\
 it returns an error object if on successful execution is not occurred.
 
-### ensure_bucket(String)
+### ensureBucket(String)
 
 #### Description
 
-ensure_bucket function creates a new bucket and ignores the error when it 
-already exists and open_project function is required as a pre-requisite.\
+ensureBucket function creates a new bucket and ignores the error when it 
+already exists and openProject function is required as a pre-requisite.\
  This function accepts 1 argument bucket name which is access from storj configuration.\
 It returns an bucket 
 object on successful execution it can be used to get other properties 
@@ -164,11 +164,11 @@ which are bound to it.
 | --- | --- | --- |
 |<code>bucket_name</code>| Bucket name on storj V3 network | <code>string</code> |
 
-### stat_bucket(String)
+### statBucket(String)
 
 #### Description
 
-stat_bucket function returns information about a bucket and open_project function is 
+statBucket function returns information about a bucket and openProject function is 
 required as a pre-requisite.\
 This function accepts 1 argument bucket name which is access from storj configuration.\
 it returns an bucket object on successful execution it can be used to get
@@ -180,12 +180,12 @@ other properties which are bound to it.
 | --- | --- | --- |
 |<code>bucket_name</code>| Bucket name on storj V3 network | <code>string</code> |
 
-### create_bucket(String)
+### createBucket(String)
 
 #### Description
 
-create_bucket function creates a new bucket When bucket already exists it returns 
-a valid Bucket and ErrBucketExists and open_project function is required
+createBucket function creates a new bucket When bucket already exists it returns 
+a valid Bucket and ErrBucketExists and openProject function is required
 as a pre-requisite.\
 This function accepts 1 argument bucket name which is access from storj 
 configuration.\
@@ -198,11 +198,11 @@ used to get other properties which are bound to it.
 | --- | --- | --- |
 |<code>bucket_name</code>| Bucket name on storj V3 network | <code>string</code> |
 
-### list_buckets()
+### listBuckets()
 
 ##### Description
 
-lsit_buckets function lists buckets and open_project function is required
+lsitBuckets function lists buckets and openProject function is required
 as a pre-requisite for this function.\
 This function takes 1 optional argument listObjectOptions which is accessed from module_classes.
 It returns an bucketList object on successful execution it can be used to get other
@@ -212,12 +212,12 @@ properties which are bound to it.
 | --- | --- | --- |
 |<code>list_bucket_options</code>| Create using storj library  | <code>object</code> |
 
-### delete_bucket(String)
+### deleteBucket(String)
 
 #### Description
 
-delete_bucket function deletes a bucket When bucket is not empty it returns ErrBucketNotEmpty.
-and open_project function is requiredas a pre-requisite for this function .\
+deleteBucket function deletes a bucket When bucket is not empty it returns ErrBucketNotEmpty.
+and openProject function is requiredas a pre-requisite for this function .\
 This function accepts 1 argument bucket name which is access from storj configuration.\
 It returns an bucket object on successful execution it can be used to get other
 properties which are bound to it.
@@ -228,12 +228,12 @@ properties which are bound to it.
 | --- | --- | --- |
 |<code>bucket_name</code>| Bucket name on storj V3 network | <code>string</code> |
 
-### stat_object(String, String)
+### statObject(String, String)
 
 ##### Description
 
-stat_object function information about an object at the specific key and 
-open_project function is required as a pre-requisite for this function.\
+statObject function information about an object at the specific key and 
+openProject function is required as a pre-requisite for this function.\
 This function accepts 2 argument bucket name which is access from storj configuration and Object Key which is access from storj configuration.\
 It returns an objectinfo object on successful execution it can be used to get other
 properties which are bound to it.
@@ -245,11 +245,11 @@ properties which are bound to it.
 |<code>bucket_name</code>| Bucket name on storj V3 network | <code>string</code> |
 |<code>objectName</code>| Object path on storj V3 network | <code>string</code> |
 
-### list_objects(String, Object)
+### listObjects(String, Object)
 
 ##### Description
 
-list_objects function lists objects, open_project function is required as a pre-requisite 
+listObjects function lists objects, openProject function is required as a pre-requisite 
 for this function.\
 This function accepts 2 argument bucket name which is access from storj configuration and listObjectOptions 
 which is access from storj library ListObjectsOptions defines object listing options.\
@@ -263,11 +263,11 @@ other properties which are bound to it.
 |<code>bucket_name</code>| Bucket name on storj V3 network | <code>string</code> |
 |<code>list_object_options</code>| Create using storj library | <code>object</code> |
 
-### delete_object(String, String)
+### deleteObject(String, String)
 
 ##### Description
 
-delete_object function deletes an object at the specific key, open_project function is required as a pre-requisite 
+deleteObject function deletes an object at the specific key, openProject function is required as a pre-requisite 
 for this function.\
 This function accepts 2 argument  bucket name which is access from storj configuration and ObjectKey
 which is access from storj configuration.\
@@ -281,11 +281,11 @@ execution it can be used to get other properties which are bound to it.
 |<code>bucket_name</code>| Bucket name on storj V3 network | <code>string</code> |
 |<code>objectName</code>| Object path on storj V3 network | <code>string</code> |
 
-### upload_object(String, String, Object)
+### uploadObject(String, String, Object)
 
 ##### Description
 
-upload_object function starts an upload to the specified key, open_project 
+uploadObject function starts an upload to the specified key, openProject 
 function is required as a pre-requisite for this function.\
 This function accepts 3 argument bucket name 
 which is access from storj configuration, ObjectKey which is access from storj 
@@ -301,11 +301,11 @@ It returns an upload object, on successful execution it can be used to call othe
 |<code>objectName</code>| Object path to be uploaded on storj V3 network | <code>string</code> |
 |<code>upload_options</code>| Create using storj library| <code>object</code> |
    
-### download_object(String, String, Object)
+### downloadObject(String, String, Object)
 
 ##### Description
 
-download_object function starts download to the specified key, open_project 
+downloadObject function starts download to the specified key, openProject 
 function is required as a pre-requisite for this function.\
 This function accepts 3 argument  bucket name 
 which is access from storj configuration, ObjectKey which is access from storj 
@@ -326,11 +326,11 @@ It returns an download object, on successful execution it can be used to call ot
 These functions require Upload(Object) for calling.
 
 
-### set_custom_metadata(Object)
+### setCustomMetadata(Object)
 
 ##### Description:
 
-set_custom_metadata function set custom meta information, upload_object function 
+setCustomMetadata function set custom meta information, upload_object function 
 is required as a pre-requisite for this function.\
 This function accepts 1 argument CustomMetaData object which is access from storj library CustomMetadata contains custom user metadata about the object 
 it returns an error object, if successful execution is not occurred.

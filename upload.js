@@ -2,7 +2,7 @@ var uplink = require("bindings")("uplink");
 const errorhandle = require('./error.js');
 
 //
-class uploadResultStruct{
+class UploadResultStruct{
     constructor(upload){
         this.upload = upload;
     }
@@ -11,8 +11,8 @@ class uploadResultStruct{
     // Input : Buffer (Buf), Buffer length (Int)
     // Output : WriteResult (Int)
     async write(buffer,bytesread){
-        var writeResult = await uplink.upload_write(this.upload,buffer,bytesread).catch((error)=>{
-            errorhandle.storj_exception(error.error.code,error.error.message)
+        var writeResult = await uplink.upload_write(this.upload,buffer,bytesread).catch((error) => {
+            errorhandle.storj_exception(error.error.code,error.error.message);
         });
         return writeResult;
     }
@@ -20,9 +20,9 @@ class uploadResultStruct{
     // function to set custom meta information while uploading data
     // Input : customMetadata (Object)
     // Output : None
-    async set_custom_metadata(customMetadata){
-        await uplink.upload_set_custom_metadata(this.upload,customMetadata).catch((error)=>{
-            errorhandle.storj_exception(error.error.code,error.error.message)
+    async setCustomMetadata(customMetadata){
+        await uplink.upload_set_custom_metadata(this.upload,customMetadata).catch((error) => {
+            errorhandle.storj_exception(error.error.code,error.error.message);
         });
     }
 
@@ -30,8 +30,8 @@ class uploadResultStruct{
     // Input : None
     // Output : None
     async commit(){
-        await uplink.upload_commit(this.upload).catch((error)=>{
-            errorhandle.storj_exception(error.error.code,error.error.message)
+        await uplink.upload_commit(this.upload).catch((error) => {
+            errorhandle.storj_exception(error.error.code,error.error.message);
         });
     }
 
@@ -39,8 +39,8 @@ class uploadResultStruct{
     // Input : None
     // Output : ObjectInfo
     async info(){
-        var object = await uplink.upload_info(this.upload).catch((error)=>{
-            errorhandle.storj_exception(error.error.code,error.error.message)
+        var object = await uplink.upload_info(this.upload).catch((error) => {
+            errorhandle.storj_exception(error.error.code,error.error.message);
         });
         return object;
     }
@@ -49,11 +49,11 @@ class uploadResultStruct{
     // Input : None
     // Output : ObjectInfo
     async abort(){
-        var object = await uplink.upload_abort(this.upload).catch((error)=>{
-            errorhandle.storj_exception(error.error.code,error.error.message)
+        var object = await uplink.upload_abort(this.upload).catch((error) => {
+            errorhandle.storj_exception(error.error.code,error.error.message);
         });
         return object;
     }
 }
 
-module.exports = uploadResultStruct;
+module.exports = UploadResultStruct;

@@ -3,16 +3,16 @@
 ## Include uplink in library 
 ```js
 	const storj = require("uplink-nodejs");
-	const libUplink = new storj.uplink();
+	const libUplink = new storj.Uplink();
 
 ```
-* we need to create an object of libUplink class that will be used to call the libuplink functions.
+* we need to create an object of Uplink class that will be used to call the libuplink functions.
 
-## request_access_with_passphrase(String, String, String)
+## requestAccessWithPassphrase(String, String, String)
 
 ##### Description:
 
-This function request_access_with_passphrase  requests satellite for a new access grant
+This function requestAccessWithPassphrase  requests satellite for a new access grant
 using a passhprase, there is no pre-requisites required for this function.\
 This function accepts 3 arguments Satellite URL, API Key and  encryptionpassphrase
 and returns an access object on successful execution which can be used to 
@@ -36,14 +36,14 @@ An access grant is always associated with exactly one Project on one Satellite.
 var satelliteURL = "change-me-to-desired-satellite-address";
 var apiKey = "change-me-to-desired-api-key";
 var encryptionPassphrase = "change-me-to-desired-encryption";
-libUplink.request_access_with_passphrase(satelliteURL,apiKey,encryptionPassphrase).then(access => {
+libUplink.requestAccessWithPassphrase(satelliteURL,apiKey,encryptionPassphrase).then(access => {
 		....//some code//....
 }).catch((err) => {
     ....//some code//....
 });
 //
 //OR
-var access = await libUplink.request_access_with_passphrase(satelliteURL,apiKey,encryptionPassphrase).catch((err) => {
+var access = await libUplink.requestAccessWithPassphrase(satelliteURL,apiKey,encryptionPassphrase).catch((err) => {
     ....//some code//....
 });
 ....//some code//....
@@ -52,11 +52,11 @@ var access = await libUplink.request_access_with_passphrase(satelliteURL,apiKey,
 
 
 
-## config_request_access_with_passphrase(Object, String, String, String)
+## configRequestAccessWithPassphrase(Object, String, String, String)
 
 ##### Description:
 
-This function config_request_access_with_passphrase requests satellite for a new access grant 
+This function configRequestAccessWithPassphrase requests satellite for a new access grant 
 using a passhprase and config.\
 There is no pre-requisites required for this function.\
 This function accepts 4 arguments Satellite URL, API Key, encryptionpassphrase and config object and returns an access object on successful execution which can be used to call other functions which are bound to it.
@@ -76,8 +76,8 @@ This function accepts 4 arguments Satellite URL, API Key, encryptionpassphrase a
 var satelliteURL = "change-me-to-desired-satellite-address";
 var apiKey = "change-me-to-desired-api-key";
 var encryptionPassphrase = "change-me-to-desired-encryption";
-var config = new storj.config();
-libUplink.config_request_access_with_passphrase(config,satelliteURL,apiKey,encryptionPassphrase).then(access => {
+var config = new storj.Config();
+libUplink.configRequestAccessWithPassphrase(config,satelliteURL,apiKey,encryptionPassphrase).then(access => {
 		....//some code//....
 }).catch((err) => {
     ....//some code//....
@@ -86,7 +86,7 @@ libUplink.config_request_access_with_passphrase(config,satelliteURL,apiKey,encry
 
 
 
-##  parse_access(String)
+##  parseAccess(String)
 
 ##### Description:
 
@@ -180,13 +180,13 @@ await sharedAccessResult.serialize().then(async (stringResult) => {
 
 
 
-## open_project()
+## openProject()
 
 ##### Description:
 
 Once you have a valid access grant, you can open a Project with the access that access grant,
-open_project function opens project using access grant.\
-request_access_with_passphrase or config_request_access_with_passphrase function is required as a pre-requisite.\
+openProject function opens project using access grant.\
+requestAccessWithPassphrase or configRequestAccessWithPassphrase function is required as a pre-requisite.\
 it returns an project object on successful execution which can be used to call 
 other functions which are bound to it.\
 It allows you to manage buckets and objects within buckets.
@@ -195,7 +195,7 @@ It allows you to manage buckets and objects within buckets.
 ##### Usage Example:
 
 ```js
-access.open_project().then(async (project) => {
+access.openProject().then(async (project) => {
 		...//some code//...
 }).catch((err) => {
 	....//some code//....
@@ -203,12 +203,12 @@ access.open_project().then(async (project) => {
 ```
 
 
-## config_open_project(Object)
+## configOpenProject(Object)
 
 ##### Description:
 
-config_open_project function opens project using access grant and config.\
-request_access_with_passphrase or config_request_access_with_passphrase function
+configOpenProject function opens project using access grant and config.\
+requestAccessWithPassphrase or configRequestAccessWithPassphrase function
 is required as a pre-requisite. This function accepts 1 argument config(object) which is access from storj
 library.\
 it returns an project object on successful execution which can be used to call 
@@ -225,7 +225,7 @@ other functions which are bound to it.
 
 ```js
 var config = new storj.config();
-access.config_open_project(config).then(async (project) => {
+access.configOpenProject(config).then(async (project) => {
 		...//some code//...
 }).catch((err) => {
 	....//some code//....
@@ -239,7 +239,7 @@ access.config_open_project(config).then(async (project) => {
 
 ##### Description:
 
-close function closes the project and open_project function is required as a pre-requisite.\
+close function closes the project and openProject function is required as a pre-requisite.\
 it returns an error object if on successful execution is not occurred.
 
 ##### Usage Example:
@@ -253,11 +253,11 @@ await project.close().then(() => {
 ```
 
 
-## stat_bucket(String)
+## statBucket(String)
 
 ##### Description:
 
-stat_bucket function returns information about a bucket and open_project function is 
+statBucket function returns information about a bucket and openProject function is 
 required as a pre-requisite.\
 This function accepts 1 argument bucket name which is access from storj configuration.\
 it returns an bucket object on successful execution it can be used to get
@@ -274,7 +274,7 @@ other properties which are bound to it.
 
 ```js
 var bucketName = "change-me-to-desired-bucket-name";
-await project.stat_bucket(bucketName).then((bucketInfo) => {
+await project.statBucket(bucketName).then((bucketInfo) => {
 	...//some code//...
 }).catch((err) => {
 	....//some code//....
@@ -282,13 +282,13 @@ await project.stat_bucket(bucketName).then((bucketInfo) => {
 ```
 
 
-## ensure_bucket(String)
+## ensureBucket(String)
 
 
 ##### Description:
 
-ensure_bucket function creates a new bucket and ignores the error when it 
-already exists and open_project function is required as a pre-requisite.\
+ensureBucket function creates a new bucket and ignores the error when it 
+already exists and openProject function is required as a pre-requisite.\
  This function accepts 1 argument bucket name which is access from storj configuration.\
 It returns an bucket 
 object on successful execution it can be used to get other properties 
@@ -304,7 +304,7 @@ which are bound to it.
 
 ```js
 var bucketName = "change-me-to-desired-bucket-name";
-await project.ensure_bucket(bucketName).then((bucketInfo) => {
+await project.ensureBucket(bucketName).then((bucketInfo) => {
 ...//some code//...
 }).catch((err) => {
 ....//some code//....
@@ -312,12 +312,12 @@ await project.ensure_bucket(bucketName).then((bucketInfo) => {
 ```
 
 
-## create_bucket(String)
+## createBucket(String)
 
 ##### Description:
 
-create_bucket function creates a new bucket When bucket already exists it returns 
-a valid Bucket and ErrBucketExists and open_project function is required
+createBucket function creates a new bucket When bucket already exists it returns 
+a valid Bucket and ErrBucketExists and openProject function is required
 as a pre-requisite.\
 This function accepts 1 argument bucket name which is access from storj 
 configuration.\
@@ -334,7 +334,7 @@ used to get other properties which are bound to it.
 
 ```js
 var bucketName = "change-me-to-desired-bucket-name";
-await project.create_bucket(bucketName).then((bucketInfo) => {
+await project.createBucket(bucketName).then((bucketInfo) => {
 	...//some code//...
 }).catch((err) => {
 	....//some code//....
@@ -342,12 +342,12 @@ await project.create_bucket(bucketName).then((bucketInfo) => {
 ```
 
 
-## delete_bucket(String)
+## deleteBucket(String)
 
 ##### Description:
 
-delete_bucket function deletes a bucket When bucket is not empty it returns ErrBucketNotEmpty.
-and open_project function is requiredas a pre-requisite for this function .\
+deleteBucket function deletes a bucket When bucket is not empty it returns ErrBucketNotEmpty.
+and openProject function is requiredas a pre-requisite for this function .\
 This function accepts 1 argument bucket name which is access from storj configuration.\
 It returns an bucket object on successful execution it can be used to get other
 properties which are bound to it.
@@ -363,7 +363,7 @@ properties which are bound to it.
 
 ```js
 var bucketName = "change-me-to-desired-bucket-name";
-await project.delete_bucket(bucketName).then((bucketInfo) => {
+await project.deleteBucket(bucketName).then((bucketInfo) => {
 	...//some_code//...
 }).catch((err) => {
 	....//some code//....
@@ -371,11 +371,11 @@ await project.delete_bucket(bucketName).then((bucketInfo) => {
 ```
 
 
-## list_buckets(Object)
+## listBuckets(Object)
 
 ##### Description:
 
-lsitbuckets function lists buckets and open_project function is required
+lsitBuckets function lists buckets and openProject function is required
 as a pre-requisite for this function .This function accepts 1 argument listBucketOptions which is access from storj library.\
 it returns an bucketList object on successful execution it can be used to get other
 properties which are bound to it.
@@ -392,7 +392,7 @@ properties which are bound to it.
 
 ```js
 var listBucketsOptions = new storj.ListBucketsOptions();
-await project.listbuckets(listBucketsOptions).then(async (bucketListResult) => {
+await project.listBuckets(listBucketsOptions).then(async (bucketListResult) => {
 	...//some_code//...
 }).catch((err) => {
     ....//some code//....
@@ -400,12 +400,12 @@ await project.listbuckets(listBucketsOptions).then(async (bucketListResult) => {
 ```
 
 
-## stat_object(String, String)
+## statObject(String, String)
 
 ##### Description:
 
-stat_object function information about an object at the specific key and 
-open_project function is required as a pre-requisite for this function.\
+statObject function information about an object at the specific key and 
+openProject function is required as a pre-requisite for this function.\
 This function accepts 2 argument bucket name which is access from storj configuration and Object Key which is access from storj configuration.\
 It returns an objectinfo object on successful execution it can be used to get other
 properties which are bound to it.
@@ -423,7 +423,7 @@ properties which are bound to it.
 ```js
 var bucketName = "change-me-to-desired-bucket-name";
 var objectName = "change-me-to-desired-object-name";
-await project.stat_object(bucketName,objectName).then((objectinfo) => {
+await project.statObject(bucketName,objectName).then((objectinfo) => {
 	...//some_code//...
 }).catch((err) => {
     ....//some code//....
@@ -431,11 +431,11 @@ await project.stat_object(bucketName,objectName).then((objectinfo) => {
 ```
 
 
-## list_objects(String, Object)
+## listObjects(String, Object)
 
 ##### Description:
 
-list_objects function lists objects, open_project function is required as a pre-requisite 
+listObjects function lists objects, openProject function is required as a pre-requisite 
 for this function.\
 This function accepts 2 argument bucket name which is access from storj configuration and listObjectOptions 
 which is access from storj library ListObjectsOptions defines object listing options.\
@@ -454,7 +454,7 @@ other properties which are bound to it.
 ```js		
 var bucketName = "change-me-to-desired-bucket-name";
 var listObjectsOptions = new storj.ListObjectsOptions();
-await project.list_objects(bucketName,listObjectsOptions).then((objectlist) => {
+await project.listObjects(bucketName,listObjectsOptions).then((objectlist) => {
 	...//some_code//...
 }).catch((err) => {
     ....//some code//....
@@ -464,11 +464,11 @@ await project.list_objects(bucketName,listObjectsOptions).then((objectlist) => {
 
 
 
-## upload_object(String, String, Object)
+## uploadObject(String, String, Object)
 
 ##### Description:
 
-upload_object function starts an upload to the specified key, open_project 
+uploadObject function starts an upload to the specified key, openProject 
 function is required as a pre-requisite for this function.\
 This function accepts 3 argument bucket name 
 which is access from storj configuration, ObjectKey which is access from storj 
@@ -491,7 +491,7 @@ It returns an upload object, on successful execution it can be used to call othe
 var bucketName = "change-me-to-desired-bucket-name";
 var objectName = "change-me-to-desired-object-name-on-storj";
 var uploadOptions = new storj.UploadOptions();
-await project.upload_object(bucketName,objectName,uploadOptions).then(async (upload) => {  
+await project.uploadObject(bucketName,objectName,uploadOptions).then(async (upload) => {  
 		...//some_code//...
 }).catch((err) => {
 	....//some code//....
@@ -499,11 +499,11 @@ await project.upload_object(bucketName,objectName,uploadOptions).then(async (upl
 ```
 
 
-## download_object(String, String, Object)
+## downloadObject(String, String, Object)
 
 ##### Description:
 
-download_object function starts download to the specified key, open_project 
+downloadObject function starts download to the specified key, openProject 
 function is required as a pre-requisite for this function.\
 This function accepts 3 argument  bucket name 
 which is access from storj configuration, ObjectKey which is access from storj 
@@ -525,19 +525,19 @@ It returns an download object, on successful execution it can be used to call ot
 var bucketName = "change-me-to-desired-bucket-name";
 var objectName = "change-me-to-desired-object-name-on-storj";
 var downloadOptions = new storj.DownloadOptions();
-await project.download_object(bucketName,objectName,downloadOptions).then(async (download) => {
+await project.downloadObject(bucketName,objectName,downloadOptions).then(async (download) => {
 	...//some_code//...
 }).catch((err) => {
 	....//some code//....
 });
 ```
 
-## delete_object(String, String)
+## deleteObject(String, String)
 
 
 ##### Description:
 
-delete_object function deletes an object at the specific key, open_project function is required as a pre-requisite 
+deleteObject function deletes an object at the specific key, openProject function is required as a pre-requisite 
 for this function.\
 This function accepts 2 argument  bucket name which is access from storj configuration and ObjectKey
 which is access from storj configuration.\
@@ -556,7 +556,7 @@ execution it can be used to get other properties which are bound to it.
 ```js
 var bucketName = "change-me-to-desired-bucket-name";
 var objectName = "change-me-to-desired-object-name-on-storj";
-await project.delete_object(bucketName,objectName).then((objectinfo) => {
+await project.deleteObject(bucketName,objectName).then((objectinfo) => {
 	...//some_code//...
 }).catch((err) => {
     ....//some code//....
@@ -567,11 +567,11 @@ await project.delete_object(bucketName,objectName).then((objectinfo) => {
 
 > NOTE: These functions require Upload(Object) for calling.
 
-## set_custom_metadata(Object)
+## setCustomMetadata(Object)
 
 ##### Description:
 
-set_custom_metadata function set custom meta information, upload_object function 
+setCustomMetadata function set custom meta information, upload_object function 
 is required as a pre-requisite for this function.\
 This function accepts 1 argument CustomMetaData object which is access from storj library CustomMetadata contains custom user metadata about the object 
 it returns an error object, if successful execution is not occurred.
@@ -596,7 +596,7 @@ var customMetadata = new storj.CustomMetadata();
 customMetadata.count = customMetadataEntryArray.length;
 customMetadata.entries = customMetadataEntryArray;
 
-await upload.set_custom_metadata(customMetadata).then(() => {
+await upload.setCustomMetadata(customMetadata).then(() => {
 	...//some_code//...
 }).catch((err) => {
 	....//some code//....

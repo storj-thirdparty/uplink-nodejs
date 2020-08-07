@@ -1,6 +1,6 @@
 const process = require("process");
 var uplink = require("bindings")("uplink");
-const accessResultStruct = require('./access.js')
+const AccessResultStruct = require('./access.js');
 const errorhandle = require('./error.js');
 process.chdir(__dirname);
 
@@ -76,7 +76,7 @@ class Config {
     }
 }
 
-class libuplink {
+class Uplink {
     // request_access_with_passphrase generates a new access grant using a passhprase.
     // It must talk to the Satellite provided to get a project-based salt for deterministic
     // key derivation.
@@ -86,11 +86,11 @@ class libuplink {
     // through ParseAccess directly.
     // Input : Satellite Address (String) , API key (String) , Encryption phassphrase(String)
     // Output : Access (Object)
-    async request_access_with_passphrase(satelliteURL,apiKey,encryptionPassphrase){
-        var access = await uplink.request_access_with_passphrase(satelliteURL,apiKey,encryptionPassphrase).catch((error)=>{
-            errorhandle.storj_exception(error.error.code,error.error.message)
+    async requestAccessWithPassphrase(satelliteURL,apiKey,encryptionPassphrase){
+        var access = await uplink.request_access_with_passphrase(satelliteURL,apiKey,encryptionPassphrase).catch((error) => {
+            errorhandle.storj_exception(error.error.code,error.error.message);
         });
-        var accessResultReturn = new accessResultStruct(access.access);
+        var accessResultReturn = new AccessResultStruct(access.access);
         return(accessResultReturn);
     }
 
@@ -99,11 +99,11 @@ class libuplink {
     // See the note on RequestAccessWithPassphrase
     // Input : Shared string
     // Output : Access (Object)
-    async parse_access(stringResult){
-        var parsedSharedAccess = await uplink.parse_access(stringResult).catch((error)=>{
-            errorhandle.storj_exception(error.error.code,error.error.message)
+    async parseAccess(stringResult){
+        var parsedSharedAccess = await uplink.parse_access(stringResult).catch((error) => {
+            errorhandle.storj_exception(error.error.code,error.error.message);
         });
-        var accessResultReturn = new accessResultStruct(parsedSharedAccess.access);
+        var accessResultReturn = new AccessResultStruct(parsedSharedAccess.access);
         return(accessResultReturn);
     }
 
@@ -114,18 +114,18 @@ class libuplink {
     // hrough ParseAccess directly.
     // Input : Config (Object) , Satellite Address (String) , API key (String) , Encryption phassphrase(String)
     // Output : Access (Object)
-    async config_request_access_with_passphrase(config,satelliteURL,apiKey,encryptionPassphrase){
-        var access = await uplink.config_request_access_with_passphrase(config,satelliteURL,apiKey,encryptionPassphrase).catch((error)=>{
-            errorhandle.storj_exception(error.error.code,error.error.message)
+    async configRequestAccessWithPassphrase(config,satelliteURL,apiKey,encryptionPassphrase){
+        var access = await uplink.config_request_access_with_passphrase(config,satelliteURL,apiKey,encryptionPassphrase).catch((error) => {
+            errorhandle.storj_exception(error.error.code,error.error.message);
         });
-        var accessResultReturn = new accessResultStruct(access.access);
+        var accessResultReturn = new AccessResultStruct(access.access);
         return(accessResultReturn);
     }
 }
 /*eslint-enable */
 //exporting function and object
 module.exports = {
-    uplink : libuplink,
+    Uplink ,
     DownloadOptions,
     ListBucketsOptions,
     Permission,

@@ -1,9 +1,9 @@
 const fs = require("fs");
 
 //include the Node.js-Storj bindings module
-const storj = require("uplink-nodejs");
+const storj = require("./uplink.js");
 //object for all the function for uplink
-const libUplink = new storj.uplink();
+const libUplink = new storj.Uplink();
 //Object for all error for uplink
 const uplinkError = storj.errorhandle;
 //
@@ -71,13 +71,13 @@ async function accessshare(uplink,access){
         await sharedAccess.serialize().then(async (stringResult) => {
             //
             console.log("Parsing access share...");
-            await uplink.parse_access(stringResult).then(async (parsedSharedAccess) => {
+            await uplink.parseAccess(stringResult).then(async (parsedSharedAccess) => {
                 //
                 console.log("Opening project using paresed shared access");
-                await parsedSharedAccess.open_project().then(async (project) => {
+                await parsedSharedAccess.openProject().then(async (project) => {
                     //
                     console.log("\nOpened Project using share access");
-                    await project.delete_object(storjConfig.bucketName,storjConfig.uploadPath).then((objectInfo) => {
+                    await project.deleteObject(storjConfig.bucketName,storjConfig.uploadPath).then((objectInfo) => {
                         console.log("\nObject Deleted successfully !!");
                         console.log("Object Name : ",objectInfo.key,"Object Size : ",objectInfo.system.content_length);
                     }).catch((err) => {
@@ -116,7 +116,7 @@ async function uploadfile(project){
     //
     uploadOptions.expires = 0;
     //Uploading object on storj V3 network
-    await project.upload_object(storjConfig.bucketName,storjConfig.uploadPath,uploadOptions).then(async (upload) => {
+    await project.uploadObject(storjConfig.bucketName,storjConfig.uploadPath,uploadOptions).then(async (upload) => {
         console.log(localFullFileName.src, " File: UPLOADED as ", storjConfig.uploadPath, "!");
         var fileHandle = await fs.openSync(localFullFileName.src, "rs");
         var size = {
@@ -178,7 +178,7 @@ customMetadataEntry2
         customMetadata.count = customMetadataEntryArray.length;
         customMetadata.entries = customMetadataEntryArray;
         //Adding custom meta to upload object
-        await upload.set_custom_metadata(customMetadata).then(() => {
+        await upload.setCustomMetadata(customMetadata).then(() => {
             console.log("\nCustom Metadata set successfully");
         }).catch((err) => {
             console.log("Failed to set custom metadata");
@@ -215,7 +215,7 @@ async function downloadfile(project){
     downloadOptions.length = -1;
     //Downloading file
     console.log("Downloading file");
-    await project.download_object(storjConfig.bucketName,storjConfig.uploadPath,downloadOptions).then(async (download) => {
+    await project.downloadObject(storjConfig.bucketName,storjConfig.uploadPath,downloadOptions).then(async (download) => {
         var objectsize =0;
         //
         console.log("Fetching download object info");
@@ -278,16 +278,16 @@ async function downloadfile(project){
 //
 //Connecting to storj network using Satellite Address , Storj API key , Encryption phassphrase
 console.log("Getting Access\nSatellite Address : ",storjConfig.satelliteURL,"\nAPI key : ",storjConfig.apiKey,"\nEncryption Passphrase : ",storjConfig.encryptionPassphrase);
-var access = libUplink.request_access_with_passphrase(storjConfig.satelliteURL,storjConfig.apiKey,storjConfig.encryptionPassphrase).then((access)=>{
+var access = libUplink.requestAccessWithPassphrase(storjConfig.satelliteURL,storjConfig.apiKey,storjConfig.encryptionPassphrase).then((access)=>{
     console.log("Access : Granted !!");
     //Opening project on storj V3 network using created access.
     console.log("Opening Storj Project...");
-    access.open_project().then(async (project)=>{
+    access.openProject().then(async (project)=>{
         console.log("Desired Storj Project: OPENED!");
         //Fetching bucket info from the storj V3 network
         console.log("Fetching Information About Bucket : ",storjConfig.bucketName);
         //
-        await project.stat_bucket(storjConfig.bucketName).then((bucketInfo) => {
+        await project.statBucket(storjConfig.bucketName).then((bucketInfo) => {
             console.log("\nBucket Information : \n Bucket Name : ",bucketInfo.name,"\n Bucket Created : ",getDateTime(bucketInfo.created));
         }).catch((err) => {
             console.log("Failed to get bucket Info");
@@ -296,7 +296,7 @@ var access = libUplink.request_access_with_passphrase(storjConfig.satelliteURL,s
         //
         //Creating bucket on storj V3 Network
         console.log("\nCreating Bucket : ",storjConfig.bucketName);
-        await project.create_bucket(storjConfig.bucketName).then((bucketInfo) => {
+        await project.createBucket(storjConfig.bucketName).then((bucketInfo) => {
             console.log("\nBucket Information : \n Bucket Name : ",bucketInfo.name,"\n Bucket Created : ",getDateTime(bucketInfo.created));
         }).catch((err) => {
             console.log("Failed to create bucket on storj V3 network");
@@ -304,7 +304,7 @@ var access = libUplink.request_access_with_passphrase(storjConfig.satelliteURL,s
         });
         //Ensuring bucket exists on storj V3 network
         console.log("\nFetching Info of newly created bucket");
-        await project.ensure_bucket(storjConfig.bucketName).then((bucketInfo) => {
+        await project.ensureBucket(storjConfig.bucketName).then((bucketInfo) => {
             console.log("\nBucket Information : \n Bucket Name : ",bucketInfo.name,"\n Bucket Created : ",getDateTime(bucketInfo.created));
         }).catch((err) => {
             console.log("Failed to fetch bucket Info");
@@ -313,7 +313,7 @@ var access = libUplink.request_access_with_passphrase(storjConfig.satelliteURL,s
         //
         //Listing buckets on storj V3 network
         var listBucketsOptions = new storj.ListBucketsOptions();
-        await project.listbuckets(listBucketsOptions).then(async (bucketListResult) => {
+        await project.listBuckets(listBucketsOptions).then(async (bucketListResult) => {
             var bucketList = bucketListResult.bucketList;
             console.log("S.No. \t Created On \t\t Bucket Name");
             console.log("===== \t ========== \t\t ===========");
@@ -333,7 +333,7 @@ var access = libUplink.request_access_with_passphrase(storjConfig.satelliteURL,s
         //
         //Fetching info of uploaded object
         console.log("Fetching object Info...");
-        await project.stat_object(storjConfig.bucketName,storjConfig.uploadPath).then((objectinfo) => {
+        await project.statObject(storjConfig.bucketName,storjConfig.uploadPath).then((objectinfo) => {
             console.log("Object : ",objectinfo.key,"\nSize : ",objectinfo.system.content_length,"\nCreated : ",getDateTime(objectinfo.system.created));
         }).catch((err) => {
             console.log("Failed to fetch object info");
@@ -347,7 +347,7 @@ var access = libUplink.request_access_with_passphrase(storjConfig.satelliteURL,s
         listObjectsOptions.system = true;
         listObjectsOptions.prefix ="change-me-to-desired-object-prefix-with-/";
 
-        await project.list_objects(storjConfig.bucketName,listObjectsOptions).then((objectlist) => {
+        await project.listObjects(storjConfig.bucketName,listObjectsOptions).then((objectlist) => {
             console.log("S.No. \t Created On \t\t\t FileName \t\t FileSize");
             console.log("===== \t ========== \t\t\t =========== \t\t ===========");
             var i = 0;
@@ -369,14 +369,14 @@ var access = libUplink.request_access_with_passphrase(storjConfig.satelliteURL,s
         //
         //Deleting bucket from the storj V3 network
         console.log("Deleting Bucket : ",storjConfig.bucketName);
-        await project.delete_bucket(storjConfig.bucketName).then((bucketInfo) => {
+        await project.deleteBucket(storjConfig.bucketName).then((bucketInfo) => {
             console.log("\nBucket Deleted : \n Bucket Name : ",bucketInfo.name,"\n Bucket Created : ",getDateTime(bucketInfo.created));
         }).catch(async (err) => {
             //Checking error type
             if (err instanceof uplinkError.BucketNotEmptyError) {
                 //Delete object from the network
                 console.log("Bucket is not empty !!\nDeleting object from storj V3 bucket...");
-                await project.delete_object(storjConfig.bucketName,storjConfig.uploadPath).then((objectinfo) => {
+                await project.deleteObject(storjConfig.bucketName,storjConfig.uploadPath).then((objectinfo) => {
                     console.log("Object ",storjConfig.uploadPath," Deleted");
                     console.log("Object Size : ",objectinfo.system.content_length);
                 }).catch((err) => {
@@ -391,7 +391,7 @@ var access = libUplink.request_access_with_passphrase(storjConfig.satelliteURL,s
         //
         //
         console.log("Deleting Bucket : ",storjConfig.bucketName);
-        await project.delete_bucket(storjConfig.bucketName).then((bucketInfo) => {
+        await project.deleteBucket(storjConfig.bucketName).then((bucketInfo) => {
             console.log("\nBucket Deleted : \n Bucket Name : ",bucketInfo.name,"\n Bucket Created : ",getDateTime(bucketInfo.created));
         }).catch((err) => { 
             console.log("Failed to delete bucket");
