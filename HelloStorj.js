@@ -1,7 +1,7 @@
 const fs = require("fs");
 
 //include the Node.js-Storj bindings module
-const storj = require("./uplink.js");
+const storj = require("uplink-nodejs");
 //object for all the function for uplink
 const libUplink = new storj.Uplink();
 //Object for all error for uplink
