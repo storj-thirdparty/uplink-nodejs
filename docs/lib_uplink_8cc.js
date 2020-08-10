@@ -1,6 +1,5 @@
 var lib_uplink_8cc =
 [
-    [ "AccessFunction", "lib_uplink_8cc.html#a0dd001df23d7f135da9f824539db3ed5", null ],
     [ "createBucketResult", "lib_uplink_8cc.html#afb478bdc32504777e90281f927c6be79", null ],
     [ "createError", "lib_uplink_8cc.html#a56b88ea420afbcee273bbc41eaae5780", null ],
     [ "createObjectResult", "lib_uplink_8cc.html#a290dc984434b7938e484e2549b7447a2", null ],
@@ -10,6 +9,5 @@ var lib_uplink_8cc =
     [ "itoa", "lib_uplink_8cc.html#a43573809ece24e1ad0b00af289693cd5", null ],
     [ "list_bucketsc", "lib_uplink_8cc.html#afcbb836fc5f182f0b8f5edafea8d47e1", null ],
     [ "list_objectsc", "lib_uplink_8cc.html#a6a7899625837fe28695b86f71e33ecf8", null ],
-    [ "ProjectFunction", "lib_uplink_8cc.html#aac381155b5b8f1d813e4eeae26f68a6b", null ],
     [ "reverse", "lib_uplink_8cc.html#af2c0f95bdedc4d81b85aefdbf5dfce19", null ]
 ];

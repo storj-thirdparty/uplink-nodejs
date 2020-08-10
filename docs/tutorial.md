@@ -31,22 +31,23 @@ var localFullFileName = {
 
 ## Step 3: Create libUplink class object
 
-Next, you need to create an object of libUplink class that will be used to call the libuplink functions.
+Next, you need to create an object of Uplink class that will be used to call the libuplink functions.
 
 ```js
-var storj = require('uplink-storj');
-var libUplink = storj.uplink;
+const storj = require("uplink-nodejs");
+const libUplink = new storj.Uplink();
+
 ```
 
 ## Step 4: Create access handle
 
 Now we need to get access handle to Storj V3 network. For that we can use any of these functions:
   
-### request_access_with_passphrase
+### requestAccessWithPassphrase
 
 ```js
 //first method for handling promise
-libUplink.request_access_with_passphrase(satelliteURL,apiKey,encryptionPassphrase).then(access => {
+libUplink.requestAccessWithPassphrase(satelliteURL,apiKey,encryptionPassphrase).then(access => {
   ....//some code//....
 }).catch((err) => {
         ....//some code//....
@@ -54,7 +55,7 @@ libUplink.request_access_with_passphrase(satelliteURL,apiKey,encryptionPassphras
 
 //or
 //second method for handling promise
-var access = await libUplink.request_access_with_passphrase(satelliteURL,apiKey,encryptionPassphrase).catch((err) => {
+var access = await libUplink.requestAccessWithPassphrase(satelliteURL,apiKey,encryptionPassphrase).catch((err) => {
         ....//some code//....
     });
 ....//some code//....
@@ -64,10 +65,10 @@ The function accepts 3 arguments Satellite URL, API Key, and Passphrase and retu
 
 > NOTE: We will be use first convention for handling promise in our documentation but user are free to use second convention.
 
-### config_request_access_with_passphrase
+### configRequestAccessWithPassphrase
 
 ```js
-libUplink.config_request_access_with_passphrase(satelliteURL,apiKey,encryptionPassphrase).then(access => {
+libUplink.configRequestAccessWithPassphrase(satelliteURL,apiKey,encryptionPassphrase).then(access => {
   ....//some code//....
 }).catch((err) => {
         ....//some code//....
@@ -76,10 +77,10 @@ libUplink.config_request_access_with_passphrase(satelliteURL,apiKey,encryptionPa
 
 The function accepts 4 arguments Config Object, Satellite URL, API Key, and Passphrase and returns an AccessResult object (access) on successful execution which can be used to call other functions which are bound to it.
 
-### parse_access
+### parseAccess
 
 ```js
-libUplink.parse_access(stringResult).then(async (parsedSharedAccess) => {
+libUplink.parseAccess(stringResult).then(async (parsedSharedAccess) => {
   ....//some code//....
 }).catch((err) => {
         ....//some code//....
@@ -94,91 +95,91 @@ The function accepts a Serialized Access (String) and returns an AccessResult ob
 
 Once we have the Access handle, it can be used to open a project using any of these functions:
 
-### open_project
+### openProject
 
 ```js
-access.open_project(access.access).then(async (projectResult) => {
+access.openProject().then(async (project) => {
   ...//some code//...
 }).catch((err) => {
         ....//some code//....
     });
 ```
 
-This function is a property of accessResult which is returned by Access Functions and denoted as 'access' in the above codes. It accepts an access object and returns projectResult on successful execution.
+This function is a property of accessResult which is returned by Access Functions and denoted as 'access' in the above codes. It  returns project on successful execution.
 
-### config_open_project
+### configOpenProject
 
 ```js
-access.config_open_project(config, access.access).then(async (projectResult) => {
+access.configOpenProject(config).then(async (project) => {
   ...//some code//...
 }).catch((err) => {
         ....//some code//....
     });
 ```
 
-This function is a property of 'access' which is returned by Access Functions. It accepts a config object and an access object and returns projectResult on successful execution. The projectResult used in the steps ahead refers to this projectResult object only.
+This function is a property of 'access' which is returned by Access Functions. It accepts a config object and returns project on successful execution. The project used in the steps ahead refers to this project object only.
 
 ## Step 6: Create/Ensure Bucket
 
-After getting projectResult we need a bucket for further execution. If a bucket is not available, one is created otherwise information about current bucket is collected and execution moves ahead.
+After getting project we need a bucket for further execution. If a bucket is not available, one is created otherwise information about current bucket is collected and execution moves ahead.
 We use *stat_bucket* function to get information about the bucket.
 
-### stat_bucket
+### statBucket
 
 ```js
-await projectResult.stat_bucket(projectResult.project,bucketName).then((bucketInfo) => {
+await project.statBucket(bucketName).then((bucketInfo) => {
 ...//some code//...
 }).catch((err) => {
         ....//some code//....
     });
 ```
 
-This function accepts two arguments, a project object and a bucketname and returns bucketInfo (information about the current bucket)
+This function accepts one arguments, a bucketname and returns bucketInfo (information about the current bucket)
 
 > NOTE: If the specified bucket does not exist, it is created using the function below
 
-### create_bucket
+### createBucket
 
 ```js
-await projectResult.create_bucket(projectResult.project,bucketName).then((bucketInfo) => {
+await project.createBucket(bucketName).then((bucketInfo) => {
 ...//some code//...
 }).catch((err) => {
         ....//some code//....
     });
 ```
 
-This function accepts two arguments, a project object and a bucketname, creates the bucket and returns bucketInfo (information about the current bucket)
+This function accepts one arguments, a bucketname, creates the bucket and returns bucketInfo (information about the current bucket)
 
 > After creating the bucket, it is important to ensure that the bucket exists on Storj V3 network before moving ahead.
 
-### ensure_bucket
+### ensureBucket
 
 ```js
-await projectResult.ensure_bucket(projectResult.project,bucketName).then((bucketInfo) => {
+await project.ensureBucket(bucketName).then((bucketInfo) => {
 ...//some code//...
 }).catch((err) => {
         ....//some code//....
     });
 ```
 
-This function accepts two arguments, a project object and a bucketname, ensures that the bucket is present on Storj V3 network and returns bucketInfo (information about the current bucket) 
+This function accepts one arguments, a bucketname, ensures that the bucket is present on Storj V3 network and returns bucketInfo (information about the current bucket) 
 
 ## Step 7: List Buckets (Optional)
 
 Once it is ensured that bucket exists on Storj V3 network, you can list all the buckets. However this step is completely optional. If you don't wish to list the buckets, you can skip this step.
 
-### list_buckets
+### listBuckets
 
 ```js
 var listBucketsOptions = new storj.ListBucketsOptions();
-await projectResult.listbuckets(projectResult.project,listBucketsOptions).then(async (bucketListResult) => {
+await project.listBuckets(listBucketsOptions).then(async (bucketListResult) => {
 ...//some_code//...
 }).catch((err) => {
         ....//some code//....
     });
 ```
 
-This function accepts two arguments, a project object and listBucketOptions and returns bucketListResult.
+This function accepts one arguments, listBucketOptions and returns bucketListResult.
 
 ## Step 8: Upload
 
@@ -189,14 +190,14 @@ Uploading a file consists of following sub-steps:
 ```js
 var uploadOptions = new storj.UploadOptions();
 uploadOptions.expires = 0;
-await projectResult.upload_object(projectResult.project,bucketName,uploadPath,uploadOptions).then(async (uploadinfo) => {  
+await project.uploadObject(bucketName,uploadPath,uploadOptions).then(async (upload) => {  
   ...//some_code//...
 }).catch((err) => {
         ....//some code//....
     });
 ```
 
-This function accepts 4 arguments project object, bucketname, uploadpath and uploadoptions. It then returns an uploadinfo object.
+This function accepts 3 arguments bucketname, uploadpath and uploadoptions. It then returns an uploadinfo object.
 
 You can create *uploadOptions* by referring to the [libuplink documentation](https://godoc.org/storj.io/uplink) or simply pass *none*.
 
@@ -205,7 +206,7 @@ You can create *uploadOptions* by referring to the [libuplink documentation](htt
 To stream the data to storj you need to create a file stream or handle which can be done in the following way. Here *uploadinfo* is your upload handle.  
 
 ```js
-await projectResult.upload_object(projectResult.project,bucketName,uploadPath,uploadOptions).then(async (uploadinfo) => {
+await project.uploadObject(bucketName,uploadPath,uploadOptions).then(async (upload) => {
   ...//some_code//...
 }).catch((err) => {
         ....//some code//....
@@ -245,7 +246,7 @@ var size = {
 Once we have the File Handle and Buffer, we can upload data to Storj V3 network in the following way:
 
 ```js
-await uploadinfo.upload_write(uploadinfo.upload,buffer,bytesRead).then((writeResult) => {
+await upload.write(buffer,bytesRead).then((writeResult) => {
   ...//some_code//...
 }).catch((err) => {
         ....//some code//....
@@ -265,7 +266,7 @@ var downloadOptions = new storj.DownloadOptions();
 downloadOptions.offset = 0;
 downloadOptions.length = -1;
 
-await projectResult.download_object(projectResult.project,bucketName,uploadPath,downloadOptions).then(async (downloadresult) => {
+await project.downloadObject(bucketName,uploadPath,downloadOptions).then(async (download) => {
   ...//some_code//...
 }).catch((err) => {
         ....//some code//....
@@ -277,7 +278,7 @@ await projectResult.download_object(projectResult.project,bucketName,uploadPath,
 After creating the download handle, we need to get info about the object to be downloaded by using the following function:
 
 ```js
-await downloadresult.download_info(downloadresult.download).then((objectInfo) => {
+await download.info().then((objectInfo) => {
   ...//some_code//...
 }).catch((err) => {
         ....//some code//....
@@ -309,7 +310,7 @@ while(loop) {
 Now we can download the object from Stroj V3 server using the following function.
 
 ```js
-await downloadresult.download_read(downloadresult.download,buffer,buffer.length).then(async (bytesread) => {
+await download.read(buffer,buffer.length).then(async (bytesread) => {
   ...//some_code//...
 }).catch((err) => {
         ....//some code//....
@@ -322,7 +323,7 @@ When the file is downloaded, you need to close the downlaod stream. It can be do
 
 ```js
 fs.closeSync(fileHandle);
-await downloadresult.close_download(downloadresult.download).then(() => {
+await download.close().then(() => {
   ...//some_codee//...
 }).catch((err) => {
         ....//some code//....
@@ -350,9 +351,9 @@ sharePrefix.prefix ="change-me-to-desired-object-prefix";
 sharePrefixListArray.push(sharePrefix);
 
 // create new access
-await access.access_share(access.access,permission,sharePrefixListArray,sharePrefixListArray.length).then(async (sharedAccess) => {
+await access.share(permission,sharePrefixListArray,sharePrefixListArray.length).then(async (sharedAccess) => {
   // generate serialized access to share
-  await sharedAccess.access_serialize(sharedAccess.access).then(async (stringResult) => {
+  await sharedAccess.serialize().then(async (stringResult) => {
     ...//some_code//...
   }).catch((err) => {
         ....//some code//....
@@ -366,21 +367,21 @@ await access.access_share(access.access,permission,sharePrefixListArray,sharePre
 To delete an object, we can use the following function:
 
 ```js
-await projectResult.delete_object(projectResult.project,bucketName,uploadPath).then((objectinfo) => {
+await project.deleteObject(bucketName,uploadPath).then((objectinfo) => {
 ...//some_code//...
 }).catch((err) => {
         ....//some code//....
     });
 ```
 
-This function accepts 3 arguments, project object, bucketname and uploadpath to identify the object to be deleted and returns information about the deleted object.
+This function accepts 2 arguments,  bucketname and uploadpath to identify the object to be deleted and returns information about the deleted object.
 
 ## Step 12: Delete Bucket
 
 To delete a bucket, we can use the following function:
 
 ```js
-await projectResult.delete_bucket(projectResult.project,bucketName).then((bucketInfo) => {
+await project.deleteBucket(bucketName).then((bucketInfo) => {
 ...//some_code//...
 }).catch((err) => {
         ....//some code//....
@@ -392,7 +393,7 @@ await projectResult.delete_bucket(projectResult.project,bucketName).then((bucket
 After finalizing everything, you can close the project in following way;
 
 ```js
-await projectResult.close_project(projectResult.project).then(() => {
+await project.close().then(() => {
 ...//some_code//...
 }).catch((err) => {
         ....//some code//....

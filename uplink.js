@@ -1,9 +1,10 @@
 const process = require("process");
-/*eslint-disable */
+var uplink = require("bindings")("uplink");
+const AccessResultStruct = require('./access.js');
+const errorhandle = require('./error.js');
 process.chdir(__dirname);
 
-var uplink = require("bindings")("uplink");
-
+/*eslint-disable */
 class ListBucketsOptions {
     constructor(cursor="") {
         this.cursor = cursor;
@@ -74,10 +75,57 @@ class Config {
         this.temp_directory=temp_directory;
     }
 }
+
+class Uplink {
+    // request_access_with_passphrase generates a new access grant using a passhprase.
+    // It must talk to the Satellite provided to get a project-based salt for deterministic
+    // key derivation.
+    // Note: this is a CPU-heavy function that uses a password-based key derivation
+    // function (Argon2). This should be a setup-only step.
+    // Most common interactions with the library should be using a serialized access grant
+    // through ParseAccess directly.
+    // Input : Satellite Address (String) , API key (String) , Encryption phassphrase(String)
+    // Output : Access (Object)
+    async requestAccessWithPassphrase(satelliteURL,apiKey,encryptionPassphrase){
+        var access = await uplink.request_access_with_passphrase(satelliteURL,apiKey,encryptionPassphrase).catch((error) => {
+            errorhandle.storjException(error.error.code,error.error.message);
+        });
+        var accessResultReturn = new AccessResultStruct(access.access);
+        return(accessResultReturn);
+    }
+
+    // ParseAccess parses a serialized access grant string.
+    // This should be the main way to instantiate an access grant for opening a project.
+    // See the note on RequestAccessWithPassphrase
+    // Input : Shared string
+    // Output : Access (Object)
+    async parseAccess(stringResult){
+        var parsedSharedAccess = await uplink.parse_access(stringResult).catch((error) => {
+            errorhandle.storjException(error.error.code,error.error.message);
+        });
+        var accessResultReturn = new AccessResultStruct(parsedSharedAccess.access);
+        return(accessResultReturn);
+    }
+
+    // RequestAccessWithPassphrase generates a new access grant using a passhprase and custom configuration.
+    // It must talk to the Satellite provided to get a project-based salt for deterministic key derivation.
+    // Note: this is a CPU-heavy function that uses a password-based key derivation function (Argon2). This should be a setup-only step.
+    // Most common interactions with the library should be using a serialized access grant
+    // hrough ParseAccess directly.
+    // Input : Config (Object) , Satellite Address (String) , API key (String) , Encryption phassphrase(String)
+    // Output : Access (Object)
+    async configRequestAccessWithPassphrase(config,satelliteURL,apiKey,encryptionPassphrase){
+        var access = await uplink.config_request_access_with_passphrase(config,satelliteURL,apiKey,encryptionPassphrase).catch((error) => {
+            errorhandle.storjException(error.error.code,error.error.message);
+        });
+        var accessResultReturn = new AccessResultStruct(access.access);
+        return(accessResultReturn);
+    }
+}
 /*eslint-enable */
 //exporting function and object
 module.exports = {
-    uplink,
+    Uplink ,
     DownloadOptions,
     ListBucketsOptions,
     Permission,
@@ -86,5 +134,6 @@ module.exports = {
     CustomMetadataEntry,
     CustomMetadata,
     SharePrefix,
-    Config
+    Config,
+    errorhandle
 };

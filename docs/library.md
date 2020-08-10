@@ -1,176 +1,772 @@
 # Binding Functions
 
-## request_access_with_passphrase(String, String, String)
-	* function request_access_with_passphrase requests satellite for a new access grant using a passhprase
-	* pre-requisites: None
-	* inputs: Satellite Address(String), API key(String), Passphrase(String)
-	* output: Access(Object) or Error(Object)
+## Include uplink in library 
+```js
+	const storj = require("uplink-nodejs");
+	const libUplink = new storj.Uplink();
 
-## config_request_access_with_passphrase(Object, String, String, String)
-	* function config_request_access_with_passphrase requests satellite for a new access grant using a passhprase and config
-	* pre-requisites: None
-	* inputs: Config(Object), Satellite Address(String), API key(String), Passphrase(String)
-	* output: Access(Object) or Error(Object)
+```
+* we need to create an object of Uplink class that will be used to call the libuplink functions.
 
-##  parse_access(String)
-	* function parse_access to parses serialized access grant string
-	* pre-requisites: None
-	* inputs: Serialized AccessString)
-	* output: Access(Object) or Error(Object)
+## requestAccessWithPassphrase(String, String, String)
 
-## Access Related Functions
+##### Description:
 
-These functions require Access(Object) for calling.
+This function requestAccessWithPassphrase  requests satellite for a new access grant
+using a passhprase, there is no pre-requisites required for this function.\
+This function accepts 3 arguments Satellite URL, API Key and  encryptionpassphrase
+and returns an access object on successful execution which can be used to 
+call other functions which are bound to it.\
+An access grant is a serialized structure that is internally comprised of an 
+API Key, a set of encryption key information, and information about which Satellite
+address is responsible for the metadata.\
+An access grant is always associated with exactly one Project on one Satellite.
 
-	* *access_share(Object, Object, Object, Int)*
-		* function access_share creates new access grant with specific permission. Permission will be applied to prefixes when defined
-		* pre-requisites: parse_access
-		* inputs: Access(Object), Permission(Object), Share Prefix(Object), Prefix Count(Int)
-		* output: Access(Object) or Error(Object)
+##### Arguments:
 
-	* *access_serialize(Object)*
-		* function access_serialize serializes access grant into a string.
-		* pre-requisites: parse_access
-		* inputs: Access(Object)
-		* output: StringResult(Object)
+| arguments | Description |  Type |
+| --- | --- | --- |
+|<code>satelliteURL</code>| Storj V3 network satellite address | <code>string</code> |
+|<code>apikey</code>| Storj V3 network API key |<code>string</code> |
+|<code>encryptionPassphrase</code>| Any passphrase |<code>string</code> |
 
-	* *open_project(Object)*
-		* function open_project opens project using access grant
-		* pre-requisites: request_access_with_passphrase or config_request_access_with_passphrase
-		* inputs: Access(Object)
-		* output: Project(Object) or Error(Object)
+##### Usage Example:
 
-	* *config_open_project(Object, Object)*
-		* function config_open_project opens project using access grant and config
-		* pre-requisites: request_access_with_passphrase or config_open_project
-		* inputs: Config(Object), Access(Object)
-		* output: Project(Object) or Error(Object)
+```js
+var satelliteURL = "change-me-to-desired-satellite-address";
+var apiKey = "change-me-to-desired-api-key";
+var encryptionPassphrase = "change-me-to-desired-encryption";
+libUplink.requestAccessWithPassphrase(satelliteURL,apiKey,encryptionPassphrase).then(access => {
+		....//some code//....
+}).catch((err) => {
+    ....//some code//....
+});
+//
+//OR
+var access = await libUplink.requestAccessWithPassphrase(satelliteURL,apiKey,encryptionPassphrase).catch((err) => {
+    ....//some code//....
+});
+....//some code//....
+```
 
-## Project Related Functions
 
-These functions require Project(Object) for calling.
 
-	* *close_project(Object)*
-		* function close_project closes the project
-		* pre-requisites: open_project
-		* inputs: Project(Object)
-		* output: Error(Object)
 
-	* *stat_bucket(Object, String)*
-		* function stat_bucket returns information about a bucket
-		* pre-requisites: open_project
-		* inputs: Project(Object), Bucket Name(String)
-		* output: Bucket(Object) or Error(Object)
+## configRequestAccessWithPassphrase(Object, String, String, String)
 
-	* *ensure_bucket(Object, String)*
-		* function ensure_bucket creates a new bucket and ignores the error when it already exists
-		* pre-requisites: open_project
-		* inputs: Project(Object), Bucket Name(String)
-		* output: Bucket(Object) or Error(Object)
+##### Description:
 
-	* *create_bucket(Object, String)*
-		* function create_bucket creates a new bucket
-		* pre-requisites: open_project
-		* inputs: Project(Object), Bucket Name(String)
-		* output: Bucket(Object) or Error(Object)
+This function configRequestAccessWithPassphrase requests satellite for a new access grant 
+using a passhprase and config.\
+There is no pre-requisites required for this function.\
+This function accepts 4 arguments Satellite URL, API Key, encryptionpassphrase and config object and returns an access object on successful execution which can be used to call other functions which are bound to it.
 
-	* *delete_bucket(Object, String)*
-		* function delete_bucket deletes a bucket
-		* pre-requisites: open_project
-		* inputs: Project(Object), Bucket Name(String)
-		* output: Bucket(Object) or Error(Object)
+##### Arguments:
 
-	* *list_buckets(Object, Object)*
-		* function list_buckets lists buckets
-		* pre-requisites: open_project
-		* inputs: Project(Object), ListBucketsOptions(Object)
-		* output: BucketList(Object) or Error(Object)
+| arguments | Description |  Type |
+| --- | --- | --- |
+|<code>config</code>| Create using storj library | <code>object</code> |
+|<code>satelliteURL</code>|  Storj V3 network satellite address | <code>string</code> |
+|<code>apikey</code>| Storj V3 network API key |<code>string</code> |
+|<code>encryptionPassphrase</code>| any passphrase string |<code>string</code> |
 
-	* *stat_object(Object, String, String)*
-		* function stat_object information about an object at the specific key
-		* pre-requisites: open_project
-		* inputs: Project(Object), Bucket Name(String),  Object Key(String)
-		* output: ObjectResult(Object) or Error(Object)
+##### Usage Example:
 
-	* *list_objects(Object, String, Object)*
-		* function list_objects lists objects
-		* pre-requisites: open_project
-		* inputs: Project(Object), Bucket Name(String), ListObjectsOptions(Object)
-		* output: ObjectList(Object)
+```js
+var satelliteURL = "change-me-to-desired-satellite-address";
+var apiKey = "change-me-to-desired-api-key";
+var encryptionPassphrase = "change-me-to-desired-encryption";
+var config = new storj.Config();
+libUplink.configRequestAccessWithPassphrase(config,satelliteURL,apiKey,encryptionPassphrase).then(access => {
+		....//some code//....
+}).catch((err) => {
+    ....//some code//....
+});
+```
 
-	* *upload_object(Object, String, String, Object)*
-		* function upload_object starts an upload to the specified key
-		* pre-requisites: open_project
-		* inputs: Project(Object), Bucket Name(String),  Object Key(String),  Upload Options(Object)
-		* output: Upload(Object) or Error(Object)
 
-	* *download_object(Object, String, String, Object)*
-		* function download_object starts  download to the specified key
-		* pre-requisites: open_project
-		* inputs: Project(Object), Buxcket Name(String), Object Key(String), Download Options(Object)
-		* output: Download(Object) or Error(Object)
 
-	* *delete_object(Object, String, String)*
-		* function delete_object deletes an object
-		* pre-requisites: open_project
-		* inputs: Project(Object), Bucket Name(String), Object Key(String)
-		* output: Object(Object) or Error(Object)
+##  parseAccess(String)
 
-## Upload Related Funcitons
+##### Description:
 
-These functions require Upload(Object) for calling.
+parse_access function to parses serialized access grant string there is no pre-requisites 
+required for this function.\
+this function accepts one argument serialized access String
+which is returned by access_serialize function it returns an access object on successful 
+execution which can be used to call other functions which are bound to it.\
+This should be the main way to instantiate an access grant for opening a project.
 
-	* *upload_set_custom_metadata(Object, Object)*
-		* function upload_set_custom_metadata set custom meta information
-		* pre-requisites: upload_object
-		* inputs: Upload(Object), CustomMetadata(Object)
-		* output: Error(Object)
+##### Arguments:
 
-	* *upload_write(Object, Buffer, Int)*
-		* function upload_write uploads len(p) bytes from p to the object's data stream
-		* pre-requisites: upload_object
-		* inputs: Upload(Object), Data(Buffer),  Length(Int)
-		* output: WriteResult(Object) or Error(Object)
+| arguments | Description |  Type |
+| --- | --- | --- |
+|<code>stringResult</code>| serialized access string returned by access.serialize function | <code>string</code> |
 
-	* *upload_info(Object)*
-		* function upload_info returns the last information about the uploaded object
-		* pre-requisites: upload_object
-		* inputs: Upload(Object)
-		* output: Object(Object) or Error(Object)
+##### Usage Example:
 
-	* *upload_commit(Object)*
-		* function upload_commit commits the uploaded data
-		* pre-requisites: upload_object
-		* inputs: Upload(Object)
-		* output: Error(Object)
+```js	
+libUplink.parse_access(stringResult).then(async (parsedSharedAccess) => {
+		....//some code//....
+}).catch((err) => {
+    ....//some code//....
+});
+```
 
-	* *upload_abort(Object)*
-		* function upload_abort aborts an upload
-		* pre-requisites: upload_object
-		* inputs: Upload(Object)
-		* output: Error(Object)
 
-## Download Related Functions
+> NOTE: These functions require Access(Object) for calling.
 
-These functions require Download(Object) for calling.
+## share(Object, Object, Int)
 
-	* *close_download(Object)*
-		* function close_download closes the download
-		* pre-requisites: download_object
-		* inputs: Download(Object)
-		* output: Error(Object)
+##### Description:
 
-	* *download_read(Object, Buffer, Int)*
-		* function download_readc downloads from object's data stream into bytes up to length amount
-		* pre-requisites: download_object
-		* inputs: Download(Object), Data(Buffer), Length(Int)
-		* output: ReadResult(Object) or Error(Object)
+share function creates new access grant with specific permission. Permission will be
+applied to prefixes when defined.
+parse access function is required as a pre-requisite for this function.\
+this function accepts 3 arguments permission(object) Permission defines what actions can be used to share which is access 
+from storj Permission defines what actions can be used to share, sharePrefix(object) 
+which is access from storj, and prefixcount is getting from the count of share prefix 
+in the list.\
+It returns an access object on successful execution which can be used 
+to call other functions which are bound to it.
 
-	* *download_info(Object)*
-		* function download_info returns information about the downloaded object
-		* pre-requisites: download_object
-		* inputs: Download(Object)
-		* output: Object(Object) or Error(Object)
+##### Arguments:
+
+| arguments | Description |  Type |
+| --- | --- | --- |
+|<code>permission</code>| Create using storj library |<code>object</code> |
+|<code>SharePrefix</code>| Create using storj library |<code>object</code> |
+|<code>PrefixCount</code>|count of share prefix |<code>Int</code> |
+
+##### Usage Example:
+
+```js		
+var permission = new storj.Permission(true,true,true,true,0,0);
+// set shared Prefix
+var sharePrefix = storj.SharePrefix;
+var sharePrefixListArray = [];
+sharePrefix.bucket = "change-me-to-desired-bucket-name";
+sharePrefix.prefix ="change-me-to-desired-object-prefix";
+sharePrefixListArray.push(sharePrefix);
+
+await access.share(permission,Share Prefix,Prefix Count).then(async (sharedAccess) => {
+	// generate serialized access to share
+}).catch((err) => {
+	....//some code//....
+});
+```
+
+
+## serialize()
+
+##### Description:
+
+serialize function serializes access grant into a string.\
+parse access function is required as a pre-requisite for this function.
+which is returned by access_share function.\
+it returns an Serialized Access String 
+on successful execution which is used to be as parse_access argument.
+
+
+##### Usage Example:
+
+```js
+await sharedAccessResult.serialize().then(async (stringResult) => {
+	...//some_code//...
+	}).catch((err) => {
+	....//some code//....
+});
+```
+
+
+
+## openProject()
+
+##### Description:
+
+Once you have a valid access grant, you can open a Project with the access that access grant,
+openProject function opens project using access grant.\
+requestAccessWithPassphrase or configRequestAccessWithPassphrase function is required as a pre-requisite.\
+it returns an project object on successful execution which can be used to call 
+other functions which are bound to it.\
+It allows you to manage buckets and objects within buckets.
+
+
+##### Usage Example:
+
+```js
+access.openProject().then(async (project) => {
+		...//some code//...
+}).catch((err) => {
+	....//some code//....
+});
+```
+
+
+## configOpenProject(Object)
+
+##### Description:
+
+configOpenProject function opens project using access grant and config.\
+requestAccessWithPassphrase or configRequestAccessWithPassphrase function
+is required as a pre-requisite. This function accepts 1 argument config(object) which is access from storj
+library.\
+it returns an project object on successful execution which can be used to call 
+other functions which are bound to it.
+
+##### Arguments:
+
+| arguments | Description |  Type |
+| --- | --- | --- |
+|<code>config</code>| Create using storj library | <code>object</code> |
+
+
+##### Usage Example:
+
+```js
+var config = new storj.config();
+access.configOpenProject(config).then(async (project) => {
+		...//some code//...
+}).catch((err) => {
+	....//some code//....
+});
+```
+
+
+
+> NOTE: These functions require Project(Object) for calling.
+## close()
+
+##### Description:
+
+close function closes the project and openProject function is required as a pre-requisite.\
+it returns an error object if on successful execution is not occurred.
+
+##### Usage Example:
+
+```js
+await project.close().then(() => {
+	...//some_code//...
+}).catch((err) => {
+    ....//some code//....
+});
+```
+
+
+## statBucket(String)
+
+##### Description:
+
+statBucket function returns information about a bucket and openProject function is 
+required as a pre-requisite.\
+This function accepts 1 argument bucket name which is access from storj configuration.\
+it returns an bucket object on successful execution it can be used to get
+other properties which are bound to it.
+
+
+##### Arguments:
+
+| arguments | Description |  Type |
+| --- | --- | --- |
+|<code>bucketName</code>| Storj bucket name | <code>string</code> |
+
+##### Usage Example:
+
+```js
+var bucketName = "change-me-to-desired-bucket-name";
+await project.statBucket(bucketName).then((bucketInfo) => {
+	...//some code//...
+}).catch((err) => {
+	....//some code//....
+});
+```
+
+
+## ensureBucket(String)
+
+
+##### Description:
+
+ensureBucket function creates a new bucket and ignores the error when it 
+already exists and openProject function is required as a pre-requisite.\
+ This function accepts 1 argument bucket name which is access from storj configuration.\
+It returns an bucket 
+object on successful execution it can be used to get other properties 
+which are bound to it.
+
+##### Arguments:
+
+| arguments | Description |  Type |
+| --- | --- | --- |
+|<code>bucketName</code>| bucket name on storj V3 network | <code>string</code> |
+
+##### Usage Example:
+
+```js
+var bucketName = "change-me-to-desired-bucket-name";
+await project.ensureBucket(bucketName).then((bucketInfo) => {
+...//some code//...
+}).catch((err) => {
+....//some code//....
+});
+```
+
+
+## createBucket(String)
+
+##### Description:
+
+createBucket function creates a new bucket When bucket already exists it returns 
+a valid Bucket and ErrBucketExists and openProject function is required
+as a pre-requisite.\
+This function accepts 1 argument bucket name which is access from storj 
+configuration.\
+It returns an bucket object on successful execution it can be 
+used to get other properties which are bound to it.
+
+##### Arguments:
+
+| arguments | Description |  Type |
+| --- | --- | --- |
+|<code>bucketName</code>|access from storj configuration | <code>string</code> |
+
+##### Usage Example:
+
+```js
+var bucketName = "change-me-to-desired-bucket-name";
+await project.createBucket(bucketName).then((bucketInfo) => {
+	...//some code//...
+}).catch((err) => {
+	....//some code//....
+});
+```
+
+
+## deleteBucket(String)
+
+##### Description:
+
+deleteBucket function deletes a bucket When bucket is not empty it returns ErrBucketNotEmpty.
+and openProject function is requiredas a pre-requisite for this function .\
+This function accepts 1 argument bucket name which is access from storj configuration.\
+It returns an bucket object on successful execution it can be used to get other
+properties which are bound to it.
+
+
+##### Arguments:
+
+| arguments | Description |  Type |
+| --- | --- | --- |
+|<code>bucketName</code>| access from storj configuration | <code>string</code> |
+
+##### Usage Example:
+
+```js
+var bucketName = "change-me-to-desired-bucket-name";
+await project.deleteBucket(bucketName).then((bucketInfo) => {
+	...//some_code//...
+}).catch((err) => {
+	....//some code//....
+});
+```
+
+
+## listBuckets(Object)
+
+##### Description:
+
+lsitBuckets function lists buckets and openProject function is required
+as a pre-requisite for this function .This function accepts 1 argument listBucketOptions which is access from storj library.\
+it returns an bucketList object on successful execution it can be used to get other
+properties which are bound to it.
+
+
+
+##### Arguments:
+
+| arguments | Description |  Type |
+| --- | --- | --- |
+|<code>listBucketOptions</code>| Create using storj library | <code>object</code> |
+
+##### Usage Example:
+
+```js
+var listBucketsOptions = new storj.ListBucketsOptions();
+await project.listBuckets(listBucketsOptions).then(async (bucketListResult) => {
+	...//some_code//...
+}).catch((err) => {
+    ....//some code//....
+});
+```
+
+
+## statObject(String, String)
+
+##### Description:
+
+statObject function information about an object at the specific key and 
+openProject function is required as a pre-requisite for this function.\
+This function accepts 2 argument bucket name which is access from storj configuration and Object Key which is access from storj configuration.\
+It returns an objectinfo object on successful execution it can be used to get other
+properties which are bound to it.
+
+
+##### Arguments:
+
+| arguments | Description |  Type |
+| --- | --- | --- |
+|<code>bucketName</code>| Bucket name on storj V3 network | <code>string</code> |
+|<code>objectName</code>| Object name on storj V3 network | <code>string</code> |
+
+##### Usage Example:
+
+```js
+var bucketName = "change-me-to-desired-bucket-name";
+var objectName = "change-me-to-desired-object-name";
+await project.statObject(bucketName,objectName).then((objectinfo) => {
+	...//some_code//...
+}).catch((err) => {
+    ....//some code//....
+});
+```
+
+
+## listObjects(String, Object)
+
+##### Description:
+
+listObjects function lists objects, openProject function is required as a pre-requisite 
+for this function.\
+This function accepts 2 argument bucket name which is access from storj configuration and listObjectOptions 
+which is access from storj library ListObjectsOptions defines object listing options.\
+it returns an objectList object, on successful execution it can be used to get 
+other properties which are bound to it.
+
+##### Arguments:
+
+| arguments | Description |  Type |
+| --- | --- | --- |
+|<code>bucketName</code>| bucket name on storj V3 network | <code>string</code> |
+|<code>listObjectOptions</code>| Create using storj library | <code>object</code> |
+
+##### Usage Example:
+
+```js		
+var bucketName = "change-me-to-desired-bucket-name";
+var listObjectsOptions = new storj.ListObjectsOptions();
+await project.listObjects(bucketName,listObjectsOptions).then((objectlist) => {
+	...//some_code//...
+}).catch((err) => {
+    ....//some code//....
+});
+```
+
+
+
+
+## uploadObject(String, String, Object)
+
+##### Description:
+
+uploadObject function starts an upload to the specified key, openProject 
+function is required as a pre-requisite for this function.\
+This function accepts 3 argument bucket name 
+which is access from storj configuration, ObjectKey which is access from storj 
+configuration and uploadOptions which is access from storj library UploadOptions 
+contains additional options for uploading.\
+It returns an upload object, on successful execution it can be used to call other properties which are bound to it.
+
+
+##### Arguments:
+
+| arguments | Description |  Type |
+| --- | --- | --- |
+|<code>bucketName</code>| Bucket name on storj V3 network | <code>string</code> |
+|<code>objectName</code>| Object name to be uploaded on storj V3 network | <code>string</code> |
+|<code>uploadOptions</code>| Create using storj library | <code>object</code> |
+
+##### Usage Example:
+
+```js		
+var bucketName = "change-me-to-desired-bucket-name";
+var objectName = "change-me-to-desired-object-name-on-storj";
+var uploadOptions = new storj.UploadOptions();
+await project.uploadObject(bucketName,objectName,uploadOptions).then(async (upload) => {  
+		...//some_code//...
+}).catch((err) => {
+	....//some code//....
+});
+```
+
+
+## downloadObject(String, String, Object)
+
+##### Description:
+
+downloadObject function starts download to the specified key, openProject 
+function is required as a pre-requisite for this function.\
+This function accepts 3 argument  bucket name 
+which is access from storj configuration, ObjectKey which is access from storj 
+configuration and downloadOptions which is access from storj library.\
+It returns an download object, on successful execution it can be used to call other properties which are bound to it.
+
+
+##### Arguments:
+
+| arguments | Description |  Type |
+| --- | --- | --- |
+|<code>bucketName</code>| Bucket name on storj V3 network | <code>string</code> |
+|<code>ObjectKey</code>| Object name already uploaded on storj V3 network | <code>string</code> |
+|<code>downloadOptions</code>| Create using storj library | <code>object</code> |
+
+##### Usage Example:
+
+```js
+var bucketName = "change-me-to-desired-bucket-name";
+var objectName = "change-me-to-desired-object-name-on-storj";
+var downloadOptions = new storj.DownloadOptions();
+await project.downloadObject(bucketName,objectName,downloadOptions).then(async (download) => {
+	...//some_code//...
+}).catch((err) => {
+	....//some code//....
+});
+```
+
+## deleteObject(String, String)
+
+
+##### Description:
+
+deleteObject function deletes an object at the specific key, openProject function is required as a pre-requisite 
+for this function.\
+This function accepts 2 argument  bucket name which is access from storj configuration and ObjectKey
+which is access from storj configuration.\
+It returns an objectinfo object, on successful 
+execution it can be used to get other properties which are bound to it.
+
+##### Arguments:
+
+| arguments | Description |  Type |
+| --- | --- | --- |
+|<code>bucketName</code>| Bucket name on storj V3 network | <code>string</code> |
+|<code>objectName</code>| object name on storj V3 network | <code>string</code> |
+
+##### Usage Example:
+
+```js
+var bucketName = "change-me-to-desired-bucket-name";
+var objectName = "change-me-to-desired-object-name-on-storj";
+await project.deleteObject(bucketName,objectName).then((objectinfo) => {
+	...//some_code//...
+}).catch((err) => {
+    ....//some code//....
+});
+```
+
+
+
+> NOTE: These functions require Upload(Object) for calling.
+
+## setCustomMetadata(Object)
+
+##### Description:
+
+setCustomMetadata function set custom meta information, upload_object function 
+is required as a pre-requisite for this function.\
+This function accepts 1 argument CustomMetaData object which is access from storj library CustomMetadata contains custom user metadata about the object 
+it returns an error object, if successful execution is not occurred.
+
+##### Arguments:
+
+| arguments | Description |  Type |
+| --- | --- | --- |
+|<code>CustomMetaData</code>| Create using storj library | <code>object</code> |
+
+##### Usage Example:
+
+```js
+var customMetadataEntry1 =new storj.CustomMetadataEntry();
+customMetadataEntry1.key = "change-me-to-metadata-key";
+customMetadataEntry1.key_length = customMetadataEntry1.key.length;
+customMetadataEntry1.value = "change-me-to--metadata-value";
+customMetadataEntry1.value_length = customMetadataEntry1.value.length;
+var customMetadataEntryArray = [ customMetadataEntry1];
+
+var customMetadata = new storj.CustomMetadata();
+customMetadata.count = customMetadataEntryArray.length;
+customMetadata.entries = customMetadataEntryArray;
+
+await upload.setCustomMetadata(customMetadata).then(() => {
+	...//some_code//...
+}).catch((err) => {
+	....//some code//....
+});
+```
+
+
+
+## write(Buffer, Int)
+
+##### Description:
+
+write function uploads len(p) bytes from p to the object's data stream It 
+returns the number of bytes written from p (0 <= n <= len(p)) and any error encountered 
+that caused the write to stop early.\
+upload_object function is required as a pre-requisite 
+for this function. This function accepts 2 argument buffer object which is access from allocated buffer and 
+Length is data file is being read it returns an writeresult object.\
+On successful execution it can be used to get other properties which are bound to it.
+
+##### Arguments:
+
+| arguments | Description |  Type |
+| --- | --- | --- |
+|<code>buffer</code>| Buffer | <code>object</code> |
+|<code>lenght</code>| length of data to be upload on storj V3 network | <code>Int</code> |
+
+##### Usage Example:
+
+```js
+// creating buffer to store data.data will be stored in buffer that needs to be uploaded
+var buffer = new Buffer.alloc(BUFFER_SIZE);
+await upload.write(buffer,buffer.length).then((writeResult) => {
+		...//some_code//...
+}).catch((err) => {
+	....//some code//....
+});
+```
+
+
+## info()
+
+##### Description:
+
+info function returns the last information about the uploaded object, upload_object function 
+is required as a pre-requisite for this function.\ 
+It returns an Object, on successful execution it can be use to get property which are bound to it.
+
+
+##### Usage Example:
+
+```js
+await upload.info().then((object) => {
+		...//some_code//...
+}).catch((err) => {
+	....//some code//....
+});
+```
+
+
+## commit()
+
+##### Description:
+
+commit function commits the uploaded data, upload_object function 
+is required as a pre-requisite for this function. it returns an error object, 
+if successful execution is not occurred.
+
+
+##### Usage Example:
+
+```js
+await upload.commit().then(() => {
+		...//some_code//...
+}).catch((err) => {
+	....//some code//....
+});
+```
+
+
+## abort()
+
+##### Description:
+
+abort function aborts an upload, upload_object function is required as 
+a pre-requisite for this function. it returns an error object, 
+if successful execution is not occurred.
+
+##### Usage Example:
+
+```js
+await upload.abort().then(() => {
+		...//some_code//...
+}).catch((err) => {
+	....//some code//....
+});
+```
+
+
+
+> NOTE: These functions require Download(Object) for calling.
+
+## close()
+
+##### Description:
+
+close function closes the download, download_object function is required as 
+a pre-requisite for this function. it returns an error object, 
+if successful execution is not occurred.
+
+##### Usage Example:
+
+```js
+await download.close().then(() => {
+	...//some_code//...
+}).catch((err) => {
+	....//some code//....
+});
+```
+
+
+## read(Buffer, Int)
+
+##### Description:
+
+read function downloads from object's data stream into bytes up to length amount, 
+download_object function is required as a pre-requisite for this function.\
+This function accepts 2 argument download(object) which is buffer object which is access from allocated buffer and Length is length of the buffer.\
+It returns an readresult object,
+On successful execution it can be used to get other properties which are bound to it.
+
+
+##### Arguments:
+
+| arguments | Description |  Type |
+| --- | --- | --- |
+|<code>buffer</code>| Buffer | <code>Int</code> |
+|<code>Length</code>| buffer length | <code>Int</code> |
+
+##### Usage Example:
+
+```js
+var buffer = new Buffer.alloc(BUFFER_SIZE);
+
+await download.read(buffer,buffer.length).then(async (bytesread) => {
+	...//some_code//...
+}).catch((err) => {
+	....//some code//....
+});
+```
+
+## info()
+
+##### Description:
+
+Info function returns the last information about the object, download_object 
+function is required as a pre-requisite for this function.\
+ it returns an download object. On successful execution it can be used to get other properties which are bound to it.
+
+
+##### Usage Example:
+
+```js
+await download.info().then((objectInfo) => {
+	...//some_code//...
+}).catch((err) => {
+	....//some code//....
+});
+```
+
 
 > NOTE: All the binding functions are asynchronous functions and return promises.
 

@@ -27,10 +27,6 @@ napi_value list_objectsc(napi_env env, napi_callback_info info);
 //
 napi_value list_bucketsc(napi_env env, napi_callback_info info);
 //
-napi_value AccessFunction(napi_env env,napi_value AccessNAPIObj);
-//
-napi_value ProjectFunction(napi_env env, napi_value projectNAPIObj);
-
 #define DECLARE_NAPI_METHOD(name, func)                                       \
   {name, 0, func, 0, 0, 0, napi_default, 0 }
 
