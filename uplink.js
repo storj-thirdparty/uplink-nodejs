@@ -1,8 +1,8 @@
 const process = require("process");
+process.chdir(__dirname);
 var uplink = require("bindings")("uplink");
 const AccessResultStruct = require('./access.js');
 const errorhandle = require('./error.js');
-process.chdir(__dirname);
 
 /*eslint-disable */
 class ListBucketsOptions {
