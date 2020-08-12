@@ -29,9 +29,8 @@ try{
     }).catch((err) => {
 	....//some code//....
     });
-}
-catch(err){
-  uplinkError.storjException(code,message);
+} catch(err){
+  ....//some code//....
 }
 ```
 
@@ -67,10 +66,9 @@ try{
     }).catch((err) => {
 	....//some code//....
     });
+} catch(err){
+	....//some code//....
 }
-catch(err){
-	uplinkError.storjException(code,message);
-			
 ```
 
 ### SharePrefix(String, String)
@@ -101,13 +99,12 @@ try{
     }).catch((err) => {
 	....//some code//....
     });
-}
-catch(err){
-     uplinkError.storjException(code,message);
+} catch(err){
+     ....//some code//....
 }
 ```
 
-### CustomMetadata(List, Int)
+### CustomMetadata(Array, Int)
 
 #### Description:
 
@@ -117,26 +114,25 @@ CustomMetadata contains a list of CustomMetadataEntry about the object.
 
 | arguments | Description |  Type |
 | --- | --- | --- |
-|<code>entries</code>| List of CustomMetadataEntry about the object | <code>list of objects</code> |
+|<code>entries</code>| List of CustomMetadataEntry about the object | <code>array of objects</code> |
 |<code>count</code>| Number of entries | <code>int</code> |
 
 
 #### Usage Example
 
 ```js
-try{	
+try{
 	const storj = require('uplink-nodejs')
 	const uplinkError = storj.errorhandle;
-    	custom_metadata = new storj.CustomMetadata(CustomMetadataEntry(key="", key_length=0, value="", value_length=0), 1)
+    var custom_metadata = new storj.CustomMetadata([CustomMetadataEntry(key="", key_length=0, value="", value_length=0)], 1)
     
     upload.set_custom_metadata(custom_metadata).then(() => {
 		...//some code//...
     }).catch((err) => {
 	....//some code//....
     });
-}
-catch(err){
-     uplinkError.storjException(code,message);
+} catch(err){
+     ....//some code//....
 }
 ```
 ### CustomMetadataEntry(String, Int, String, Int)
@@ -157,28 +153,24 @@ as an example application named"Image Board" might use a key "image-board:title"
 |<code>value</code>| Value | <code>string</code> |
 |<code>value_length</code>| Length of value | <code>int</code> |
 
-#### Methods:
-
-get_dict() -> convert CustomMetadataEntry object to python dictionary
 
 #### Usage Example
 
 ```js
-try:
-	   const storj = require('uplink-nodejs')
-	   const uplinkError = storj.errorhandle;
-    const custom_metadata_entries = new storj.CustomMetadataEntry(key="", key_length=0, value="", value_length=0), CustomMetadataEntry(key="", key_length=0, value="", value_length=0)
+try{
+	const storj = require('uplink-nodejs')
+	const uplinkError = storj.errorhandle;
+    const custom_metadata_entry = new storj.CustomMetadataEntry(key="", key_length=0, value="", value_length=0);
     
-	const custom_metadata = new storj.CustomMetadata(custom_metadata_entries, 2)
+	const custom_metadata = new storj.CustomMetadata([custom_metadata_entry], 1);
     
     upload.set_custom_metadata(custom_metadata).then(() => {
 		...//some code//...
     }).catch((err) => {
 	....//some code//....
     });
-}
-catch(err){
-     uplinkError.storjException(code,message);
+} catch(err){
+     ....//some code//....
 }
 ```
 
@@ -206,10 +198,9 @@ ListObjectsOptions defines object listing options.
 #### Usage Example
 
 ```js
-try:
-
-		const storj = require('uplink-nodejs')
-		const uplinkError = storj.errorhandle;
+try {
+	const storj = require('uplink-nodejs')
+	const uplinkError = storj.errorhandle;
 	const listobjectoptions = new storj.ListObjectsOptions(recursive=True)
     
     project.list_objects(bucketName,listObjectsOptions).then((objectlist) => {
@@ -217,8 +208,8 @@ try:
     }).catch((err) => {
     ....//some code//....
     });
-catch(err){
-     uplinkError.storjException(code,message);
+} catch(err){
+     ....//some code//....
 }
 ```
 
@@ -238,7 +229,7 @@ ListBucketsOptions defines bucket listing options.
 #### Usage Example
 
 ```js
-try:
+try {
 	const storj = require('uplink-nodejs')
 	const uplinkError = storj.errorhandle;
     const listbucketsoptions = new storj.ListBucketsOptions(cursor="")
@@ -247,8 +238,8 @@ try:
     }).catch((err) => {
     ....//some code//....
     });
-catch(err){
-     uplinkError.storjException(code,message);
+} catch(err) {
+     ....//some code//....
 }
 ```
 
@@ -267,7 +258,7 @@ UploadOptions contains additional options for uploading.
 #### Usage Example
 
 ```js
-try:
+try{
 	const storj = require('uplink-nodejs')
 	const uplinkError = storj.errorhandle;
 	const uploadOptions = new storj.UploadOptions(expires=0)
@@ -276,8 +267,8 @@ try:
     }).catch((err) => {
 	....//some code//....
     });
-catch(err){
-     uplinkError.storjException(code,message);
+} catch(err) {
+     ....//some code//....
 }
 ```
 
@@ -297,7 +288,7 @@ DownloadOptions contains additional options for downloading.
 #### Usage Example
 
 ```js
-try:
+try{
 	const storj = require('uplink-nodejs')
 	const uplinkError = storj.errorhandle;
 	const downloadOptions = DownloadOptions(length=-1)
@@ -306,8 +297,8 @@ try:
     }).catch((err) => {
 	....//some code//....
     });
-catch(err){
-     uplinkError.storjException(code,message);
+} catch(err) {
+     ....//some code//....
 }
 ```
 ## Errors
@@ -325,7 +316,6 @@ It can be used to catch error thrown from uplink when one does not know what exc
 | --- | --- | --- |
 |<code>code</code>| Error code related to error | <code>int</code> |
 |<code>message</code>| Short description of error  |<code>string</code> |
-|<code>details</code>| Detailed description of the error |<code>string</code> |
 
 #### Usage Example
 
@@ -333,9 +323,9 @@ It can be used to catch error thrown from uplink when one does not know what exc
 try{
 	const uplinkError = storj.errorhandle;
     // function calls
-}
-catch(err){
-     uplinkError.storjException(code,message);
+    uplinkError.storjException(code,message);
+} catch(err){
+	....//some code//....
 }
 ```
 
