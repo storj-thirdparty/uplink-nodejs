@@ -41,7 +41,7 @@ Your directory structure would be something like this:
 
         {
             "name": "uplink-nodejs",
-            "version": "1.0.5",
+            "version": "1.0.6",
 
 > Increment package version is mandatory because npm does not allow updating a package with same version.
 
