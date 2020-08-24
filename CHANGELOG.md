@@ -1,5 +1,8 @@
 # Storj-Nodejs Changelog
 
+## [1.0.7] - 24-08-2020
+* Updated Make file
+
 ## [1.0.6] - 10-08-2020
 * Changed function structures
 * Updates documentation
