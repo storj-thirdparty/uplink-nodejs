@@ -7,6 +7,7 @@ GOGET=$(GOCMD) get
 # Uplink-c
 GIT_REPO=https://github.com/storj/uplink-c
 UPLINKC_NAME=uplink-c
+UPLINKC_VERSION=v1.0.5
 #Library Name
 LIBRARY_NAME_LINUX=libuplinkc.so
 LIBRARY_NAME_DARWIN=libuplinkc.dylib
@@ -20,13 +21,13 @@ RESET_COLOR=\033[0m
 #
 build:
 ifdef OS
-	git clone ${GIT_REPO}
+	git clone -b ${UPLINKC_VERSION} ${GIT_REPO}
 	(cd ${UPLINKC_NAME}) && (${GOBUILD} -o ../${LIBRARY_NAME_WIN} -buildmode=c-shared) && (move ${LIBRARY_UPLINK} ../)
 	rmdir /s ${UPLINKC_NAME}
 else
 	echo "$(shell uname)";\
      if [ ! -d $(UPLINKC_NAME) ]; then\
-      git clone $(GIT_REPO);\
+      git clone -b $(UPLINKC_VERSION) $(GIT_REPO);\
      fi;\
      if [ $(shell uname) = Darwin ]; then\
       cd $(UPLINKC_NAME);$(GOBUILD) -o ../$(LIBRARY_NAME_DARWIN) -buildmode=c-shared;mv $(LIBRARY_UPLINK) ../;cd ../;\
