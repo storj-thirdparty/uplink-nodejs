@@ -53,3 +53,7 @@ void ConfigRequestAccessWithEncryption(napi_env env, void* data);
 void RequestAccessWithEncryption(napi_env env, void* data);
 
 void accessSerializePromiseExecute(napi_env env, void* data);
+
+void deriveEncrpPromiseExecute(napi_env env, void* data);
+
+void accessOverRidePromiseExecute(napi_env env, void* data);

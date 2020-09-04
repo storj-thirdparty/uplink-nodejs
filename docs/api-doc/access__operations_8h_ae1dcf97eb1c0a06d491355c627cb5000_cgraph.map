@@ -1,0 +1,5 @@
+<map id="access_serializec" name="access_serializec">
+<area shape="rect" id="node1" title="access_serializec function is called from the javascript file access_serialize serializes access gran..." alt="" coords="5,31,132,57"/>
+<area shape="rect" id="node2" href="$promises__complete_8cc.html#aa5637cc8f8ecb95b52482c477d54187f" title="accessSerializePromiseComplete creates the handle for access_serialize" alt="" coords="180,5,397,32"/>
+<area shape="rect" id="node3" href="$promises__execute_8cc.html#ada5b2b919b2cab2f12ea77e2d119555f" title="accessSerializePromiseExecute used to implement the uplink&#45;c library function accessSerializePromiseE..." alt="" coords="183,56,394,83"/>
+</map>

@@ -56,5 +56,15 @@ class AccessResultStruct {
         });
         return stringResult;
     }
+
+    //function serializes an access grant such that it can be used later with ParseAccess or other tools.
+    //Input : bucket (String) , prefix (String) and Encrption key
+    //Output : None
+    async overrideEncryptionKey(bucket,prefix,encryption_key){
+        var stringResult = await uplink.access_override_encryption_key(this.access,bucket,prefix,encryption_key).catch((error) => {
+            errorhandle.storjException(error.error.code,error.error.message);
+        });
+        return stringResult;
+    }
 }
 module.exports = AccessResultStruct;

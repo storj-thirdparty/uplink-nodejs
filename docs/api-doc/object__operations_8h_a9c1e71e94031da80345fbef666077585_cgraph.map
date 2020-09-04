@@ -1,0 +1,5 @@
+<map id="delete_objectc" name="delete_objectc">
+<area shape="rect" id="node1" title="delete_objectc function is called from the javascript file delete_objectc deletes an object." alt="" coords="5,31,112,57"/>
+<area shape="rect" id="node2" href="$promises__execute_8cc.html#aa517560015f9b9cccccec3b07f44f54f" title="deleteObjectPromiseExecute creates the handle for delete_object" alt="" coords="160,5,351,32"/>
+<area shape="rect" id="node3" href="$promises__complete_8cc.html#a5c220272e07cece2cc9b74d898e2ddb1" title="objectOperationComplete used to implement the uplink&#45;c library function objectOperationComplete signi..." alt="" coords="171,56,339,83"/>
+</map>

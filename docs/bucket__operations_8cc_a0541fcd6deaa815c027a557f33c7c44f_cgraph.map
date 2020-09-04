@@ -1,8 +1,0 @@
-<map id="delete_bucketc" name="delete_bucketc">
-<area shape="rect" id="node1" title="delete_bucket function is called from the javascript file delete_bucket deletes the bucket...." alt="" coords="5,81,116,108"/>
-<area shape="rect" id="node2" href="$promises__complete_8cc.html#a20d046f409f32eed2a803006d7895330" title="bucketOperationComplete used to implement the uplink&#45;c library function bucketOperationComplete opera..." alt="" coords="175,31,347,57"/>
-<area shape="rect" id="node5" href="$promises__execute_8cc.html#ae7c28aefc405f31fb71c320c9f51d7e1" title="deleteBucketPromiseExecute creates the handle for delete_bucket" alt="" coords="164,81,359,108"/>
-<area shape="rect" id="node6" href="$lib_uplink_8cc.html#af3084e4f8020d09148225eb624a2fed8" title="int64_t getHandleValue handles the value type it returns integer type handlelong" alt="" coords="205,132,318,159"/>
-<area shape="rect" id="node3" href="$lib_uplink_8cc.html#afb478bdc32504777e90281f927c6be79" title="createBucketResult creates bucket result whether it is generated or not" alt="" coords="407,5,543,32"/>
-<area shape="rect" id="node4" href="$lib_uplink_8cc.html#a56b88ea420afbcee273bbc41eaae5780" title="napi_value createError creates NAPI type error object it returns the object for which error occurred" alt="" coords="431,56,518,83"/>
-</map>

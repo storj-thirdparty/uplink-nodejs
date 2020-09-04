@@ -1,5 +1,8 @@
 # Storj-Nodejs Changelog
 
+## [1.0.7] - 03-09-2020
+* Added functions and updated code according to uplink-c v1.1.0 master branch
+
 ## [1.0.7] - 24-08-2020
 * Updated Make file
 

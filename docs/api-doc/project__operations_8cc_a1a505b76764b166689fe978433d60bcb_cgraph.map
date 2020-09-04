@@ -1,0 +1,5 @@
+<map id="open_projectc" name="open_projectc">
+<area shape="rect" id="node1" title="open_projectc function is called from the javascript file open_projectc opens the project" alt="" coords="5,31,108,57"/>
+<area shape="rect" id="node2" href="$promises__complete_8cc.html#abbd7d817a0fbb3730accb682e09951d9" title="openProjectPromiseComplete creates the handle for open_project" alt="" coords="156,5,351,32"/>
+<area shape="rect" id="node3" href="$promises__execute_8cc.html#a2d0a49dcee3edd0c8ab14bedd0bc7000" title="openProjectPromiseExecute function called when async operation get complete and convert c data type i..." alt="" coords="160,56,347,83"/>
+</map>

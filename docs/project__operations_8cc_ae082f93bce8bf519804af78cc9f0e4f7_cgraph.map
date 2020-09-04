@@ -1,7 +1,0 @@
-<map id="close_projectc" name="close_projectc">
-<area shape="rect" id="node1" title="close_projectc function is called from the javascript file close_projectc closes the project" alt="" coords="5,56,112,83"/>
-<area shape="rect" id="node2" href="$promises__complete_8cc.html#a28a47eeee9eefdb598c1baba2ef521ea" title="closeProjectPromiseComplete creates the handle for close_project" alt="" coords="160,5,357,32"/>
-<area shape="rect" id="node4" href="$promises__execute_8cc.html#a2612252dcc9023897df3fa76181db626" title="closeProjectPromiseExecute used to implement the uplink&#45;c library function closeProjectPromiseExecute..." alt="" coords="163,56,354,83"/>
-<area shape="rect" id="node5" href="$lib_uplink_8cc.html#af3084e4f8020d09148225eb624a2fed8" title="int64_t getHandleValue handles the value type it returns integer type handlelong" alt="" coords="202,107,315,133"/>
-<area shape="rect" id="node3" href="$lib_uplink_8cc.html#a56b88ea420afbcee273bbc41eaae5780" title="napi_value createError creates NAPI type error object it returns the object for which error occurred" alt="" coords="405,5,492,32"/>
-</map>

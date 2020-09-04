@@ -1,5 +1,0 @@
-<map id="uploadAbortPromiseComplete" name="uploadAbortPromiseComplete">
-<area shape="rect" id="node1" title="uploadAbortPromiseComplete creates the handle for upload_abort" alt="" coords="243,5,437,32"/>
-<area shape="rect" id="node2" href="$upload__operations_8cc.html#acec0b997c68975ed65af14cc200bad09" title="upload_abortc function is called from the javascript file upload_abortc function aborts the upload" alt="" coords="92,5,195,32"/>
-<area shape="rect" id="node3" href="$lib_uplink_8cc.html#a2a8628282ff7cc746345d7a7afb2884d" title="This is main function 1) request_access_with_passphrase requests satellite for a new access grant usi..." alt="" coords="5,5,44,32"/>
-</map>

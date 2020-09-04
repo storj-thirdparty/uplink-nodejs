@@ -3,7 +3,6 @@
 
 HINSTANCE hGetProcIDDLL = LoadLibrary("../libuplinkc.dll");
 
-
 void openProjectPromiseExecute(napi_env env, void* data) {
     openProjectPromiseObj* obj =
         reinterpret_cast<openProjectPromiseObj*>(data);
@@ -11,12 +10,12 @@ void openProjectPromiseExecute(napi_env env, void* data) {
         free(obj);
         napi_throw_type_error(env, nullptr, "\nLibrary not found \n");
     } else {
-        FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL), "open_project");
+        FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL), "uplink_open_project");
         if (!fn) {
             free(obj);
             napi_throw_type_error(env, nullptr, "\nFunction not found \n");
         } else {
-            typedef ProjectResult(__stdcall* pICProjectResult)(Access*);
+            typedef UplinkProjectResult(__stdcall* pICProjectResult)(UplinkAccess*);
             pICProjectResult open_project;
             open_project = pICProjectResult(fn);
             obj->project_Result = open_project(&(obj->access));
@@ -31,13 +30,13 @@ void ListObjectsPromiseExecute(napi_env env, void* data) {
         free(obj);
         napi_throw_type_error(env, nullptr, "\nLibrary not found \n");
     } else {
-        FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL), "list_objects");
+        FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL), "uplink_list_objects");
         if (!fn) {
             free(obj);
             napi_throw_type_error(env, nullptr, "\nFunction not found \n");
         } else {
-            typedef ObjectIterator* (__stdcall* pICObjectIterator)(Project*,
-                char*, ListObjectsOptions*);
+            typedef UplinkObjectIterator* (__stdcall* pICObjectIterator)(UplinkProject*,
+                char*, UplinkListObjectsOptions*);
             pICObjectIterator list_objects;
             list_objects = pICObjectIterator(fn);
          //
@@ -60,19 +59,18 @@ void downloadInfoPromiseExecute(napi_env env, void* data) {
         free(obj);
         napi_throw_type_error(env, nullptr, "\nLibrary not found \n");
     } else {
-        FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL), "download_info");
+        FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL), "uplink_download_info");
         if (!fn) {
             free(obj);
             napi_throw_type_error(env, nullptr, "\nFunction not found \n");
         } else {
-            typedef ObjectResult(__stdcall* pICObjectResult)(Download*);
+            typedef UplinkObjectResult(__stdcall* pICObjectResult)(UplinkDownload*);
             pICObjectResult download_info;
             download_info = pICObjectResult(fn);
             obj->object_result = download_info(&obj->download_result);
         }
     }
 }
-
 
 void downloadClosePromiseExecute(napi_env env, void* data) {
     downloadCloseObj* obj =
@@ -81,19 +79,18 @@ void downloadClosePromiseExecute(napi_env env, void* data) {
         free(obj);
         napi_throw_type_error(env, nullptr, "\nLibrary not found \n");
     } else {
-        FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL), "close_download");
+        FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL), "uplink_close_download");
         if (!fn) {
             free(obj);
             napi_throw_type_error(env, nullptr, "\n Function not found \n");
         } else {
-            typedef Error* (__stdcall* pICError)(Download*);
+            typedef UplinkError* (__stdcall* pICError)(UplinkDownload*);
             pICError close_download;
             close_download = pICError(fn);
             obj->error_result = close_download(&obj->download_result);
         }
     }
 }
-
 
 void downloadReadPromiseExecute(napi_env env, void* data) {
     downloadReadObj* obj = reinterpret_cast<downloadReadObj*>(data);
@@ -103,12 +100,12 @@ void downloadReadPromiseExecute(napi_env env, void* data) {
         free(obj);
         napi_throw_type_error(env, nullptr, "\nLibrary not found \n");
     } else {
-        FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL), "download_read");
+        FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL), "uplink_download_read");
         if (!fn) {
             free(obj);
             napi_throw_type_error(env, nullptr, "\nFunction not found \n");
         } else {
-            typedef ReadResult(__stdcall* pICReadResult)(Download*,
+            typedef UplinkReadResult(__stdcall* pICReadResult)(UplinkDownload*,
                 uint8_t*, size_t);
             pICReadResult download_read;
             download_read = pICReadResult(fn);
@@ -125,13 +122,13 @@ void downloadObjectPromiseExecute(napi_env env, void* data) {
         free(obj);
         napi_throw_type_error(env, nullptr, "\nLibrary not found\n");
     } else {
-        FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL), "download_object");
+        FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL), "uplink_download_object");
         if (!fn) {
             free(obj);
             napi_throw_type_error(env, nullptr, "\nFunction not found\n");
         } else {
-            typedef DownloadResult(__stdcall* pICDownloadResult)(Project*,
-                char*, char*, DownloadOptions*);
+            typedef UplinkDownloadResult(__stdcall* pICDownloadResult)(UplinkProject*,
+                char*, char*, UplinkDownloadOptions*);
             pICDownloadResult download_object;
             download_object = pICDownloadResult(fn);
             obj->download_result = download_object(&obj->project,
@@ -147,12 +144,13 @@ void uploadSetMetaPromiseExecute(napi_env env, void* data) {
         napi_throw_type_error(env, nullptr, "\nLibrary not found\n");
     } else {
         FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL),
-            "upload_set_custom_metadata");
+            "uplink_upload_set_custom_metadata");
         if (!fn) {
             free(obj);
             napi_throw_type_error(env, nullptr, "\nFunction not found\n");
         } else {
-            typedef Error* (__stdcall* pICError)(Upload*, CustomMetadata);
+            typedef UplinkError* (__stdcall* pICError)(UplinkUpload*,
+                UplinkCustomMetadata);
             pICError upload_set_custom_metadata;
             upload_set_custom_metadata = pICError(fn);
             obj->error_result =
@@ -169,12 +167,12 @@ void uploadAbortPromiseExecute(napi_env env, void* data) {
         free(obj);
         napi_throw_type_error(env, nullptr, "\nLibrary not found \n");
     } else {
-        FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL), "upload_abort");
+        FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL), "uplink_upload_abort");
         if (!fn) {
             free(obj);
             napi_throw_type_error(env, nullptr, "\nFunction not found \n");
         } else {
-            typedef Error* (__stdcall* pICError)(Upload*);
+            typedef UplinkError* (__stdcall* pICError)(UplinkUpload*);
             pICError upload_abort;
             upload_abort = pICError(fn);
             obj->error_result = upload_abort(&obj->upload_result);
@@ -188,12 +186,12 @@ void uploadInfoPromiseExecute(napi_env env, void* data) {
         free(obj);
         napi_throw_type_error(env, nullptr, "\nLibrary not found\n");
     } else {
-        FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL), "upload_info");
+        FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL), "uplink_upload_info");
         if (!fn) {
             free(obj);
             napi_throw_type_error(env, nullptr, "\nFunction not found\n");
         } else {
-            typedef ObjectResult(__stdcall* pICObjectResult)(Upload*);
+            typedef UplinkObjectResult(__stdcall* pICObjectResult)(UplinkUpload*);
             pICObjectResult upload_info;
             upload_info = pICObjectResult(fn);
             obj->object_result = upload_info(&obj->upload_result);
@@ -207,12 +205,12 @@ void uploadCommitPromiseExecute(napi_env env, void* data) {
         free(obj);
         napi_throw_type_error(env, nullptr, "\nLibrary not found \n");
     } else {
-        FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL), "upload_commit");
+        FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL), "uplink_upload_commit");
         if (!fn) {
             free(obj);
             napi_throw_type_error(env, nullptr, "\nFunction not found\n");
         } else {
-            typedef Error* (__stdcall* pICError)(Upload*);
+            typedef UplinkError* (__stdcall* pICError)(UplinkUpload*);
             pICError upload_commit;
             upload_commit = pICError(fn);
             obj->error_result = upload_commit(&(obj->upload_result));
@@ -229,12 +227,12 @@ void uploadWritePromiseExecute(napi_env env, void* data) {
         free(obj);
         napi_throw_type_error(env, nullptr, "\nLibrary not found\n");
     } else {
-        FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL), "upload_write");
+        FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL), "uplink_upload_write");
         if (!fn) {
             free(obj);
             napi_throw_type_error(env, nullptr, "\nFunction not found\n");
         } else {
-            typedef WriteResult(__stdcall* pICWriteResult)(Upload*,
+            typedef UplinkWriteResult(__stdcall* pICWriteResult)(UplinkUpload*,
                 uint8_t*, size_t);
             pICWriteResult upload_write;
             upload_write = pICWriteResult(fn);
@@ -250,13 +248,13 @@ void uploadObjectExecute(napi_env env, void* data) {
         free(obj);
         napi_throw_type_error(env, nullptr, "\nLibrary not found\n");
     } else {
-        FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL), "upload_object");
+        FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL), "uplink_upload_object");
         if (!fn) {
             free(obj);
             napi_throw_type_error(env, nullptr, "\nFunction not found\n");
         } else {
-            typedef UploadResult(__stdcall* pICUploadResult)(Project*,
-                char*, char*, UploadOptions*);
+            typedef UplinkUploadResult(__stdcall* pICUploadResult)(UplinkProject*,
+                char*, char*, UplinkUploadOptions*);
             pICUploadResult upload_object;
             upload_object = pICUploadResult(fn);
             if (obj->uploadoptionSet == 0) {
@@ -276,12 +274,12 @@ void stateObjectPromiseExecute(napi_env env, void* data) {
         free(obj);
         napi_throw_type_error(env, nullptr, "\nLibrary not found\n");
     } else {
-        FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL), "stat_object");
+        FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL), "uplink_stat_object");
         if (!fn) {
             free(obj);
             napi_throw_type_error(env, nullptr, "\nFunction not found\n");
         } else {
-            typedef ObjectResult(__stdcall* pICObjectResult)(Project*,
+            typedef UplinkObjectResult(__stdcall* pICObjectResult)(UplinkProject*,
                 char*, char*);
             pICObjectResult stat_object;
             stat_object = pICObjectResult(fn);
@@ -297,12 +295,12 @@ void deleteObjectPromiseExecute(napi_env env, void* data) {
         free(obj);
         napi_throw_type_error(env, nullptr, "\nLibrary not found \n");
     } else {
-        FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL), "delete_object");
+        FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL), "uplink_delete_object");
         if (!fn) {
             free(obj);
             napi_throw_type_error(env, nullptr, "\nFunction not found \n");
         } else {
-            typedef ObjectResult(__stdcall* pICObjectResult)(Project*,
+            typedef UplinkObjectResult(__stdcall* pICObjectResult)(UplinkProject*,
                 char*, char*);
             pICObjectResult delete_object;
             delete_object = pICObjectResult(fn);
@@ -318,12 +316,12 @@ void stateBucketPromiseExecute(napi_env env, void* data) {
         free(obj);
         napi_throw_type_error(env, nullptr, "\nLibrary not found\n");
     } else {
-        FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL), "stat_bucket");
+        FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL), "uplink_stat_bucket");
         if (!fn) {
             free(obj);
             napi_throw_type_error(env, nullptr, "\nFunction not found\n");
         } else {
-            typedef BucketResult(__stdcall* pICBucketResult)(Project*,
+            typedef UplinkBucketResult(__stdcall* pICBucketResult)(UplinkProject*,
                 char*);
             pICBucketResult stat_bucket;
             stat_bucket = pICBucketResult(fn);
@@ -339,12 +337,12 @@ void createBucketPromiseExecute(napi_env env, void* data) {
         free(obj);
         napi_throw_type_error(env, nullptr, "\nLibrary not found\n");
     } else {
-        FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL), "create_bucket");
+        FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL), "uplink_create_bucket");
         if (!fn) {
             free(obj);
             napi_throw_type_error(env, nullptr, "\nFunction not found\n");
         } else {
-            typedef BucketResult(__stdcall* pICBucketResult)(Project*,
+            typedef UplinkBucketResult(__stdcall* pICBucketResult)(UplinkProject*,
                 char*);
             pICBucketResult create_bucket;
             create_bucket = pICBucketResult(fn);
@@ -360,12 +358,12 @@ void ensureBucketPromiseExecute(napi_env env, void* data) {
         free(obj);
         napi_throw_type_error(env, nullptr, "\nLibrary not found\n");
     } else {
-        FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL), "ensure_bucket");
+        FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL), "uplink_ensure_bucket");
         if (!fn) {
             free(obj);
             napi_throw_type_error(env, nullptr, "\nFound not found\n");
         } else {
-            typedef BucketResult(__stdcall* pICBucketResult)(Project*,
+            typedef UplinkBucketResult(__stdcall* pICBucketResult)(UplinkProject*,
                 char*);
             pICBucketResult ensure_bucket;
             ensure_bucket = pICBucketResult(fn);
@@ -381,12 +379,12 @@ void deleteBucketPromiseExecute(napi_env env, void* data) {
         free(obj);
         napi_throw_type_error(env, nullptr, "\nLibrary not found\n");
     } else {
-        FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL), "delete_bucket");
+        FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL), "uplink_delete_bucket");
         if (!fn) {
             free(obj);
             napi_throw_type_error(env, nullptr, "\nFunction not found\n");
         } else {
-            typedef BucketResult(__stdcall* pICBucketResult)(Project*,
+            typedef UplinkBucketResult(__stdcall* pICBucketResult)(UplinkProject*,
                 char*);
             pICBucketResult delete_bucket;
             delete_bucket = pICBucketResult(fn);
@@ -404,13 +402,13 @@ void ListBucketsPromiseExecute(napi_env env, void* data) {
         free(obj);
         napi_throw_type_error(env, nullptr, "\nLibrary not found\n");
     } else {
-        FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL), "list_buckets");
+        FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL), "uplink_list_buckets");
         if (!fn) {
             free(obj);
             napi_throw_type_error(env, nullptr, "\nFunction not found\n");
         } else {
-            typedef BucketIterator* (__stdcall* pICBucketIterator)(Project*,
-                ListBucketsOptions*);
+            typedef UplinkBucketIterator* (__stdcall* pICBucketIterator)(UplinkProject*,
+                UplinkListBucketsOptions*);
             pICBucketIterator list_buckets;
             list_buckets = pICBucketIterator(fn);
             if (obj->listBucketOptionSet == 0) {
@@ -432,12 +430,12 @@ void closeProjectPromiseExecute(napi_env env, void* data) {
         free(obj);
         napi_throw_type_error(env, nullptr, "\nLibrary not found\n");
     } else {
-        FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL), "close_project");
+        FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL), "uplink_close_project");
         if (!fn) {
             free(obj);
             napi_throw_type_error(env, nullptr, "\nFunction not found\n");
         } else {
-            typedef Error* (__stdcall* pICError)(Project*);
+            typedef UplinkError* (__stdcall* pICError)(UplinkProject*);
             pICError close_project;
             close_project = pICError(fn);
             obj->error_result = close_project(&(obj->project_result));
@@ -453,13 +451,13 @@ void configOpenProjectPromiseExecute(napi_env env, void* data) {
         napi_throw_type_error(env, nullptr, "\nLibrary not found \n");
     } else {
         FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL),
-            "config_open_project");
+            "uplink_config_open_project");
         if (!fn) {
             free(obj);
             napi_throw_type_error(env, nullptr, "\nFunction not found \n");
         } else {
-            typedef ProjectResult(__stdcall* pICProjectResult)(Config,
-                Access*);
+            typedef UplinkProjectResult(__stdcall* pICProjectResult)(UplinkConfig,
+                UplinkAccess*);
             pICProjectResult config_open_project;
             config_open_project = pICProjectResult(fn);
             obj->project_Result = config_open_project(obj->config,
@@ -474,12 +472,12 @@ void ParseAccess(napi_env env, void* data) {
         free(obj);
         napi_throw_type_error(env, nullptr, "\nLibrary not found\n");
     } else {
-        FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL), "parse_access");
+        FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL), "uplink_parse_access");
         if (!fn) {
             free(obj);
             napi_throw_type_error(env, nullptr, "\nFunction not found \n");
         } else {
-            typedef AccessResult(__stdcall* pICAccessResult)(char*);
+            typedef UplinkAccessResult(__stdcall* pICAccessResult)(char*);
             pICAccessResult parse_access;
             parse_access = pICAccessResult(fn);
             obj->access_Result = parse_access(obj->accessString);
@@ -493,13 +491,13 @@ void ShareAccessPromiseExecute(napi_env env, void* data) {
         free(obj);
         napi_throw_type_error(env, nullptr, "\nLibrary not found \n");
     } else {
-        FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL), "access_share");
+        FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL), "uplink_access_share");
         if (!fn) {
             free(obj);
             napi_throw_type_error(env, nullptr, "\nFunction not found \n");
         } else {
-            typedef AccessResult(__stdcall* pICAccessResult)(Access*,
-                Permission, SharePrefix*, int64_t);
+            typedef UplinkAccessResult(__stdcall* pICAccessResult)(UplinkAccess*,
+                UplinkPermission, UplinkSharePrefix*, int64_t);
             pICAccessResult access_share;
             access_share = pICAccessResult(fn);
             obj->access_Result = access_share(&(obj->access), obj->permission,
@@ -516,12 +514,12 @@ void accessSerializePromiseExecute(napi_env env, void* data) {
         napi_throw_type_error(env, nullptr, "\nLibrary not found\n");
     } else {
         FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL),
-            "access_serialize");
+            "uplink_access_serialize");
         if (!fn) {
             free(obj);
             napi_throw_type_error(env, nullptr, "\nFunction not found\n");
         } else {
-            typedef StringResult(__stdcall* pICStringResult)(Access*);
+            typedef UplinkStringResult(__stdcall* pICStringResult)(UplinkAccess*);
             pICStringResult access_serialize;
             access_serialize = pICStringResult(fn);
             obj->string_result = access_serialize(&(obj->access));
@@ -537,12 +535,12 @@ void ConfigRequestAccessWithEncryption(napi_env env, void* data) {
         napi_throw_type_error(env, nullptr, "\nLibrary not found\n");
     } else {
         FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL),
-            "config_request_access_with_passphrase");
+            "uplink_config_request_access_with_passphrase");
         if (!fn) {
             free(obj);
             napi_throw_type_error(env, nullptr, "\nFunction not found\n");
         } else {
-            typedef AccessResult(__stdcall* pICAccessResult)(Config,
+            typedef UplinkAccessResult(__stdcall* pICAccessResult)(UplinkConfig,
                 char*, char*, char*);
             pICAccessResult config_request_access_with_passphrase;
             config_request_access_with_passphrase = pICAccessResult(fn);
@@ -561,12 +559,12 @@ void RequestAccessWithEncryption(napi_env env, void* data) {
         napi_throw_type_error(env, nullptr, "\nLibrary not found\n");
     } else {
         FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL),
-            "request_access_with_passphrase");
+            "uplink_request_access_with_passphrase");
         if (!fn) {
             free(obj);
             napi_throw_type_error(env, nullptr, "\nFunction not found\n");
         } else {
-            typedef AccessResult(__stdcall* pICAccessResult)(char*,
+            typedef UplinkAccessResult(__stdcall* pICAccessResult)(char*,
                 char*, char*);
             pICAccessResult request_access_with_passphrase;
             request_access_with_passphrase = pICAccessResult(fn);
@@ -576,3 +574,56 @@ void RequestAccessWithEncryption(napi_env env, void* data) {
         }
     }
 }
+
+void deriveEncrpPromiseExecute(napi_env env, void* data) {
+  deriveEncrpPromiseObj *obj =
+      reinterpret_cast<deriveEncrpPromiseObj*>(data);
+  char *ptrToData;
+  ptrToData = reinterpret_cast<char *>(obj->saltCharArrayPointer);
+  if (!hGetProcIDDLL) {
+      free(obj);
+      napi_throw_type_error(env, nullptr, "\nLibrary not found\n");
+  }
+  else {
+      FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL),
+          "uplink_derive_encryption_key");
+      if (!fn) {
+          free(obj);
+          napi_throw_type_error(env, nullptr, "\nFunction not found\n");
+      }
+      else {
+          typedef UplinkEncryptionKeyResult(__stdcall*
+              pICEncryptionKeyResult)(char*, char*, int64_t);
+          pICEncryptionKeyResult derive_encryption_key;
+          derive_encryption_key = pICEncryptionKeyResult(fn);
+          obj->encryptionResult =
+              derive_encryption_key(obj->passphrase, ptrToData, obj->saltSize);
+      }
+  }
+}
+
+void accessOverRidePromiseExecute(napi_env env, void* data) {
+  accessOverRidePromiseObj *obj =
+      reinterpret_cast<accessOverRidePromiseObj*>(data);
+  if (!hGetProcIDDLL) {
+      free(obj);
+      napi_throw_type_error(env, nullptr, "\nLibrary not found\n");
+  }
+  else {
+      FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL),
+          "uplink_access_override_encryption_key");
+      if (!fn) {
+          free(obj);
+          napi_throw_type_error(env, nullptr, "\nFunction not found\n");
+      }
+      else {
+          typedef UplinkError*(__stdcall*
+              pICErrorResult)(UplinkAccess*, char*, char*, UplinkEncryptionKey*);
+          pICErrorResult access_override_encryption_key;
+          access_override_encryption_key = pICErrorResult(fn);
+          obj->error_result = access_override_encryption_key(&(obj->access),
+                  obj->bucket, obj->prefix, &(obj->encryptionKey));
+      }
+  }
+}
+

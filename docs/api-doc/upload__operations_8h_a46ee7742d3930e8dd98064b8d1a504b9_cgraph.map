@@ -1,0 +1,5 @@
+<map id="upload_infoc" name="upload_infoc">
+<area shape="rect" id="node1" title="upload_infoc function is called from the javascript file upload_infoc upload the information ." alt="" coords="5,31,100,57"/>
+<area shape="rect" id="node2" href="$promises__complete_8cc.html#a822fbfc685345cc8e1b6c7af4ba6f5e5" title="uploadInfoOperationComplete creates the handle for upload_info" alt="" coords="148,5,339,32"/>
+<area shape="rect" id="node3" href="$promises__execute_8cc.html#a8eaffccedd333cb4fee71d8d5d3f80dc" title="uploadInfoPromiseExecute used to implement the uplink&#45;c library function uploadInfoPromiseExecute upl..." alt="" coords="155,56,331,83"/>
+</map>

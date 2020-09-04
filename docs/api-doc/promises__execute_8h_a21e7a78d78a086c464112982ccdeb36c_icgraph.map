@@ -1,0 +1,4 @@
+<map id="ensureBucketPromiseExecute" name="ensureBucketPromiseExecute">
+<area shape="rect" id="node1" title="ensureBucketPromiseExecute creates the handle for ensure_bucket" alt="" coords="168,5,367,32"/>
+<area shape="rect" id="node2" href="$bucket__operations_8h.html#a52f6abad2725d06efa100cc28ba6a6b5" title="ensure_bucket function is called from the javascript file ensure_bucket creates a new bucket and igno..." alt="" coords="5,5,120,32"/>
+</map>

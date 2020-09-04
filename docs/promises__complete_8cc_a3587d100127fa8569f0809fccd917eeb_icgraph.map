@@ -1,5 +1,0 @@
-<map id="downloadObjectOperationComplete" name="downloadObjectOperationComplete">
-<area shape="rect" id="node1" title="downloadobjectOperationComplete creates the handle for download_object it shows null if download has ..." alt="" coords="265,5,491,32"/>
-<area shape="rect" id="node2" href="$download__operations_8cc.html#a1feb50082437a42729a8ae4bcd7eae14" title="download_objectc function is called from the javascript file download_objectc starts download to the ..." alt="" coords="92,5,217,32"/>
-<area shape="rect" id="node3" href="$lib_uplink_8cc.html#a2a8628282ff7cc746345d7a7afb2884d" title="This is main function 1) request_access_with_passphrase requests satellite for a new access grant usi..." alt="" coords="5,5,44,32"/>
-</map>

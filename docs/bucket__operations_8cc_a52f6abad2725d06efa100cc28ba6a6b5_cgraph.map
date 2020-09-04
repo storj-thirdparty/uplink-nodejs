@@ -1,8 +1,0 @@
-<map id="ensure_bucketc" name="ensure_bucketc">
-<area shape="rect" id="node1" title="ensure_bucket function is called from the javascript file ensure_bucket creates a new bucket and igno..." alt="" coords="5,81,120,108"/>
-<area shape="rect" id="node2" href="$promises__complete_8cc.html#a20d046f409f32eed2a803006d7895330" title="bucketOperationComplete used to implement the uplink&#45;c library function bucketOperationComplete opera..." alt="" coords="181,31,353,57"/>
-<area shape="rect" id="node5" href="$promises__execute_8cc.html#a21e7a78d78a086c464112982ccdeb36c" title="ensureBucketPromiseExecute creates the handle for ensure_bucket" alt="" coords="168,81,367,108"/>
-<area shape="rect" id="node6" href="$lib_uplink_8cc.html#af3084e4f8020d09148225eb624a2fed8" title="int64_t getHandleValue handles the value type it returns integer type handlelong" alt="" coords="211,132,324,159"/>
-<area shape="rect" id="node3" href="$lib_uplink_8cc.html#afb478bdc32504777e90281f927c6be79" title="createBucketResult creates bucket result whether it is generated or not" alt="" coords="415,5,551,32"/>
-<area shape="rect" id="node4" href="$lib_uplink_8cc.html#a56b88ea420afbcee273bbc41eaae5780" title="napi_value createError creates NAPI type error object it returns the object for which error occurred" alt="" coords="439,56,526,83"/>
-</map>

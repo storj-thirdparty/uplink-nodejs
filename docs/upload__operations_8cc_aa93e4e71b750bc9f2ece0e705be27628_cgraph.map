@@ -1,7 +1,0 @@
-<map id="upload_set_custom_metadatac" name="upload_set_custom_metadatac">
-<area shape="rect" id="node1" title="upload_set_custom_metadatac function is called from the javascript file there are restrictions on wha..." alt="" coords="5,56,208,83"/>
-<area shape="rect" id="node2" href="$lib_uplink_8cc.html#af3084e4f8020d09148225eb624a2fed8" title="int64_t getHandleValue handles the value type it returns integer type handlelong" alt="" coords="305,5,419,32"/>
-<area shape="rect" id="node3" href="$promises__complete_8cc.html#ada21d0b3a98f66fcc91cd7f3a1f7ce00" title="uploadSetMetaPromiseComplete creates the handle for upload_set_custom_metadata" alt="" coords="256,56,468,83"/>
-<area shape="rect" id="node5" href="$promises__execute_8cc.html#a4f314684cd49d9c9a16d504a154a600e" title="uploadSetMetaPromiseExecute used to implement the uplink&#45;c library function uploadSetMetaPromiseExecu..." alt="" coords="259,107,465,133"/>
-<area shape="rect" id="node4" href="$lib_uplink_8cc.html#a56b88ea420afbcee273bbc41eaae5780" title="napi_value createError creates NAPI type error object it returns the object for which error occurred" alt="" coords="516,56,603,83"/>
-</map>

@@ -1,0 +1,5 @@
+<map id="delete_bucketc" name="delete_bucketc">
+<area shape="rect" id="node1" title="delete_bucket function is called from the javascript file delete_bucket deletes the bucket...." alt="" coords="5,31,116,57"/>
+<area shape="rect" id="node2" href="$promises__complete_8cc.html#a20d046f409f32eed2a803006d7895330" title="bucketOperationComplete used to implement the uplink&#45;c library function bucketOperationComplete opera..." alt="" coords="175,5,347,32"/>
+<area shape="rect" id="node3" href="$promises__execute_8cc.html#ae7c28aefc405f31fb71c320c9f51d7e1" title="deleteBucketPromiseExecute creates the handle for delete_bucket" alt="" coords="164,56,359,83"/>
+</map>

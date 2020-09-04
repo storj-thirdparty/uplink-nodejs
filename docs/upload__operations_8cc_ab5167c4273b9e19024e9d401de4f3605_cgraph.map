@@ -1,7 +1,0 @@
-<map id="upload_commitc" name="upload_commitc">
-<area shape="rect" id="node1" title="upload_commitc function is called from the javascript file upload_commitc commits the uploaded data." alt="" coords="5,56,123,83"/>
-<area shape="rect" id="node2" href="$lib_uplink_8cc.html#af3084e4f8020d09148225eb624a2fed8" title="int64_t getHandleValue handles the value type it returns integer type handlelong" alt="" coords="222,5,335,32"/>
-<area shape="rect" id="node3" href="$promises__complete_8cc.html#a4579a6b34f5cd9c7bdedbc6efe35058f" title="uploadCommitOperationComplete creates the handle for upload_commit" alt="" coords="171,56,387,83"/>
-<area shape="rect" id="node5" href="$promises__execute_8cc.html#ab4b5bcf8bb3a3ce4e8b38c80bb2ab638" title="uploadCommitPromiseExecute used to implement the uplink&#45;c library function uploadCommitPromiseExecute..." alt="" coords="178,107,379,133"/>
-<area shape="rect" id="node4" href="$lib_uplink_8cc.html#a56b88ea420afbcee273bbc41eaae5780" title="napi_value createError creates NAPI type error object it returns the object for which error occurred" alt="" coords="435,56,521,83"/>
-</map>

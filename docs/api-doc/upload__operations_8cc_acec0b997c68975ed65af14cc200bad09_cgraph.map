@@ -1,0 +1,5 @@
+<map id="upload_abortc" name="upload_abortc">
+<area shape="rect" id="node1" title="upload_abortc function is called from the javascript file upload_abortc function aborts the upload" alt="" coords="5,31,108,57"/>
+<area shape="rect" id="node2" href="$promises__complete_8cc.html#a7861cc4b65b134dd30fc38174403814c" title="uploadAbortPromiseComplete creates the handle for upload_abort" alt="" coords="156,5,351,32"/>
+<area shape="rect" id="node3" href="$promises__execute_8cc.html#a42a9a4606811e76768d5104fb4d2d6de" title="uploadAbortPromiseExecute used to implement the uplink&#45;c library function uploadAbortPromiseExecute a..." alt="" coords="160,56,347,83"/>
+</map>

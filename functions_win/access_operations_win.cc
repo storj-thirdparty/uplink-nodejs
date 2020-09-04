@@ -143,7 +143,7 @@ napi_value access_sharec(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  Access access;
+  UplinkAccess access;
   if (checktypeofinput1 != napi_null) {
     bool propertyexists = false;
     napi_value ObjectkeyNAPI;
@@ -168,7 +168,7 @@ napi_value access_sharec(napi_env env, napi_callback_info info) {
     }
   }
 
-  Permission permission;
+  UplinkPermission permission;
 
   napi_value allow_downloadNAPI;
   status = napi_get_named_property(env, args[1], "allow_download",
@@ -262,12 +262,12 @@ napi_value access_sharec(napi_env env, napi_callback_info info) {
   } else {
     size = sizeOfArrayInt;
   }
-  SharePrefix* SharePrefixListPointer = new SharePrefix[size];
+  UplinkSharePrefix* SharePrefixListPointer = new UplinkSharePrefix[size];
 
   napi_value SharePrefixObject;
 
   for (uint32_t i=0; i < (uint32_t)sizeOfArrayInt; i++) {
-    SharePrefix sharePrefix;
+    UplinkSharePrefix sharePrefix;
     status = napi_get_element(env, args[2], i, &SharePrefixObject);
     assert(status == napi_ok);
 
@@ -351,7 +351,7 @@ napi_value config_request_access_with_passphrasec(napi_env env,
     return NULL;
   }
 
-  Config config;
+  UplinkConfig config;
 
   napi_valuetype checktypeofinput;
   status = napi_typeof(env, args[0], &checktypeofinput);
@@ -653,7 +653,6 @@ napi_value request_access_with_passphrasec(napi_env env,
     args[2], passphrase, convertedvalue, &bufsize);
   assert(status == napi_ok);
   obj->passphrase = passphrase;
-
   napi_value resource_name;
   napi_create_string_utf8(env, "RequestAccess",
   NAPI_AUTO_LENGTH, &resource_name);
@@ -722,7 +721,7 @@ napi_value access_serializec(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  Access access;
+  UplinkAccess access;
   access._handle = getHandleValue(env, args[0]);
   if (access._handle == 0) {
       free(obj);
@@ -735,6 +734,278 @@ napi_value access_serializec(napi_env env, napi_callback_info info) {
   &resource_name);
   napi_create_async_work(env, NULL, resource_name,
   accessSerializePromiseExecute, accessSerializePromiseComplete,
+  obj, &obj->work);
+  napi_queue_async_work(env, obj->work);
+  return promise;
+}
+
+napi_value uplink_derive_encryption_keyc(napi_env env, napi_callback_info info) {
+  napi_status status;
+  size_t argc = 3;
+  napi_value args[3];
+  napi_value promise;
+
+  deriveEncrpPromiseObj *obj = (deriveEncrpPromiseObj *)
+  malloc(sizeof(deriveEncrpPromiseObj));
+  if (obj == NULL) {
+      free(obj);
+    napi_throw_error(env, NULL, "Memory allocation error");
+    return NULL;
+  }
+
+  status = napi_get_cb_info(env, info, &argc, args, nullptr , nullptr);
+  assert(status == napi_ok);
+  //
+  status = napi_create_promise(env, &obj->deferred, &promise);
+  if (status != napi_ok) {
+      free(obj);
+    napi_throw_error(env, NULL, "Unable to create promise");
+    return NULL;
+  }
+
+  if (argc < 3) {
+      free(obj);
+    napi_throw_type_error(env, nullptr,
+      "\nWrong number of arguments!! excepted 3 arguments\n");
+    return NULL;
+  }
+  //
+  napi_valuetype checktypeofinput;
+  //
+  status = napi_typeof(env, args[0], &checktypeofinput);
+  assert(status == napi_ok);
+
+  if (checktypeofinput != napi_string) {
+      free(obj);
+      napi_throw_type_error(env, nullptr,
+            "\nWrong datatype!! argument excepted to be string type\n");
+      return NULL;
+  }
+  // Reading String
+  size_t bufsize = 0;
+  size_t convertedvalue = 0;
+  status = napi_get_value_string_utf8(env, args[0], NULL,
+        bufsize, &convertedvalue);
+  assert(status == napi_ok);
+  convertedvalue = convertedvalue + 1;
+
+  char* passphraseString = new char[convertedvalue];
+  status = napi_get_value_string_utf8(env, args[0], passphraseString,
+        convertedvalue, &bufsize);
+  assert(status == napi_ok);
+  //
+  int64_t saltSize;
+  status = napi_get_value_int64(env, args[2], &saltSize);
+  assert(status == napi_ok);
+  //
+  // Checking whether is array of not
+  bool isarray = false;
+  status = napi_is_array(env, args[1], &isarray);
+  assert(status == napi_ok);
+  if (!isarray) {
+      free(obj);
+    napi_throw_type_error(env, nullptr,
+      "\nWrong data type of 1 parameter \n");
+    return NULL;
+  }
+  //
+  uint32_t sizeOfArray = 0;
+  status = napi_get_array_length(env, args[1], &sizeOfArray);
+  assert(status == napi_ok);
+  //
+  int sizeOfArrayInt = static_cast<int>(sizeOfArray);
+  int size;
+  if (sizeOfArray == saltSize) {
+    size = static_cast<int>(saltSize);
+  } else {
+    size = sizeOfArrayInt;
+  }
+  char* saltListPointer = new char[size];
+
+  napi_value saltValue;
+  
+  for (uint32_t i=0; i < (uint32_t)size; i++) {
+    status = napi_get_element(env, args[1], i, &saltValue);
+    assert(status == napi_ok);
+    uint32_t charArray;
+    status = napi_get_value_uint32(env, saltValue,&charArray);
+    assert(status == napi_ok);
+    *(saltListPointer+i) = charArray;
+  }
+  
+  obj->saltCharArrayPointer = saltListPointer;
+  //deriveEncrpPromiseExecute
+  //
+  obj->passphrase = passphraseString;
+  obj->saltSize = size;
+  //
+  napi_value resource_name;
+  napi_create_string_utf8(env, "deriveEncrp", NAPI_AUTO_LENGTH,
+  &resource_name);
+  napi_create_async_work(env, NULL, resource_name,
+  deriveEncrpPromiseExecute, deriveEncrpPromiseComplete,
+  obj, &obj->work);
+  napi_queue_async_work(env, obj->work);
+  return promise;
+}
+
+napi_value uplink_access_override_encryption_keyc(napi_env env, napi_callback_info info) {
+  napi_status status;
+  size_t argc = 4;
+  napi_value args[4];
+  napi_value promise;
+
+  accessOverRidePromiseObj *obj = (accessOverRidePromiseObj *)
+  malloc(sizeof(accessOverRidePromiseObj));
+  if (obj == NULL) {
+      free(obj);
+    napi_throw_error(env, NULL, "Memory allocation error");
+    return NULL;
+  }
+
+  status = napi_get_cb_info(env, info, &argc, args, nullptr , nullptr);
+  assert(status == napi_ok);
+  //
+  status = napi_create_promise(env, &obj->deferred, &promise);
+  if (status != napi_ok) {
+      free(obj);
+    napi_throw_error(env, NULL, "Unable to create promise");
+    return NULL;
+  }
+
+  if (argc < 4) {
+      free(obj);
+    napi_throw_type_error(env, nullptr,
+      "\nWrong number of arguments!! excepted 4 arguments\n");
+    return NULL;
+  }
+
+  napi_valuetype checktypeofinput;
+  status = napi_typeof(env, args[0], &checktypeofinput);
+  assert(status == napi_ok);
+
+  if (checktypeofinput != napi_object) {
+      free(obj);
+    napi_throw_type_error(env, nullptr,
+      "\nWrong datatype !! First argument excepted to be object type\n");
+    return NULL;
+  }
+
+  bool propertyexists = false;
+  napi_value ObjectkeyNAPI;
+  string handle = "_handle";
+  status = napi_create_string_utf8(env,
+    const_cast<char* > (handle.c_str()), NAPI_AUTO_LENGTH , &ObjectkeyNAPI);
+  assert(status == napi_ok);
+  //
+  status = napi_has_property(env, args[0],
+    ObjectkeyNAPI, &propertyexists);
+  assert(status == napi_ok);
+  if (!propertyexists) {
+      free(obj);
+    napi_throw_type_error(env, nullptr,
+      "\nInvalid Object \n");
+    return NULL;
+  }
+
+  UplinkAccess access;
+  access._handle = getHandleValue(env, args[0]);
+  if (access._handle == 0) {
+      free(obj);
+    napi_throw_type_error(env, nullptr, "\nInvalid Object \n");
+    return NULL;
+  }
+  //
+  //
+  status = napi_typeof(env, args[1], &checktypeofinput);
+  assert(status == napi_ok);
+
+  if (checktypeofinput != napi_string) {
+      free(obj);
+      napi_throw_type_error(env, nullptr,
+            "\nWrong datatype!! argument excepted to be string type\n");
+      return NULL;
+  }
+
+  size_t bufsize = 0;
+  size_t convertedvalue = 0;
+  status = napi_get_value_string_utf8(env, args[1], NULL,
+        bufsize, &convertedvalue);
+  assert(status == napi_ok);
+  convertedvalue = convertedvalue + 1;
+
+  char* bucketString = new char[convertedvalue];
+  status = napi_get_value_string_utf8(env, args[1], bucketString,
+        convertedvalue, &bufsize);
+  assert(status == napi_ok);
+  //
+  //
+  status = napi_typeof(env, args[2], &checktypeofinput);
+  assert(status == napi_ok);
+
+  if (checktypeofinput != napi_string) {
+      free(obj);
+      napi_throw_type_error(env, nullptr,
+            "\nWrong datatype!! argument excepted to be string type\n");
+      return NULL;
+  }
+
+  bufsize = 0;
+  convertedvalue = 0;
+  status = napi_get_value_string_utf8(env, args[2], NULL,
+        bufsize, &convertedvalue);
+  assert(status == napi_ok);
+  convertedvalue = convertedvalue + 1;
+
+  char* prefixString = new char[convertedvalue];
+  status = napi_get_value_string_utf8(env, args[2], prefixString,
+        convertedvalue, &bufsize);
+  assert(status == napi_ok);
+  //
+  //
+  status = napi_typeof(env, args[3], &checktypeofinput);
+  assert(status == napi_ok);
+
+  if (checktypeofinput != napi_object) {
+      free(obj);
+    napi_throw_type_error(env, nullptr,
+      "\nWrong datatype !! Fourth argument excepted to be object type\n");
+    return NULL;
+  }
+
+  propertyexists = false;
+  handle = "_handle";
+  status = napi_create_string_utf8(env,
+    const_cast<char* > (handle.c_str()), NAPI_AUTO_LENGTH , &ObjectkeyNAPI);
+  assert(status == napi_ok);
+  //
+  status = napi_has_property(env, args[3],
+    ObjectkeyNAPI, &propertyexists);
+  assert(status == napi_ok);
+  if (!propertyexists) {
+      free(obj);
+    napi_throw_type_error(env, nullptr,
+      "\nInvalid Object \n");
+    return NULL;
+  }
+
+  UplinkEncryptionKey encryptionKey;
+  encryptionKey._handle = getHandleValue(env, args[3]);
+  if (encryptionKey._handle == 0) {
+      free(obj);
+    napi_throw_type_error(env, nullptr, "\nInvalid Object \n");
+    return NULL;
+  }
+  //
+  obj->access = access;
+  obj->bucket = bucketString;
+  obj->prefix = prefixString;
+  obj->encryptionKey = encryptionKey;
+  napi_value resource_name;
+  napi_create_string_utf8(env, "accessOverRide", NAPI_AUTO_LENGTH,
+  &resource_name);
+  napi_create_async_work(env, NULL, resource_name,
+  accessOverRidePromiseExecute, accessOverRidePromiseComplete,
   obj, &obj->work);
   napi_queue_async_work(env, obj->work);
   return promise;

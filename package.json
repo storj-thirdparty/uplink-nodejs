@@ -1,6 +1,6 @@
 {
   "name": "uplink-nodejs",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Storj-NodeJS bindings package",
   "main": "uplink.js",
   "scripts": {
@@ -25,9 +25,7 @@
     "url": "https://github.com/storj-thirdparty/uplink-nodejs/issues"
   },
   "homepage": "https://github.com/storj-thirdparty/uplink-nodejs#readme",
-  "devDependencies": {
-    "eslint": "^7.6.0"
-  },
+  "devDependencies": {},
   "dependencies": {
     "bindings": "^1.5.0",
     "chai": "^4.2.0",

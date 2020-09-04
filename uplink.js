@@ -121,6 +121,15 @@ class Uplink {
         var accessResultReturn = new AccessResultStruct(access.access);
         return(accessResultReturn);
     }
+    //
+    // Input : Encryption phassphrase(String) , Array ,
+    // Output : Encryptio_Key (Object)
+    async uplinkDeriveEncryptionKey(phassphrase,salt){
+        var encryption = await uplink.derive_encryption_key(phassphrase,salt,salt.length).catch((error)=>{
+            errorhandle.storjException(error.error.code,error.error.message);
+        });
+        return encryption;
+    }
 }
 /*eslint-enable */
 //exporting function and object

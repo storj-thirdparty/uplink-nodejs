@@ -1,0 +1,5 @@
+<map id="upload_objectc" name="upload_objectc">
+<area shape="rect" id="node1" title="upload_objectc function is called from the javascript file upload_objectc starts an upload to the spe..." alt="" coords="5,31,115,57"/>
+<area shape="rect" id="node2" href="$promises__complete_8cc.html#a12290185e76500738477d7da999d97fe" title="uploadObjectComplete creates the handle for upload_object . it shows null if upload option set contai..." alt="" coords="163,5,316,32"/>
+<area shape="rect" id="node3" href="$promises__execute_8cc.html#ad2bebbe7f71894c563e078de13e3742f" title="uploadObjectExecute used to implement the uplink&#45;c library function uploadObjectExecute uploads the o..." alt="" coords="166,56,313,83"/>
+</map>
