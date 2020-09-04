@@ -75,14 +75,14 @@ async function accessshare(uplink,access){
                 //
                 console.log("\nDeriving encryption key");
                 //
-                var encryption = await libUplink.uplinkDeriveEncryptionKey("test",[4,5,6]).catch((error)=>{
+                var encryption = await libUplink.uplinkDeriveEncryptionKey("test",[4,5,6]).catch((error) => {
                     console.log("Failed to derive encryption key");
                     console.log(error);
                 });
                 //
                 console.log("Over riding encryption key");
                 //
-                await parsedSharedAccess.overrideEncryptionKey(sharePrefix.bucket,sharePrefix.prefix,encryption["encryption_key"]).catch((err)=>{
+                await parsedSharedAccess.overrideEncryptionKey(sharePrefix.bucket,sharePrefix.prefix,encryption["encryption_key"]).catch((err) => {
                     console.log("Failed to over write encryption key");
                     console.log(err);
                 });
