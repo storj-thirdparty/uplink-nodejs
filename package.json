@@ -7,7 +7,7 @@
     "test": "mocha --timeout 10000",
     "preinstall": "make",
     "install": "(node-gyp configure) && (node-gyp rebuild)",
-    "prepublish": "tsc"
+    "prepare": "tsc"
   },
   "repository": {
     "type": "git",
