@@ -1,17 +1,24 @@
-const process = require("process");
+import process from "process";
 process.chdir(__dirname);
-var uplink = require("bindings")("uplink");
-const AccessResultStruct = require('./access.js');
+const uplink = require("bindings")("uplink");
+import { AccessResultStruct } from './access.js';
 const errorhandle = require('./error.js');
 
 /*eslint-disable */
 class ListBucketsOptions {
+    cursor: string;
     constructor(cursor="") {
         this.cursor = cursor;
     }
 }
 
 class Permission {
+    allow_download: boolean;
+    allow_upload: boolean;
+    allow_list: boolean;
+    allow_delete: boolean;
+    not_before: number;
+    not_after: number;
     constructor(allow_download=false,allow_upload=false,allow_list=false,allow_delete=false,not_before=0,not_after=0) {
         this.allow_download=allow_download;
         this.allow_upload=allow_upload;
@@ -23,12 +30,15 @@ class Permission {
 }
 
 class UploadOptions {
+    expires: number;
     constructor(expires=0) {
         this.expires = expires;
     }
 }
 
 class DownloadOptions{
+    offset: number;
+    length: number;
     constructor(offset = 0,length = 0) {
     this.offset = offset;
     this.length = length; 
@@ -36,6 +46,11 @@ class DownloadOptions{
 }
 
 class ListObjectsOptions {
+    prefix: string;
+    cursor: string;
+    recursive: boolean;
+    system: boolean;
+    custom: boolean;
     constructor(prefix="",cursor="",recursive=false,system=false,custom=false) {
         this.prefix=prefix;
         this.cursor=cursor;
@@ -46,6 +61,8 @@ class ListObjectsOptions {
 }
 
 class SharePrefix {
+    bucket: string;
+    prefix: string;
     constructor(bucket="",prefix="") {
         this.bucket=bucket;
         this.prefix=prefix;
@@ -53,6 +70,8 @@ class SharePrefix {
 }
 
 class CustomMetadata {
+    entries: never[];
+    count: number;
     constructor(entries=[],count=0) {
         this.entries = entries;
         this.count = count;
@@ -60,6 +79,10 @@ class CustomMetadata {
 }
 
 class CustomMetadataEntry {
+    key: string;
+    key_length: number;
+    value: number;
+    value_length: number;
     constructor(key="", key_length=0,value=0,value_length=0) {
         this.key=key;
         this.key_length=key_length;
@@ -69,6 +92,9 @@ class CustomMetadataEntry {
 }
 
 class Config {
+    user_agent: string;
+    dial_timeout_milliseconds: number;
+    temp_directory: string;
     constructor(user_agent="", dial_timeout_milliseconds=0,temp_directory="") {
         this.user_agent=user_agent;
         this.dial_timeout_milliseconds=dial_timeout_milliseconds;
@@ -86,11 +112,11 @@ class Uplink {
     // through ParseAccess directly.
     // Input : Satellite Address (String) , API key (String) , Encryption phassphrase(String)
     // Output : Access (Object)
-    async requestAccessWithPassphrase(satelliteURL,apiKey,encryptionPassphrase){
-        var access = await uplink.request_access_with_passphrase(satelliteURL,apiKey,encryptionPassphrase).catch((error) => {
+    async requestAccessWithPassphrase(satelliteURL: string, apiKey: string,encryptionPassphrase: string): Promise<AccessResultStruct>{
+        const access = await uplink.request_access_with_passphrase(satelliteURL,apiKey,encryptionPassphrase).catch((error: any) => {
             errorhandle.storjException(error.error.code,error.error.message);
         });
-        var accessResultReturn = new AccessResultStruct(access.access);
+        const accessResultReturn = new AccessResultStruct(access.access);
         return(accessResultReturn);
     }
 
@@ -99,11 +125,11 @@ class Uplink {
     // See the note on RequestAccessWithPassphrase
     // Input : Shared string
     // Output : Access (Object)
-    async parseAccess(stringResult){
-        var parsedSharedAccess = await uplink.parse_access(stringResult).catch((error) => {
+    async parseAccess(stringResult: string): Promise<AccessResultStruct> {
+        const parsedSharedAccess = await uplink.parse_access(stringResult).catch((error: any) => {
             errorhandle.storjException(error.error.code,error.error.message);
         });
-        var accessResultReturn = new AccessResultStruct(parsedSharedAccess.access);
+        const accessResultReturn = new AccessResultStruct(parsedSharedAccess.access);
         return(accessResultReturn);
     }
 
@@ -114,17 +140,17 @@ class Uplink {
     // hrough ParseAccess directly.
     // Input : Config (Object) , Satellite Address (String) , API key (String) , Encryption phassphrase(String)
     // Output : Access (Object)
-    async configRequestAccessWithPassphrase(config,satelliteURL,apiKey,encryptionPassphrase){
-        var access = await uplink.config_request_access_with_passphrase(config,satelliteURL,apiKey,encryptionPassphrase).catch((error) => {
+    async configRequestAccessWithPassphrase(config: Config,satelliteURL: string, apiKey: string,encryptionPassphrase: string): Promise<AccessResultStruct> {
+        const access = await uplink.config_request_access_with_passphrase(config,satelliteURL,apiKey,encryptionPassphrase).catch((error: any) => {
             errorhandle.storjException(error.error.code,error.error.message);
         });
-        var accessResultReturn = new AccessResultStruct(access.access);
+        const accessResultReturn = new AccessResultStruct(access.access);
         return(accessResultReturn);
     }
 }
 /*eslint-enable */
 //exporting function and object
-module.exports = {
+export {
     Uplink ,
     DownloadOptions,
     ListBucketsOptions,

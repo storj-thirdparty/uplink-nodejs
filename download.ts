@@ -1,8 +1,11 @@
+import { ObjectInfo } from "./types";
+
 var uplink = require("bindings")("uplink");
 const errorhandle = require('./error.js');
 
-class DownloadResultStruct{
-    constructor(download){
+export class DownloadResultStruct{
+    download: any;
+    constructor(download: any){
         this.download = download;
     }
 
@@ -10,8 +13,8 @@ class DownloadResultStruct{
     // It returns the data_read in bytes and number of bytes read
     // Input : Buffer (Buf), Buffer length (Int)
     // Output : ReadResult (Int)
-    async read(buffer,length){
-        var bytesread = await uplink.download_read(this.download,buffer,length).catch((error) => {
+    async read(buffer: Buffer,length: number): Promise<number> {
+        var bytesread = await uplink.download_read(this.download,buffer,length).catch((error: any) => {
             errorhandle.storjException(error.error.code,error.error.message);
         });
         return bytesread;
@@ -20,8 +23,8 @@ class DownloadResultStruct{
     // function returns information about the downloaded object.
     // Input : None
     // Output : ObjectInfo (Object)
-    async info(){
-        var objectInfo = await uplink.download_info(this.download).catch((error) => {
+    async info(): Promise<ObjectInfo> {
+        var objectInfo = await uplink.download_info(this.download).catch((error: any) => {
             errorhandle.storjException(error.error.code,error.error.message);
         });
         return objectInfo;
@@ -30,11 +33,9 @@ class DownloadResultStruct{
     // function closes the download.
     // Input : None
     // Output : None
-    async close(){
-        await uplink.close_download(this.download).catch((error) => {
+    async close(): Promise<void>{
+        await uplink.close_download(this.download).catch((error: any) => {
             errorhandle.storjException(error.error.code,error.error.message);
         });
     }
 }
-
-module.exports = DownloadResultStruct;

@@ -1,32 +1,33 @@
-var uplink = require("bindings")("uplink");
-const ProjectResultStruct = require('./project.js');
+const uplink = require("bindings")("uplink");
+import { ProjectResultStruct } from './project.js';
 const errorhandle = require('./error.js');
 
 //
-class AccessResultStruct {
-    constructor(access){
+export class AccessResultStruct {
+    access: any;
+    constructor(access: any){
         this.access = access;
     }
 
     //function opens Storj(V3) project using access grant.
     //Input : None
     //Output : Project(Object)
-    async openProject(){
-        var project = await uplink.open_project(this.access).catch((error) => {
+    async openProject(): Promise<ProjectResultStruct>{
+        const project = await uplink.open_project(this.access).catch((error: any) => {
             errorhandle.storjException(error.error.code,error.error.message);
         });
-        var projectResultReturn = new ProjectResultStruct(project.project);
+        const projectResultReturn = new ProjectResultStruct(project.project);
         return(projectResultReturn);
     }
 
     //function opens Storj(V3) project using access grant and custom configuration.
     //Input : None
     //Output : Project(Object)
-    async configOpenProject(){
-        var project = await uplink.config_open_project(this.access).catch((error) => {
+    async configOpenProject(): Promise<ProjectResultStruct> {
+        const project = await uplink.config_open_project(this.access).catch((error: any) => {
             errorhandle.storjException(error.error.code,error.error.message);
         });
-        var projectResultReturn = new ProjectResultStruct(project.project);
+        const projectResultReturn = new ProjectResultStruct(project.project);
         return(projectResultReturn);
     }
     
@@ -39,22 +40,21 @@ class AccessResultStruct {
     //to only contain enough information to allow access to just those prefixes.
     //Input : Permission (Object) , sharePrefixListArray (Array) , sharePrefixListArraylength (Int)
     //Output : Project(Object)
-    async share(permission,sharePrefixListArray,sharePrefixListArraylength){
-        var sharedAccess = await uplink.access_share(this.access,permission,sharePrefixListArray,sharePrefixListArraylength).catch((error) => {
+    async share(permission: Record<string, any>, sharePrefixListArray: Array<any>, sharePrefixListArraylength: number): Promise<AccessResultStruct> {
+        const sharedAccess = await uplink.access_share(this.access,permission,sharePrefixListArray,sharePrefixListArraylength).catch((error: any) => {
             errorhandle.storjException(error.error.code,error.error.message);
         });
-        var sharedAccessResultReturn = new AccessResultStruct(sharedAccess.access);
+        const sharedAccessResultReturn = new AccessResultStruct(sharedAccess.access);
         return(sharedAccessResultReturn);
     }
 
     //function serializes an access grant such that it can be used later with ParseAccess or other tools.
     //Input : None
     //Output : SharedString (String)
-    async serialize(){
-        var stringResult = await uplink.access_serialize(this.access).catch((error) => {
+    async serialize(): Promise<string> {
+        const stringResult = await uplink.access_serialize(this.access).catch((error: any) => {
             errorhandle.storjException(error.error.code,error.error.message);
         });
         return stringResult;
     }
 }
-module.exports = AccessResultStruct;

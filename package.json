@@ -2,11 +2,12 @@
   "name": "uplink-nodejs",
   "version": "1.0.7",
   "description": "Storj-NodeJS bindings package",
-  "main": "uplink.js",
+  "main": "dist/uplink.js",
   "scripts": {
     "test": "mocha --timeout 10000",
     "preinstall": "make",
-    "install": "(node-gyp configure) && (node-gyp rebuild)"
+    "install": "(node-gyp configure) && (node-gyp rebuild)",
+    "prepublish": "tsc"
   },
   "repository": {
     "type": "git",
@@ -26,13 +27,15 @@
   },
   "homepage": "https://github.com/storj-thirdparty/uplink-nodejs#readme",
   "devDependencies": {
-    "eslint": "^7.6.0"
+    "@tsconfig/node12": "^1.0.7",
+    "eslint": "^7.6.0",
+    "typescript": "^4.0.5"
   },
   "dependencies": {
     "bindings": "^1.5.0",
     "chai": "^4.2.0",
     "docsify": "^4.11.4",
-    "mocha": "^8.0.1",
+    "mocha": "^8.2.1",
     "node-gyp": "^7.0.0"
   }
 }
