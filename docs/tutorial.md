@@ -253,6 +253,16 @@ await upload.write(buffer,bytesRead).then((writeResult) => {
     });
 ```
 
+### Commit Upload:
+
+Once the data has been successfully streamed, the upload needs to be committed using the following method:
+```js
+await upload.commit().then(() => {
+    ...//some_code//...
+}).catch((err) => {
+    ...//some_code//...
+});
+```
 ## Step 9: Download
   
 Downloading a file consists of following steps:
