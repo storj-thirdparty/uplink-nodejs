@@ -10,7 +10,7 @@ var storjConfig = {
   apiKey    : "",
   satelliteURL   : "us-central-1.tardigrade.io:7777",
   encryptionPassphrase  : "test",
-  bucketName   : "nodejstest",
+  bucketName   : "uplinknodejstest",
   uploadPath   : "filepath/sample.txt",
 };
 //
