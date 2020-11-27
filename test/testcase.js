@@ -17,7 +17,11 @@ var storjConfig = {
 //
 function readAPIKey(){
   try {
+    const testFolder = './';
     var filename ="secret.txt";
+    fs.readdirSync(testFolder).forEach(file => {
+      console.log(file);
+    });
     if(fs.existsSync(filename)){
       storjConfig.apiKey = fs.readFileSync(filename, {encoding:'utf8', flag:'r'});
     }else{
