@@ -22,26 +22,10 @@ steps:
   - name: 'gcr.io/${PROJECT_ID}/npm'
     entrypoint: 'bash'
     args: ["-c","make && node-gyp configure && node-gyp rebuild"]
-# install listing directory for testing
-  - name: 'gcr.io/${PROJECT_ID}/npm'
-    entrypoint: 'bash'
-    args: ["-c","ls -l -a"]
-# for testing listing files
-  - name: 'gcr.io/${PROJECT_ID}/npm'
-    entrypoint: 'bash'
-    args: ["-c","cd ./dist/ && ls -l -a && pwd && cd ../"]
-# for testing listing files
-  - name: 'gcr.io/${PROJECT_ID}/npm'
-    entrypoint: 'bash'
-    args: ["-c","cd ./test/ && ls -l -a && pwd && cd ../"]
 # install typescript
   - name: 'gcr.io/${PROJECT_ID}/npm'
     entrypoint: 'bash'
     args: ["-c","npm install -g typescript && tsc"]
-# for testing listing files
-  - name: 'gcr.io/${PROJECT_ID}/npm'
-    entrypoint: 'bash'
-    args: ["-c","cd ./dist/ && ls -l -a && pwd && cd ../"]
 # running testcases
   - name: 'gcr.io/${PROJECT_ID}/npm'
     entrypoint: 'npm'
