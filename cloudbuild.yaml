@@ -25,7 +25,7 @@ steps:
 # install typescript
   - name: 'gcr.io/${PROJECT_ID}/npm'
     entrypoint: 'npm'
-    args: ["-c","-i -g typescript"]
+    args: ["-i -g typescript"]
 # running testcases
   - name: 'gcr.io/${PROJECT_ID}/npm'
     entrypoint: 'npm'
