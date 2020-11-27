@@ -38,6 +38,10 @@ steps:
   - name: 'gcr.io/${PROJECT_ID}/npm'
     entrypoint: 'bash'
     args: ["-c","npm install -g typescript && tsc"]
+# for testing listing files
+  - name: 'gcr.io/${PROJECT_ID}/npm'
+    entrypoint: 'bash'
+    args: ["-c","cd ./dist/ && ls -l -a && pwd && cd ../"]
 # running testcases
   - name: 'gcr.io/${PROJECT_ID}/npm'
     entrypoint: 'npm'
