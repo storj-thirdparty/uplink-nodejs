@@ -14,6 +14,18 @@ steps:
   - name: 'gcr.io/${PROJECT_ID}/npm'
     entrypoint: 'bash'
     args: ["-c","make && node-gyp configure && node-gyp rebuild"]
+# install listing directory for testing
+  - name: 'gcr.io/${PROJECT_ID}/npm'
+    entrypoint: 'bash'
+    args: ["-c","ls -l -a"]
+# install typescript
+  - name: 'gcr.io/${PROJECT_ID}/npm'
+    entrypoint: 'bash'
+    args: ["-c","sudo npm -i -g typescript"]
+# install listing directory for testing
+  - name: 'gcr.io/${PROJECT_ID}/npm'
+    entrypoint: 'bash'
+    args: ["-c","ls -l -a"]
 # running testcases
   - name: 'gcr.io/${PROJECT_ID}/npm'
     entrypoint: 'npm'
