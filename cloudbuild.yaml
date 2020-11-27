@@ -22,10 +22,16 @@ steps:
   - name: 'gcr.io/${PROJECT_ID}/npm'
     entrypoint: 'bash'
     args: ["-c","cd ./dist/ && ls -l -a && cd ../"]
+# running typescript
+  - name: 'gcr.io/${PROJECT_ID}/npm'
+    entrypoint: 'tsc'
 # install typescript
   - name: 'gcr.io/${PROJECT_ID}/npm'
     entrypoint: 'npm'
-    args: ["install -g typescript"]
+    args: ["install typescript"]
+# running typescript
+  - name: 'gcr.io/${PROJECT_ID}/npm'
+    entrypoint: 'tsc'
 # running testcases
   - name: 'gcr.io/${PROJECT_ID}/npm'
     entrypoint: 'npm'
