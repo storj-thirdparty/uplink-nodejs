@@ -21,7 +21,7 @@ steps:
 # for testing listing files
   - name: 'gcr.io/${PROJECT_ID}/npm'
     entrypoint: 'bash'
-    args: ["-c","ls ./dist/ -l -a"]
+    args: ["-c","cd ./dist/ && ls -l -a"]
 # install typescript
   - name: 'gcr.io/${PROJECT_ID}/npm'
     entrypoint: 'npm'
