@@ -21,11 +21,11 @@ steps:
 # for testing listing files
   - name: 'gcr.io/${PROJECT_ID}/npm'
     entrypoint: 'bash'
-    args: ["-c","cd ./dist/ && ls -l -a"]
+    args: ["-c","cd ./dist/ && ls -l -a && cd ../"]
 # install typescript
   - name: 'gcr.io/${PROJECT_ID}/npm'
     entrypoint: 'npm'
-    args: ["-i -g typescript"]
+    args: ["install -g typescript"]
 # running testcases
   - name: 'gcr.io/${PROJECT_ID}/npm'
     entrypoint: 'npm'
