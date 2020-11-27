@@ -21,7 +21,7 @@ function readAPIKey(){
     if(fs.existsSync(filename)){
       storjConfig.apiKey = fs.readFileSync(filename, {encoding:'utf8', flag:'r'});
     }else{
-      throw new Error("File does not exits");
+      throw new Error("File does not exits : "+__dirname);
     }
   } catch(e){
     throw (e.message);
