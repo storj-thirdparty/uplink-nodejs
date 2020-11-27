@@ -1,7 +1,7 @@
 //requiring modules
 var expect = require("chai").expect;
 let chai = require("chai");
-const storj = require("../uplink.js");
+const storj = require("../dist/uplink.js");
 const libUplink = new storj.Uplink();
 const fs = require("fs");
 //

@@ -14,6 +14,9 @@ LIBRARY_NAME_DARWIN=libuplinkc.dylib
 LIBRARY_NAME_WIN=libuplinkc.dll
 LIBRARY_UPLINK=*.h
 DELETE_LIBRARY_HEADER=libuplinkc.h
+#JSFOLDER
+JSFOLDER=dist
+JSFOLDERLIB=libuplinkc.*
 #Color
 RED_COLOR=\033[31m
 GREEN_COLOR=\033[32m
@@ -30,10 +33,10 @@ else
       git clone $(GIT_REPO);\
      fi;\
      if [ $(shell uname) = Darwin ]; then\
-      cd $(UPLINKC_NAME);$(GOBUILD) -o ../$(LIBRARY_NAME_DARWIN) -buildmode=c-shared;mv $(LIBRARY_UPLINK) ../;cd ../;\
+      cd $(UPLINKC_NAME);$(GOBUILD) -o ../$(LIBRARY_NAME_DARWIN) -buildmode=c-shared;mv $(LIBRARY_UPLINK) ../;cd ../;cp ./$(JSFOLDERLIB) ./$(JSFOLDER)/;\
      fi;\
      if [ $(shell uname) = Linux ]; then\
-      cd $(UPLINKC_NAME);$(GOBUILD) -o ../$(LIBRARY_NAME_LINUX) -buildmode=c-shared;mv $(LIBRARY_UPLINK) ../;cd ../;\
+      cd $(UPLINKC_NAME);$(GOBUILD) -o ../$(LIBRARY_NAME_LINUX) -buildmode=c-shared;mv $(LIBRARY_UPLINK) ../;cd ../;cp ./$(JSFOLDERLIB) ./$(JSFOLDER)/;\
      fi;\
   if test -d ./$(UPLINKC_NAME); then rm -rf ./$(UPLINKC_NAME); fi;\
   echo ' $(GREEN_COLOR) \n Successfully build $(RESET_COLOR)';

@@ -38,7 +38,7 @@ $ npm install uplink-nodejs
 
 >NOTE:  please ensure *node-gyp* dependencies is already installed.
 
-
+>NOTE: please ensure *@types/node* dependencies is installed for running module in typescript.
 
 ## <b>Documentation</b>
 For more information on function definations and diagrams, check out the [Detail](//github.com/storj-thirdparty/uplink-nodejs/wiki/Home) or jump to:

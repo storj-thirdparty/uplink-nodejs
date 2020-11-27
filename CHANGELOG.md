@@ -1,5 +1,8 @@
 # Storj-Nodejs Changelog
 
+## [1.0.9] - 27-11-2020
+* Merged PR
+
 ## [1.0.7] - 03-09-2020
 * Added functions and updated code according to uplink-c v1.1.0 master branch
 
