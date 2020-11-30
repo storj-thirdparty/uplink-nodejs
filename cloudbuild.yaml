@@ -21,7 +21,7 @@ steps:
 # install typescript
   - name: 'gcr.io/${PROJECT_ID}/npm'
     entrypoint: 'bash'
-    args: ["-c","npm install -g typescript && tsc && cd ./test && tsc testcases.ts"]
+    args: ["-c","npm install -g typescript && tsc && cd ./test && tsc testcase.ts && cd ../"]
 # running testcases
   - name: 'gcr.io/${PROJECT_ID}/npm'
     entrypoint: 'npm'
