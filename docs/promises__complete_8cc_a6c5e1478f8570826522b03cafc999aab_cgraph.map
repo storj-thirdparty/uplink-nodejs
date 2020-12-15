@@ -1,5 +1,0 @@
-<map id="ConfigRequestAccessWithEncryptionPromiseComplete" name="ConfigRequestAccessWithEncryptionPromiseComplete">
-<area shape="rect" id="node1" title="ConfigRequestAccessWithEncryptionPromiseComplete creates the handle for config_request_access_with_pa..." alt="" coords="5,23,244,65"/>
-<area shape="rect" id="node2" href="$lib_uplink_8cc.html#a56b88ea420afbcee273bbc41eaae5780" title="napi_value createError creates NAPI type error object it returns the object for which error occurred" alt="" coords="296,5,383,32"/>
-<area shape="rect" id="node3" href="$lib_uplink_8cc.html#ad94789f70f86557aa0075b408f3e4895" title="napi_value createResult create result of new object whether it is generated or not" alt="" coords="292,56,387,83"/>
-</map>

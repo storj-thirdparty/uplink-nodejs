@@ -1,8 +1,0 @@
-<map id="config_open_projectc" name="config_open_projectc">
-<area shape="rect" id="node1" title="config_open_projectc function is called from the javascript file config_open_project opens project us..." alt="" coords="5,96,149,123"/>
-<area shape="rect" id="node2" href="$promises__complete_8cc.html#a5f37a32796714208333df7d0f34f6a1a" title="configOpenProjectPromiseComplete creates the handle for config_open_project" alt="" coords="197,23,373,65"/>
-<area shape="rect" id="node5" href="$promises__execute_8cc.html#af8c085d7d9f0eb86023aa8540b6442df" title="configOpenProjectPromiseExecute used to implement the uplink&#45;c library function configOpenProjectProm..." alt="" coords="197,89,373,130"/>
-<area shape="rect" id="node6" href="$lib_uplink_8cc.html#af3084e4f8020d09148225eb624a2fed8" title="int64_t getHandleValue handles the value type it returns integer type handlelong" alt="" coords="229,155,342,181"/>
-<area shape="rect" id="node3" href="$lib_uplink_8cc.html#a56b88ea420afbcee273bbc41eaae5780" title="napi_value createError creates NAPI type error object it returns the object for which error occurred" alt="" coords="425,5,512,32"/>
-<area shape="rect" id="node4" href="$lib_uplink_8cc.html#ad94789f70f86557aa0075b408f3e4895" title="napi_value createResult create result of new object whether it is generated or not" alt="" coords="421,56,516,83"/>
-</map>

@@ -1,5 +1,0 @@
-<map id="uploadInfoPromiseExecute" name="uploadInfoPromiseExecute">
-<area shape="rect" id="node1" title="uploadInfoPromiseExecute used to implement the uplink&#45;c library function uploadInfoPromiseExecute upl..." alt="" coords="235,5,411,32"/>
-<area shape="rect" id="node2" href="$upload__operations_8cc.html#a46ee7742d3930e8dd98064b8d1a504b9" title="upload_infoc function is called from the javascript file upload_infoc upload the information ." alt="" coords="92,5,187,32"/>
-<area shape="rect" id="node3" href="$lib_uplink_8cc.html#a2a8628282ff7cc746345d7a7afb2884d" title="This is main function 1) request_access_with_passphrase requests satellite for a new access grant usi..." alt="" coords="5,5,44,32"/>
-</map>

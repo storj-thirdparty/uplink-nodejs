@@ -82,7 +82,7 @@ napi_value stat_bucketc(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  Project project_result;
+  UplinkProject project_result;
   project_result._handle = getHandleValue(env, args[0]);
   if (project_result._handle == 0) {
       free(obj);
@@ -181,7 +181,7 @@ napi_value create_bucketc(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  Project project_result;
+  UplinkProject project_result;
   project_result._handle = getHandleValue(env, args[0]);
   if (project_result._handle == 0) {
       free(obj);
@@ -280,7 +280,7 @@ napi_value ensure_bucketc(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  Project project_result;
+  UplinkProject project_result;
   project_result._handle = getHandleValue(env, args[0]);
   if (project_result._handle == 0) {
       free(obj);
@@ -379,7 +379,7 @@ napi_value delete_bucketc(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  Project project_result;
+  UplinkProject project_result;
   project_result._handle = getHandleValue(env, args[0]);
   if (project_result._handle == 0) {
       free(obj);

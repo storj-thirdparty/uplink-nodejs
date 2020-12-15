@@ -21,7 +21,7 @@ napi_value createResult(napi_env env, string resultType, int64_t handlevalue);
 //
 napi_value createBucketResult(napi_env env, string resultType, int64_t bucketCreated, char* bucketNamePtr);
 //
-napi_value createObjectResult(napi_env env, Object* objectPtr);
+napi_value createObjectResult(napi_env env, UplinkObject* objectPtr);
 //
 napi_value list_objectsc(napi_env env, napi_callback_info info);
 //

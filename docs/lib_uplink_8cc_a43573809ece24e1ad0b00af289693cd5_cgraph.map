@@ -1,4 +1,0 @@
-<map id="itoa" name="itoa">
-<area shape="rect" id="node1" title="itoa function negative numbers are handled only with base 10. Otherwise numbers are considered unsign..." alt="" coords="5,5,48,32"/>
-<area shape="rect" id="node2" href="$lib_uplink_8cc.html#af2c0f95bdedc4d81b85aefdbf5dfce19" title="A utility function to reverse a string." alt="" coords="96,5,159,32"/>
-</map>

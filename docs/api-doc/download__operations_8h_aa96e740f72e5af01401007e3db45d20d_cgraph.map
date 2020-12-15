@@ -1,0 +1,5 @@
+<map id="close_downloadc" name="close_downloadc">
+<area shape="rect" id="node1" title="close_downloadc function is called from the javascript file close_downloadc closes the download ." alt="" coords="5,31,127,57"/>
+<area shape="rect" id="node2" href="$promises__complete_8cc.html#a2faabbd65745bb8dc0442eb2d3fd6893" title="downloadCloseOperationComplete creates the handle for close_download ." alt="" coords="175,5,395,32"/>
+<area shape="rect" id="node3" href="$promises__execute_8cc.html#a86edf44f586c4c4d9d85ff3624d6c487" title="downloadClosePromiseExecute used to implement the uplink&#45;c library function downloadClosePromiseExecu..." alt="" coords="182,56,387,83"/>
+</map>

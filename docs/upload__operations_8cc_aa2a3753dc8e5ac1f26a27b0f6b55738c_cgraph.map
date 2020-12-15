@@ -1,7 +1,0 @@
-<map id="upload_writec" name="upload_writec">
-<area shape="rect" id="node1" title="upload_writec function is called from the javascript file upload_write uploads len(p) bytes from p to..." alt="" coords="5,56,107,83"/>
-<area shape="rect" id="node2" href="$lib_uplink_8cc.html#af3084e4f8020d09148225eb624a2fed8" title="int64_t getHandleValue handles the value type it returns integer type handlelong" alt="" coords="199,5,313,32"/>
-<area shape="rect" id="node3" href="$promises__complete_8cc.html#a8431cb32cc47dc1be926446a49e41ace" title="uploadWriteOperationComplete creates the handle for upload_write" alt="" coords="155,56,357,83"/>
-<area shape="rect" id="node5" href="$promises__execute_8cc.html#a1da2882ef898e3791da3e6fcbbebbdb0" title="uploadWritePromiseExecute used to implement the uplink&#45;c library function uploadWritePromiseExecute w..." alt="" coords="163,107,349,133"/>
-<area shape="rect" id="node4" href="$lib_uplink_8cc.html#a56b88ea420afbcee273bbc41eaae5780" title="napi_value createError creates NAPI type error object it returns the object for which error occurred" alt="" coords="405,56,492,83"/>
-</map>

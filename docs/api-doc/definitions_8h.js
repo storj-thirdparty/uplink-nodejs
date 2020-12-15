@@ -1,0 +1,28 @@
+var definitions_8h =
+[
+    [ "listObjectPromiseObj", "structlist_object_promise_obj.html", "structlist_object_promise_obj" ],
+    [ "downloadInfoObj", "structdownload_info_obj.html", "structdownload_info_obj" ],
+    [ "downloadCloseObj", "structdownload_close_obj.html", "structdownload_close_obj" ],
+    [ "downloadReadObj", "structdownload_read_obj.html", "structdownload_read_obj" ],
+    [ "downloadObjectObj", "structdownload_object_obj.html", "structdownload_object_obj" ],
+    [ "uploadSetMetaObj", "structupload_set_meta_obj.html", "structupload_set_meta_obj" ],
+    [ "uploadAbortPromiseObj", "structupload_abort_promise_obj.html", "structupload_abort_promise_obj" ],
+    [ "uploadInfoObj", "structupload_info_obj.html", "structupload_info_obj" ],
+    [ "uploadCommitObj", "structupload_commit_obj.html", "structupload_commit_obj" ],
+    [ "uploadWriteObj", "structupload_write_obj.html", "structupload_write_obj" ],
+    [ "uploadobjectObj", "structuploadobject_obj.html", "structuploadobject_obj" ],
+    [ "objectOperationObj", "structobject_operation_obj.html", "structobject_operation_obj" ],
+    [ "bucketOperationObj", "structbucket_operation_obj.html", "structbucket_operation_obj" ],
+    [ "ListBucketsPromiseObj", "struct_list_buckets_promise_obj.html", "struct_list_buckets_promise_obj" ],
+    [ "closeProjectPromiseObj", "structclose_project_promise_obj.html", "structclose_project_promise_obj" ],
+    [ "configOpenProjectPromiseObj", "structconfig_open_project_promise_obj.html", "structconfig_open_project_promise_obj" ],
+    [ "openProjectPromiseObj", "structopen_project_promise_obj.html", "structopen_project_promise_obj" ],
+    [ "ParseAccessPromiseObj", "struct_parse_access_promise_obj.html", "struct_parse_access_promise_obj" ],
+    [ "RequestAccessPromiseObj", "struct_request_access_promise_obj.html", "struct_request_access_promise_obj" ],
+    [ "AccessSharePromiseObj", "struct_access_share_promise_obj.html", "struct_access_share_promise_obj" ],
+    [ "ConfigRequestAccessPromiseObj", "struct_config_request_access_promise_obj.html", "struct_config_request_access_promise_obj" ],
+    [ "accessSerializePromiseObj", "structaccess_serialize_promise_obj.html", "structaccess_serialize_promise_obj" ],
+    [ "deriveEncrpPromiseObj", "structderive_encrp_promise_obj.html", "structderive_encrp_promise_obj" ],
+    [ "accessOverRidePromiseObj", "structaccess_over_ride_promise_obj.html", "structaccess_over_ride_promise_obj" ],
+    [ "UPLINK_DISABLE_NAMESPACE_COMPAT", "definitions_8h.html#ab294e6708b3c4a5d8c8c05e647111e92", null ]
+];

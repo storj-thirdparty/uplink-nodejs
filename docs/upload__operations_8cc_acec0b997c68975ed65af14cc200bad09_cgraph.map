@@ -1,7 +1,0 @@
-<map id="upload_abortc" name="upload_abortc">
-<area shape="rect" id="node1" title="upload_abortc function is called from the javascript file upload_abortc function aborts the upload" alt="" coords="5,56,108,83"/>
-<area shape="rect" id="node2" href="$lib_uplink_8cc.html#af3084e4f8020d09148225eb624a2fed8" title="int64_t getHandleValue handles the value type it returns integer type handlelong" alt="" coords="197,5,310,32"/>
-<area shape="rect" id="node3" href="$promises__complete_8cc.html#a7861cc4b65b134dd30fc38174403814c" title="uploadAbortPromiseComplete creates the handle for upload_abort" alt="" coords="156,56,351,83"/>
-<area shape="rect" id="node5" href="$promises__execute_8cc.html#a42a9a4606811e76768d5104fb4d2d6de" title="uploadAbortPromiseExecute used to implement the uplink&#45;c library function uploadAbortPromiseExecute a..." alt="" coords="160,107,347,133"/>
-<area shape="rect" id="node4" href="$lib_uplink_8cc.html#a56b88ea420afbcee273bbc41eaae5780" title="napi_value createError creates NAPI type error object it returns the object for which error occurred" alt="" coords="399,56,485,83"/>
-</map>

@@ -1,7 +1,0 @@
-<map id="objectOperationComplete" name="objectOperationComplete">
-<area shape="rect" id="node1" title="objectOperationComplete used to implement the uplink&#45;c library function objectOperationComplete signi..." alt="" coords="5,31,173,57"/>
-<area shape="rect" id="node2" href="$lib_uplink_8cc.html#a56b88ea420afbcee273bbc41eaae5780" title="napi_value createError creates NAPI type error object it returns the object for which error occurred" alt="" coords="245,5,331,32"/>
-<area shape="rect" id="node3" href="$lib_uplink_8cc.html#a290dc984434b7938e484e2549b7447a2" title="createObjectResult create object&#39;s result whether it is generated or not" alt="" coords="221,56,355,83"/>
-<area shape="rect" id="node4" href="$lib_uplink_8cc.html#a43573809ece24e1ad0b00af289693cd5" title="itoa function negative numbers are handled only with base 10. Otherwise numbers are considered unsign..." alt="" coords="403,56,445,83"/>
-<area shape="rect" id="node5" href="$lib_uplink_8cc.html#af2c0f95bdedc4d81b85aefdbf5dfce19" title="A utility function to reverse a string." alt="" coords="493,56,556,83"/>
-</map>

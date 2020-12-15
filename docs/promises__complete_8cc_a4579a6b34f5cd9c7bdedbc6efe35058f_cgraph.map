@@ -1,4 +1,0 @@
-<map id="uploadCommitOperationComplete" name="uploadCommitOperationComplete">
-<area shape="rect" id="node1" title="uploadCommitOperationComplete creates the handle for upload_commit" alt="" coords="5,5,221,32"/>
-<area shape="rect" id="node2" href="$lib_uplink_8cc.html#a56b88ea420afbcee273bbc41eaae5780" title="napi_value createError creates NAPI type error object it returns the object for which error occurred" alt="" coords="269,5,356,32"/>
-</map>

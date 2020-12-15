@@ -69,7 +69,7 @@ napi_value download_infoc(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  Download download_result;
+  UplinkDownload download_result;
   download_result._handle = getHandleValue(env, args[0]);
   obj->download_result = download_result;
   napi_value resource_name;
@@ -143,7 +143,7 @@ napi_value close_downloadc(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  Download download_result;
+  UplinkDownload download_result;
   download_result._handle = getHandleValue(env, args[0]);
   obj->download_result = download_result;
   napi_value resource_name;
@@ -240,7 +240,7 @@ napi_value download_readc(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  Download download_resulterRef;
+  UplinkDownload download_resulterRef;
   download_resulterRef._handle = getHandleValue(env, args[0]);
 
   void* bufferPtr = NULL;
@@ -356,7 +356,7 @@ napi_value download_objectc(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  Project project_result;
+  UplinkProject project_result;
   project_result._handle = getHandleValue(env, args[0]);
   if (project_result._handle == 0) {
       free(obj);
@@ -393,7 +393,7 @@ napi_value download_objectc(napi_env env, napi_callback_info info) {
 
   } else {
     obj->downloadoptionSet = 1;
-    DownloadOptions downloadOption;
+    UplinkDownloadOptions downloadOption;
     napi_value offsetNAPI, lengthNAPI;
 
     status = napi_get_named_property(env, args[3], "offset", &offsetNAPI);

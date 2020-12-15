@@ -1,5 +1,0 @@
-<map id="stateObjectPromiseExecute" name="stateObjectPromiseExecute">
-<area shape="rect" id="node1" title="stateObjectPromiseExecute creates the handle for stat_object" alt="" coords="233,5,419,32"/>
-<area shape="rect" id="node2" href="$object__operations_8cc.html#a61f81727705cac1bbaba40e5c57909f1" title="stat_objectc function is called from the javascript file stat_objectc returns information about an ob..." alt="" coords="92,5,185,32"/>
-<area shape="rect" id="node3" href="$lib_uplink_8cc.html#a2a8628282ff7cc746345d7a7afb2884d" title="This is main function 1) request_access_with_passphrase requests satellite for a new access grant usi..." alt="" coords="5,5,44,32"/>
-</map>

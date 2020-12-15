@@ -1,0 +1,4 @@
+<map id="deleteBucketPromiseExecute" name="deleteBucketPromiseExecute">
+<area shape="rect" id="node1" title="deleteBucketPromiseExecute creates the handle for delete_bucket" alt="" coords="164,5,359,32"/>
+<area shape="rect" id="node2" href="$bucket__operations_8h.html#a0541fcd6deaa815c027a557f33c7c44f" title="delete_bucket function is called from the javascript file delete_bucket deletes the bucket...." alt="" coords="5,5,116,32"/>
+</map>

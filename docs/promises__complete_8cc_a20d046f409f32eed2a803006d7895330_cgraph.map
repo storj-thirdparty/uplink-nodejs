@@ -1,5 +1,0 @@
-<map id="bucketOperationComplete" name="bucketOperationComplete">
-<area shape="rect" id="node1" title="bucketOperationComplete used to implement the uplink&#45;c library function bucketOperationComplete opera..." alt="" coords="5,31,177,57"/>
-<area shape="rect" id="node2" href="$lib_uplink_8cc.html#afb478bdc32504777e90281f927c6be79" title="createBucketResult creates bucket result whether it is generated or not" alt="" coords="225,5,361,32"/>
-<area shape="rect" id="node3" href="$lib_uplink_8cc.html#a56b88ea420afbcee273bbc41eaae5780" title="napi_value createError creates NAPI type error object it returns the object for which error occurred" alt="" coords="250,56,337,83"/>
-</map>

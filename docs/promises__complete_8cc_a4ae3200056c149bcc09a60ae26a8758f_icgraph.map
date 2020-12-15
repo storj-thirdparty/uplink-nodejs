@@ -1,5 +1,0 @@
-<map id="listObjectPromiseComplete" name="listObjectPromiseComplete">
-<area shape="rect" id="node1" title="listObjectPromiseComplete creates the handle for list_objects it shows null if zero objects found in ..." alt="" coords="235,5,415,32"/>
-<area shape="rect" id="node2" href="$lib_uplink_8cc.html#a6a7899625837fe28695b86f71e33ecf8" title="list_objectsc creates list of objects promise function makes list_objectsc asynchronous function" alt="" coords="92,5,187,32"/>
-<area shape="rect" id="node3" href="$lib_uplink_8cc.html#a2a8628282ff7cc746345d7a7afb2884d" title="This is main function 1) request_access_with_passphrase requests satellite for a new access grant usi..." alt="" coords="5,5,44,32"/>
-</map>

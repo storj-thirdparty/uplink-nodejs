@@ -1,0 +1,4 @@
+<map id="uploadWriteOperationComplete" name="uploadWriteOperationComplete">
+<area shape="rect" id="node1" title="uploadWriteOperationComplete creates the handle for upload_write" alt="" coords="155,5,357,32"/>
+<area shape="rect" id="node2" href="$upload__operations_8h.html#aa2a3753dc8e5ac1f26a27b0f6b55738c" title="upload_writec function is called from the javascript file upload_write uploads len(p) bytes from p to..." alt="" coords="5,5,107,32"/>
+</map>

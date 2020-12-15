@@ -1,0 +1,27 @@
+var annotated_dup =
+[
+    [ "accessOverRidePromiseObj", "structaccess_over_ride_promise_obj.html", "structaccess_over_ride_promise_obj" ],
+    [ "accessSerializePromiseObj", "structaccess_serialize_promise_obj.html", "structaccess_serialize_promise_obj" ],
+    [ "AccessSharePromiseObj", "struct_access_share_promise_obj.html", "struct_access_share_promise_obj" ],
+    [ "bucketOperationObj", "structbucket_operation_obj.html", "structbucket_operation_obj" ],
+    [ "closeProjectPromiseObj", "structclose_project_promise_obj.html", "structclose_project_promise_obj" ],
+    [ "configOpenProjectPromiseObj", "structconfig_open_project_promise_obj.html", "structconfig_open_project_promise_obj" ],
+    [ "ConfigRequestAccessPromiseObj", "struct_config_request_access_promise_obj.html", "struct_config_request_access_promise_obj" ],
+    [ "deriveEncrpPromiseObj", "structderive_encrp_promise_obj.html", "structderive_encrp_promise_obj" ],
+    [ "downloadCloseObj", "structdownload_close_obj.html", "structdownload_close_obj" ],
+    [ "downloadInfoObj", "structdownload_info_obj.html", "structdownload_info_obj" ],
+    [ "downloadObjectObj", "structdownload_object_obj.html", "structdownload_object_obj" ],
+    [ "downloadReadObj", "structdownload_read_obj.html", "structdownload_read_obj" ],
+    [ "ListBucketsPromiseObj", "struct_list_buckets_promise_obj.html", "struct_list_buckets_promise_obj" ],
+    [ "listObjectPromiseObj", "structlist_object_promise_obj.html", "structlist_object_promise_obj" ],
+    [ "objectOperationObj", "structobject_operation_obj.html", "structobject_operation_obj" ],
+    [ "openProjectPromiseObj", "structopen_project_promise_obj.html", "structopen_project_promise_obj" ],
+    [ "ParseAccessPromiseObj", "struct_parse_access_promise_obj.html", "struct_parse_access_promise_obj" ],
+    [ "RequestAccessPromiseObj", "struct_request_access_promise_obj.html", "struct_request_access_promise_obj" ],
+    [ "uploadAbortPromiseObj", "structupload_abort_promise_obj.html", "structupload_abort_promise_obj" ],
+    [ "uploadCommitObj", "structupload_commit_obj.html", "structupload_commit_obj" ],
+    [ "uploadInfoObj", "structupload_info_obj.html", "structupload_info_obj" ],
+    [ "uploadobjectObj", "structuploadobject_obj.html", "structuploadobject_obj" ],
+    [ "uploadSetMetaObj", "structupload_set_meta_obj.html", "structupload_set_meta_obj" ],
+    [ "uploadWriteObj", "structupload_write_obj.html", "structupload_write_obj" ]
+];

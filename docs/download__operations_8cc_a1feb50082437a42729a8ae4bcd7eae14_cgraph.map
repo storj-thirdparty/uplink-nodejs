@@ -1,8 +1,0 @@
-<map id="download_objectc" name="download_objectc">
-<area shape="rect" id="node1" title="download_objectc function is called from the javascript file download_objectc starts download to the ..." alt="" coords="5,81,131,108"/>
-<area shape="rect" id="node2" href="$promises__complete_8cc.html#a3587d100127fa8569f0809fccd917eeb" title="downloadobjectOperationComplete creates the handle for download_object it shows null if download has ..." alt="" coords="179,31,404,57"/>
-<area shape="rect" id="node5" href="$promises__execute_8cc.html#afa39b1469b741ca47bbe184afc5bbb0b" title="downloadObjectPromiseExecute used to implement the uplink&#45;c library function downloadClosePromiseExec..." alt="" coords="186,81,397,108"/>
-<area shape="rect" id="node6" href="$lib_uplink_8cc.html#af3084e4f8020d09148225eb624a2fed8" title="int64_t getHandleValue handles the value type it returns integer type handlelong" alt="" coords="235,132,348,159"/>
-<area shape="rect" id="node3" href="$lib_uplink_8cc.html#a56b88ea420afbcee273bbc41eaae5780" title="napi_value createError creates NAPI type error object it returns the object for which error occurred" alt="" coords="456,5,543,32"/>
-<area shape="rect" id="node4" href="$lib_uplink_8cc.html#ad94789f70f86557aa0075b408f3e4895" title="napi_value createResult create result of new object whether it is generated or not" alt="" coords="452,56,547,83"/>
-</map>

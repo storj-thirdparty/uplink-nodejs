@@ -20,7 +20,7 @@
           "sources":["libUplink_win.cc" , "./functions_win/promises_execute_win.cc", "./functions_win/promises_complete_win.cc", "./functions_win/project_operations_win.cc", "./functions_win/download_operations_win.cc", "./functions_win/upload_operations_win.cc", "./functions_win/access_operations_win.cc", "./functions_win/bucket_operations_win.cc", "./functions_win/object_operations_win.cc"],
           "copies":[{
             "destination":"<(module_root_dir)/build/Release",
-            "files":["<(module_root_dir)/libuplinkc.dll","<(module_root_dir)/libuplinkc.h","<(module_root_dir)/uplink_definitions.h"]
+            "files":["<(module_root_dir)/libuplinkc.dll","<(module_root_dir)/libuplinkc.h","<(module_root_dir)/uplink_definitions.h","<(module_root_dir)/uplink_combat.h"]
           }],
           "ldflags":["-Wl,-rpath","build/Release"],  
         },

@@ -1,5 +1,0 @@
-<map id="ParseAccessPromiseComplete" name="ParseAccessPromiseComplete">
-<area shape="rect" id="node1" title="ParseAccessPromiseComplete creates the handle for parse_access." alt="" coords="5,31,208,57"/>
-<area shape="rect" id="node2" href="$lib_uplink_8cc.html#a56b88ea420afbcee273bbc41eaae5780" title="napi_value createError creates NAPI type error object it returns the object for which error occurred" alt="" coords="260,5,347,32"/>
-<area shape="rect" id="node3" href="$lib_uplink_8cc.html#ad94789f70f86557aa0075b408f3e4895" title="napi_value createResult create result of new object whether it is generated or not" alt="" coords="256,56,351,83"/>
-</map>

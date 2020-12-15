@@ -5,7 +5,7 @@ steps:
 # storing storj API key in file
   - name: gcr.io/cloud-builders/gcloud
     entrypoint: 'bash'
-    args: ["-c","gcloud secrets versions access latest --secret=StorjAPIKey >>secret.txt" ]
+    args: ["-c","gcloud secrets versions access latest --secret=StorjAPIKey >>./dist/secret.txt" ]
 # running npm install command
   - name: 'gcr.io/${PROJECT_ID}/npm'
     entrypoint: 'npm'
@@ -14,6 +14,10 @@ steps:
   - name: 'gcr.io/${PROJECT_ID}/npm'
     entrypoint: 'bash'
     args: ["-c","make && node-gyp configure && node-gyp rebuild"]
+# install typescript
+  - name: 'gcr.io/${PROJECT_ID}/npm'
+    entrypoint: 'bash'
+    args: ["-c","npm install -g typescript && tsc && tsc ./test/testcase.ts"]
 # running testcases
   - name: 'gcr.io/${PROJECT_ID}/npm'
     entrypoint: 'npm'
