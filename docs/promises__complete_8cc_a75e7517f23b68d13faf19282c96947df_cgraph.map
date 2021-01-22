@@ -1,7 +1,0 @@
-<map id="ListBucketsPromiseComplete" name="ListBucketsPromiseComplete">
-<area shape="rect" id="node1" title=" " alt="" coords="5,56,200,83"/>
-<area shape="rect" id="node2" href="$lib_uplink_8cc.html#afb478bdc32504777e90281f927c6be79" title="createBucketResult creates bucket result whether it is generated or not" alt="" coords="248,5,384,32"/>
-<area shape="rect" id="node3" href="$lib_uplink_8cc.html#a56b88ea420afbcee273bbc41eaae5780" title="napi_value createError creates NAPI type error object it returns the object for which error occurred" alt="" coords="273,56,359,83"/>
-<area shape="rect" id="node4" href="$lib_uplink_8cc.html#a43573809ece24e1ad0b00af289693cd5" title="itoa function negative numbers are handled only with base 10. Otherwise numbers are considered unsign..." alt="" coords="295,107,337,133"/>
-<area shape="rect" id="node5" href="$lib_uplink_8cc.html#af2c0f95bdedc4d81b85aefdbf5dfce19" title="A utility function to reverse a string." alt="" coords="432,107,495,133"/>
-</map>

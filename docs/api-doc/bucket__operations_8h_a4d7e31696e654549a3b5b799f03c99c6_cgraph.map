@@ -1,0 +1,5 @@
+<map id="stat_bucketc" name="stat_bucketc">
+<area shape="rect" id="node1" title="stat_bucket function is called from the javascript file stat_bucket returns information about a bucke..." alt="" coords="5,31,103,57"/>
+<area shape="rect" id="node2" href="$promises__complete_8cc.html#a20d046f409f32eed2a803006d7895330" title="bucketOperationComplete used to implement the uplink&#45;c library function bucketOperationComplete opera..." alt="" coords="159,5,331,32"/>
+<area shape="rect" id="node3" href="$promises__execute_8cc.html#ae8c96dcfcf05d7c948843a712976f645" title="stateBucketPromiseExecute creates the handle for stat_bucket" alt="" coords="151,56,339,83"/>
+</map>

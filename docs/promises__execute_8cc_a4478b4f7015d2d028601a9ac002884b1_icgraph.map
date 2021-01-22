@@ -1,5 +1,0 @@
-<map id="createBucketPromiseExecute" name="createBucketPromiseExecute">
-<area shape="rect" id="node1" title="createBucketPromiseExecute creates the handle for create_bucket" alt="" coords="251,5,445,32"/>
-<area shape="rect" id="node2" href="$bucket__operations_8cc.html#ae71b54239e182c072b747d16b057c5be" title="stat_bucket function is called from the javascript file create_bucket creates a new bucket...." alt="" coords="92,5,203,32"/>
-<area shape="rect" id="node3" href="$lib_uplink_8cc.html#a2a8628282ff7cc746345d7a7afb2884d" title="This is main function 1) request_access_with_passphrase requests satellite for a new access grant usi..." alt="" coords="5,5,44,32"/>
-</map>

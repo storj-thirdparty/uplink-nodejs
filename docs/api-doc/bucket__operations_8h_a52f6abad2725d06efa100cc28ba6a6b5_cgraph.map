@@ -1,0 +1,5 @@
+<map id="ensure_bucketc" name="ensure_bucketc">
+<area shape="rect" id="node1" title="ensure_bucket function is called from the javascript file ensure_bucket creates a new bucket and igno..." alt="" coords="5,31,120,57"/>
+<area shape="rect" id="node2" href="$promises__complete_8cc.html#a20d046f409f32eed2a803006d7895330" title="bucketOperationComplete used to implement the uplink&#45;c library function bucketOperationComplete opera..." alt="" coords="181,5,353,32"/>
+<area shape="rect" id="node3" href="$promises__execute_8cc.html#a21e7a78d78a086c464112982ccdeb36c" title="ensureBucketPromiseExecute creates the handle for ensure_bucket" alt="" coords="168,56,367,83"/>
+</map>

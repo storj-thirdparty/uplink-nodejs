@@ -1,0 +1,5 @@
+<map id="close_projectc" name="close_projectc">
+<area shape="rect" id="node1" title="close_projectc function is called from the javascript file close_projectc closes the project" alt="" coords="5,31,112,57"/>
+<area shape="rect" id="node2" href="$promises__complete_8cc.html#a28a47eeee9eefdb598c1baba2ef521ea" title="closeProjectPromiseComplete creates the handle for close_project" alt="" coords="160,5,357,32"/>
+<area shape="rect" id="node3" href="$promises__execute_8cc.html#a2612252dcc9023897df3fa76181db626" title="closeProjectPromiseExecute used to implement the uplink&#45;c library function closeProjectPromiseExecute..." alt="" coords="163,56,354,83"/>
+</map>

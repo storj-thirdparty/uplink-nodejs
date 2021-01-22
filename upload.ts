@@ -1,60 +1,125 @@
-import { ObjectInfo } from "./types";
+/* eslint-disable */
+import {ObjectInfo} from "./types";
 
-const uplink = require("bindings")("uplink");
-const errorhandle = require('./error.js');
+import bindings = require("bindings");
+const uplink = bindings("uplink");
+const errorhandle = require("./error.js");
 
-//
-export class UploadResultStruct{
+export class UploadResultStruct {
+
     upload: any;
-    constructor(upload: any){
+
+    constructor (upload: any) {
+
         this.upload = upload;
+
     }
 
-    // function uploads bytes data passed as parameter to the object's data stream.
-    // Input : Buffer (Buf), Buffer length (Int)
-    // Output : WriteResult (Int)
-    async write(buffer: Buffer,bytesread: number): Promise<Record<string, any>> {
-        const writeResult = await uplink.upload_write(this.upload,buffer,bytesread).catch((error: any) => {
-            errorhandle.storjException(error.error.code,error.error.message);
+    /*
+     * Function uploads bytes data passed as parameter to the object's data stream.
+     * Input : Buffer (Buf), Buffer length (Int)
+     * Output : WriteResult (Int)
+     */
+    async write (buffer: Buffer, bytesread: number): Promise<Record<string, any>> {
+
+        const writeResult = await uplink.upload_write(
+            this.upload,
+            buffer,
+            bytesread
+        ).catch((error: any) => {
+
+            errorhandle.storjException(
+                error.error.code,
+                error.error.message
+            );
+
         });
+
+
         return writeResult;
+
     }
 
-    // function to set custom meta information while uploading data
-    // Input : customMetadata (Object)
-    // Output : None
-    async setCustomMetadata(customMetadata: Record<string, any>): Promise<void> {
-        await uplink.upload_set_custom_metadata(this.upload,customMetadata).catch((error: any) => {
-            errorhandle.storjException(error.error.code,error.error.message);
+    /*
+     * Function to set custom meta information while uploading data
+     * Input : customMetadata (Object)
+     * Output : None
+     */
+    async setCustomMetadata (customMetadata: Record<string, any>): Promise<void> {
+
+        await uplink.upload_set_custom_metadata(
+            this.upload,
+            customMetadata
+        ).catch((error: any) => {
+
+            errorhandle.storjException(
+                error.error.code,
+                error.error.message
+            );
+
         });
+
     }
 
-    // function commits the uploaded data.
-    // Input : None
-    // Output : None
-    async commit(): Promise<void> {
+    /*
+     * Function commits the uploaded data.
+     * Input : None
+     * Output : None
+     */
+    async commit (): Promise<void> {
+
         await uplink.upload_commit(this.upload).catch((error: any) => {
-            errorhandle.storjException(error.error.code,error.error.message);
+
+            errorhandle.storjException(
+                error.error.code,
+                error.error.message
+            );
+
         });
+
     }
 
-    // function returns the last information about the uploaded object.
-    // Input : None
-    // Output : ObjectInfo
-    async info(): Promise<ObjectInfo> {
+    /*
+     * Function returns the last information about the uploaded object.
+     * Input : None
+     * Output : ObjectInfo
+     */
+    async info (): Promise<ObjectInfo> {
+
         const object = await uplink.upload_info(this.upload).catch((error: any) => {
-            errorhandle.storjException(error.error.code,error.error.message);
+
+            errorhandle.storjException(
+                error.error.code,
+                error.error.message
+            );
+
         });
+
+
         return object;
+
     }
 
-    // function aborts an ongoing upload.
-    // Input : None
-    // Output : ObjectInfo
-    async abort(): Promise<ObjectInfo> {
+    /*
+     * Function aborts an ongoing upload.
+     * Input : None
+     * Output : ObjectInfo
+     */
+    async abort (): Promise<ObjectInfo> {
+
+        /* eslint-disable max-len */
         const object = await uplink.upload_abort(this.upload).catch((error: any) => {
-            errorhandle.storjException(error.error.code,error.error.message);
+
+            errorhandle.storjException(
+                error.error.code,
+                error.error.message
+            );
+
         });
+
         return object;
+
     }
+
 }
+/* eslint-enable max-len,@typescript-eslint/no-explicit-any */

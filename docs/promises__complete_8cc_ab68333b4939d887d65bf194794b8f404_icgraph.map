@@ -1,5 +1,0 @@
-<map id="RequestAccessWithEncryptionPromiseComplete" name="RequestAccessWithEncryptionPromiseComplete">
-<area shape="rect" id="node1" title="RequestAccessWithEncryptionPromiseComplete creates the handle for request_access_with_passphrase." alt="" coords="284,5,487,47"/>
-<area shape="rect" id="node2" href="$access__operations_8cc.html#a1b24e58dd7f4843b6d3d9e1b7422158e" title="request_access_with_passphrase function is called from the javascript file request_access_with_passph..." alt="" coords="92,5,236,47"/>
-<area shape="rect" id="node3" href="$lib_uplink_8cc.html#a2a8628282ff7cc746345d7a7afb2884d" title="This is main function 1) request_access_with_passphrase requests satellite for a new access grant usi..." alt="" coords="5,13,44,39"/>
-</map>

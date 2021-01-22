@@ -1,5 +1,0 @@
-<map id="ListBucketsPromiseComplete" name="ListBucketsPromiseComplete">
-<area shape="rect" id="node1" title=" " alt="" coords="239,5,433,32"/>
-<area shape="rect" id="node2" href="$lib_uplink_8cc.html#afcbb836fc5f182f0b8f5edafea8d47e1" title="list_bucketsc provide list of buckets using promise makes list_bucketsc asynchronous" alt="" coords="92,5,191,32"/>
-<area shape="rect" id="node3" href="$lib_uplink_8cc.html#a2a8628282ff7cc746345d7a7afb2884d" title="This is main function 1) request_access_with_passphrase requests satellite for a new access grant usi..." alt="" coords="5,5,44,32"/>
-</map>

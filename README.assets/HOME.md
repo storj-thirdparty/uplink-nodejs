@@ -2,8 +2,6 @@
 
 ![](https://github.com/storj-thirdparty/uplink-nodejs/blob/master/README.assets/arch.drawio.png)
 
-
-
 ## Binding Functions
 
 >Note: All the functions, if unsuccessful, throw an exception that can be caught using try-except block. For implementation, refer to *hello_storj.js*.
@@ -32,9 +30,7 @@ An access grant is always associated with exactly one Project on one Satellite.
 |<code>api_key</code>| Storj V3 network API key |<code>string</code> |
 |<code>passphrase</code>| Any passphrase |<code>string</code> |
 
-
 ### configRequestAccessWithPassphrase(Object, String, String, String)
-
 
 #### Description
 
@@ -52,9 +48,7 @@ This function accepts 4 arguments Satellite URL, API Key, encryptionpassphrase a
 |<code>api_key</code>| Storj V3 network API key |<code>string</code> |
 |<code>passphrase</code>| Any passphrase string |<code>string</code> |
 
-
-####  parse_access(String)
-
+###  parse_access(String)
 
 #### Description
 
@@ -71,6 +65,20 @@ This should be the main way to instantiate an access grant for opening a project
 | --- | --- | --- |
 |<code>serialized_access</code>| Serialized access string returned by access.serialize function | <code>string</code> |
 
+### uplinkDeriveEncryptionKey(String, Array)
+
+#### Description:
+
+uplinkDeriveEncryptionKey function derives a salted encryption key for passphrase using the salt. This function is useful for deriving a salted encryption key for users when implementing multitenancy in a single app bucket.\
+This function takes 2 argumeents Encryption Passphrase and a byte array.
+It returns the Salted Encryption Key.
+
+#### Arguments:
+
+| arguments | Description | Type |
+| --- | --- | --- |
+| <code>encryptionPassphrase</code> | Any passphrase | <code>string</code> |
+| <code>salt</code> | Any byte array | Array |
 
 ## Access Functions
 
@@ -100,7 +108,7 @@ in the list.\
 It returns an access object on successful execution which can be used 
 to call other functions which are bound to it.
 
-##### Arguments:
+#### Arguments:
 
 | arguments | Description |  Type |
 | --- | --- | --- |
@@ -121,7 +129,7 @@ It allows you to manage buckets and objects within buckets.
 
 ### configOpenProject(Object)
 
-##### Description
+#### Description
 
 configOpenProject function opens project using access grant and config.\
 requestAccessWithPassphrase or configRequestAccessWithPassphrase function
@@ -130,11 +138,26 @@ library.\
 it returns an project object on successful execution which can be used to call 
 other functions which are bound to it.
 
-##### Arguments:
+#### Arguments:
 
 | arguments | Description |  Type |
 | --- | --- | --- |
 |<code>config</code>| Create using storj library | <code>object</code> |
+
+### overrideEncryptionKey(String, String, Object)
+
+#### Description:
+
+overrideEncryptionKey function overrides the root encryption key for the prefix in bucket with encryptionKey. This function is useful for overriding the encryption key in user-specific access grants when implementing multitenancy in a single app bucket.
+This function accepts 3 arguemnts Bucket name, Prefix and Encryption key.
+
+#### Arguments:
+
+| arguments | Description | Type |
+| --- | --- | --- |
+| <code>bucketName</code> | Storj bucket name | <code>string</code> |
+| <code>prefix</code> | Storj prefix | <code>string</code> |
+| <code>encryptionKey</code> | Create using storj library | <code>object</code> |
 
 ## Project Related Functions
 
@@ -158,7 +181,7 @@ It returns an bucket
 object on successful execution it can be used to get other properties 
 which are bound to it.
 
-##### Arguments
+#### Arguments
 
 | arguments | Description |  Type |
 | --- | --- | --- |
@@ -200,7 +223,7 @@ used to get other properties which are bound to it.
 
 ### listBuckets()
 
-##### Description
+#### Description
 
 lsitBuckets function lists buckets and openProject function is required
 as a pre-requisite for this function.\
@@ -230,7 +253,7 @@ properties which are bound to it.
 
 ### statObject(String, String)
 
-##### Description
+#### Description
 
 statObject function information about an object at the specific key and 
 openProject function is required as a pre-requisite for this function.\
@@ -238,7 +261,7 @@ This function accepts 2 argument bucket name which is access from storj configur
 It returns an objectinfo object on successful execution it can be used to get other
 properties which are bound to it.
 
-##### Arguments
+#### Arguments
 
 | arguments | Description |  Type |
 | --- | --- | --- |
@@ -247,7 +270,7 @@ properties which are bound to it.
 
 ### listObjects(String, Object)
 
-##### Description
+#### Description
 
 listObjects function lists objects, openProject function is required as a pre-requisite 
 for this function.\
@@ -256,7 +279,7 @@ which is access from storj library ListObjectsOptions defines object listing opt
 it returns an objectList object, on successful execution it can be used to get 
 other properties which are bound to it.
 
-##### Arguments
+#### Arguments
 
 | arguments | Description |  Type |
 | --- | --- | --- |
@@ -265,7 +288,7 @@ other properties which are bound to it.
 
 ### deleteObject(String, String)
 
-##### Description
+#### Description
 
 deleteObject function deletes an object at the specific key, openProject function is required as a pre-requisite 
 for this function.\
@@ -274,7 +297,7 @@ which is access from storj configuration.\
 It returns an objectinfo object, on successful 
 execution it can be used to get other properties which are bound to it.
 
-##### Arguments
+#### Arguments
 
 | arguments | Description |  Type |
 | --- | --- | --- |
@@ -283,7 +306,7 @@ execution it can be used to get other properties which are bound to it.
 
 ### uploadObject(String, String, Object)
 
-##### Description
+#### Description
 
 uploadObject function starts an upload to the specified key, openProject 
 function is required as a pre-requisite for this function.\
@@ -293,7 +316,7 @@ configuration and uploadOptions which is access from storj library UploadOptions
 contains additional options for uploading.\
 It returns an upload object, on successful execution it can be used to call other properties which are bound to it.
 
-##### Arguments
+#### Arguments
 
 | arguments | Description |  Type |
 | --- | --- | --- |
@@ -303,7 +326,7 @@ It returns an upload object, on successful execution it can be used to call othe
    
 ### downloadObject(String, String, Object)
 
-##### Description
+#### Description
 
 downloadObject function starts download to the specified key, openProject 
 function is required as a pre-requisite for this function.\
@@ -312,7 +335,7 @@ which is access from storj configuration, ObjectKey which is access from storj
 configuration and downloadOptions which is access from storj library.\
 It returns an download object, on successful execution it can be used to call other properties which are bound to it.
 
-##### Arguments
+#### Arguments
 
 | arguments | Description |  Type |
 | --- | --- | --- |
@@ -320,32 +343,28 @@ It returns an download object, on successful execution it can be used to call ot
 |<code>objectName</code>| Path to object already uploaded on storj V3 network | <code>string</code> |
 |<code>download_options</code>| Create using storj library | <code>object</code> |
 
-
 ## Upload Funcitons
 
 These functions require Upload(Object) for calling.
 
-
 ### setCustomMetadata(Object)
 
-##### Description:
+#### Description:
 
 setCustomMetadata function set custom meta information, upload_object function 
 is required as a pre-requisite for this function.\
 This function accepts 1 argument CustomMetaData object which is access from storj library CustomMetadata contains custom user metadata about the object 
 it returns an error object, if successful execution is not occurred.
 
-##### Arguments:
+#### Arguments:
 
 | arguments | Description |  Type |
 | --- | --- | --- |
 |<code>CustomMetaData</code>| Create using storj library | <code>object</code> |
 
-
-
 ### write(Buffer, Int)
 
-##### Description:
+#### Description:
 
 write function uploads len(p) bytes from p to the object's data stream It 
 returns the number of bytes written from p (0 <= n <= len(p)) and any error encountered 
@@ -355,35 +374,32 @@ for this function. This function accepts 2 argument buffer object which is acces
 Length is data file is being read it returns an writeresult object.\
 On successful execution it can be used to get other properties which are bound to it.
 
-##### Arguments:
+#### Arguments:
 
 | arguments | Description |  Type |
 | --- | --- | --- |
 |<code>buffer</code>| Buffer | <code>object</code> |
 |<code>lenght</code>| length of data to be upload on storj V3 network | <code>Int</code> |
 
-
 ### info()
 
-##### Description:
+#### Description:
 
 info function returns the last information about the uploaded object, upload_object function 
 is required as a pre-requisite for this function.\ 
 It returns an Object, on successful execution it can be use to get property which are bound to it.
 
-
 ### commit()
 
-##### Description:
+#### Description:
 
 commit function commits the uploaded data, upload_object function 
 is required as a pre-requisite for this function. it returns an error object, 
 if successful execution is not occurred.
 
-
 ### abort()
 
-##### Description:
+#### Description:
 
 abort function aborts an upload, upload_object function is required as 
 a pre-requisite for this function. it returns an error object, 
@@ -395,17 +411,15 @@ These functions require Download(Object) for calling.
 
 ### close()
 
-##### Description:
+#### Description:
 
 close function closes the download, download_object function is required as 
 a pre-requisite for this function. it returns an error object, 
 if successful execution is not occurred.
 
-
-
 ### read(Buffer, Int)
 
-##### Description:
+#### Description:
 
 read function downloads from object's data stream into bytes up to length amount, 
 download_object function is required as a pre-requisite for this function.\
@@ -413,26 +427,22 @@ This function accepts 2 argument download(object) which is buffer object which i
 It returns an readresult object,
 On successful execution it can be used to get other properties which are bound to it.
 
-
-##### Arguments:
+#### Arguments:
 
 | arguments | Description |  Type |
 | --- | --- | --- |
 |<code>buffer</code>| Buffer | <code>Int</code> |
 |<code>Length</code>| buffer length | <code>Int</code> |
 
-
 ### info()
 
-##### Description:
+#### Description:
 
 Info function returns the last information about the object, download_object 
 function is required as a pre-requisite for this function.\
  it returns an download object. On successful execution it can be used to get other properties which are bound to it.
 
-
 >NOTE: All the binding functions are asynchronous functions and return promises.
-
 
 ## Testing
 Create file with name secret.txt at uplink-nodejs module root directory and paste storj API key in same file.

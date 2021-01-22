@@ -1,4 +1,0 @@
-<map id="accessSerializePromiseComplete" name="accessSerializePromiseComplete">
-<area shape="rect" id="node1" title="accessSerializePromiseComplete creates the handle for access_serialize" alt="" coords="5,5,223,32"/>
-<area shape="rect" id="node2" href="$lib_uplink_8cc.html#a56b88ea420afbcee273bbc41eaae5780" title="napi_value createError creates NAPI type error object it returns the object for which error occurred" alt="" coords="271,5,357,32"/>
-</map>

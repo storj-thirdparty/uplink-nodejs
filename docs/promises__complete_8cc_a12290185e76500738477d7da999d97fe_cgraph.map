@@ -1,5 +1,0 @@
-<map id="uploadObjectComplete" name="uploadObjectComplete">
-<area shape="rect" id="node1" title="uploadObjectComplete creates the handle for upload_object . it shows null if upload option set contai..." alt="" coords="5,31,159,57"/>
-<area shape="rect" id="node2" href="$lib_uplink_8cc.html#a56b88ea420afbcee273bbc41eaae5780" title="napi_value createError creates NAPI type error object it returns the object for which error occurred" alt="" coords="211,5,297,32"/>
-<area shape="rect" id="node3" href="$lib_uplink_8cc.html#ad94789f70f86557aa0075b408f3e4895" title="napi_value createResult create result of new object whether it is generated or not" alt="" coords="207,56,301,83"/>
-</map>

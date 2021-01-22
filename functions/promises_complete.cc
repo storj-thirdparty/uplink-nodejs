@@ -12,10 +12,10 @@
  */
 void openProjectPromiseComplete(napi_env env, napi_status status, void* data) {
   openProjectPromiseObj *obj = (openProjectPromiseObj*)data;
-  ProjectResult project_result = obj->project_Result;
+  UplinkProjectResult project_result = obj->project_Result;
   if (project_result.project == NULL) {
     if (project_result.error != NULL) {
-      Error error_result = *(project_result.error);
+      UplinkError error_result = *(project_result.error);
       char* errorMessagePtr = error_result.message;
       char blank[] = "";
       if (errorMessagePtr == NULL) {errorMessagePtr = &blank[0];}
@@ -23,7 +23,7 @@ void openProjectPromiseComplete(napi_env env, napi_status status, void* data) {
       createError(env, error_result.code, errorMessagePtr));
     }
   } else {
-    Project project = *(project_result.project);
+    UplinkProject project = *(project_result.project);
     size_t handlevalue = project._handle;
 
     napi_value projectNAPIObj = createResult(env, "project", handlevalue);
@@ -53,8 +53,8 @@ void listObjectPromiseComplete(napi_env env, napi_status status, void* data) {
   assert(status == napi_ok);
   //
   int count = 0;
-  while (object_iterator_next(obj->objectIterator)) {
-    Object *objectPtr = object_iterator_item(obj->objectIterator);
+  while (uplink_object_iterator_next(obj->objectIterator)) {
+    UplinkObject *objectPtr = uplink_object_iterator_item(obj->objectIterator);
     napi_value objectNAPI = createObjectResult(env, objectPtr);
 
     char str[100];
@@ -65,9 +65,9 @@ void listObjectPromiseComplete(napi_env env, napi_status status, void* data) {
     count++;
   }
 
-  Error *err = object_iterator_err(obj->objectIterator);
+  UplinkError *err = uplink_object_iterator_err(obj->objectIterator);
   if (err != NULL) {
-    Error errorResult = *(err);
+    UplinkError errorResult = *(err);
     char* messagePtr = errorResult.message;
     char blank[] = "";
     if (messagePtr == NULL) {messagePtr = &blank[0];}
@@ -91,11 +91,11 @@ void listObjectPromiseComplete(napi_env env, napi_status status, void* data) {
 void downloadInfoOperationComplete(napi_env env,
 napi_status status, void* data) {
   downloadInfoObj *obj = (downloadInfoObj*)data;
-  ObjectResult object_result = obj->object_result;
+  UplinkObjectResult object_result = obj->object_result;
   //
   if (object_result.object == NULL) {
     if (object_result.error != NULL) {
-      Error error_result = *(object_result.error);
+      UplinkError error_result = *(object_result.error);
       char* errorMessagePtr = error_result.message;
       char blank[] = "";
       if (errorMessagePtr == NULL) {errorMessagePtr = &blank[0];}
@@ -125,7 +125,7 @@ napi_status status, void* data) {
   downloadCloseObj *obj = (downloadCloseObj*)data;
 
   if (obj->error_result != NULL) {
-      Error error_result = *(obj->error_result);
+      UplinkError error_result = *(obj->error_result);
       char* errorMessagePtr = error_result.message;
       char blank[] = "";
       if (errorMessagePtr == NULL) {errorMessagePtr = &blank[0];}
@@ -154,10 +154,10 @@ napi_status status, void* data) {
 void downloadReadOperationComplete(napi_env env,
 napi_status status, void* data) {
   downloadReadObj *obj = (downloadReadObj*)data;
-  ReadResult read_result = obj->read_result;
+  UplinkReadResult read_result = obj->read_result;
 
   if (read_result.error != NULL) {
-      Error error_result = *(read_result.error);
+      UplinkError error_result = *(read_result.error);
       char* errorMessagePtr = error_result.message;
       char blank[] = "";
       if (errorMessagePtr == NULL) {errorMessagePtr = &blank[0];}
@@ -197,10 +197,10 @@ it shows null if download has zero options.
 void downloadObjectOperationComplete(napi_env env,
 napi_status status, void* data) {
   downloadObjectObj *obj = (downloadObjectObj*)data;
-  DownloadResult download_result = obj->download_result;
+  UplinkDownloadResult download_result = obj->download_result;
   if (download_result.download == NULL) {
     if (download_result.error != NULL) {
-      Error error_result = *(download_result.error);
+      UplinkError error_result = *(download_result.error);
       char* errorMessagePtr = error_result.message;
       char blank[] = "";
       if (errorMessagePtr == NULL) {errorMessagePtr = &blank[0];}
@@ -208,7 +208,7 @@ napi_status status, void* data) {
       createError(env, error_result.code, errorMessagePtr));
     }
   } else {
-    Download download = *(download_result.download);
+    UplinkDownload download = *(download_result.download);
     size_t handlevalue = download._handle;
 
     napi_value downloadResultNAPI = createResult(env, "download", handlevalue);
@@ -229,9 +229,9 @@ napi_status status, void* data) {
 void uploadSetMetaPromiseComplete(napi_env env,
 napi_status status, void* data) {
   uploadSetMetaObj *obj = (uploadSetMetaObj*)data;
-  Error* error_result = obj->error_result;
+  UplinkError* error_result = obj->error_result;
   if (error_result != NULL) {
-    Error errorResult = *(error_result);
+    UplinkError errorResult = *(error_result);
     char* errorMessagePtr = errorResult.message;
     char blank[] = "";
     if (errorMessagePtr == NULL) {errorMessagePtr = &blank[0];}
@@ -258,9 +258,9 @@ napi_status status, void* data) {
  */
 void uploadAbortPromiseComplete(napi_env env, napi_status status, void* data) {
   uploadAbortPromiseObj *obj = (uploadAbortPromiseObj*)data;
-  Error* error_result = obj->error_result;
+  UplinkError* error_result = obj->error_result;
   if (error_result != NULL) {
-    Error errorResult = *(error_result);
+    UplinkError errorResult = *(error_result);
     char* errorMessagePtr = errorResult.message;
     char blank[] = "";
     if (errorMessagePtr == NULL) {errorMessagePtr = &blank[0];}
@@ -287,11 +287,11 @@ void uploadAbortPromiseComplete(napi_env env, napi_status status, void* data) {
  */
 void uploadInfoOperationComplete(napi_env env, napi_status status, void* data) {
   uploadInfoObj *obj = (uploadInfoObj*)data;
-  ObjectResult object_result = obj->object_result;
+  UplinkObjectResult object_result = obj->object_result;
   //
   if (object_result.object == NULL) {
     if (object_result.error != NULL) {
-      Error error_result = *(object_result.error);
+      UplinkError error_result = *(object_result.error);
       char* errorMessagePtr = error_result.message;
       char blank[] = "";
       if (errorMessagePtr == NULL) {errorMessagePtr = &blank[0];}
@@ -320,7 +320,7 @@ napi_status status, void* data) {
   uploadCommitObj *obj = (uploadCommitObj*)data;
 
   if (obj->error_result != NULL) {
-      Error error_result = *(obj->error_result);
+      UplinkError error_result = *(obj->error_result);
       char* errorMessagePtr = error_result.message;
       char blank[] = "";
       if (errorMessagePtr == NULL) {errorMessagePtr = &blank[0];}
@@ -348,10 +348,10 @@ napi_status status, void* data) {
 void uploadWriteOperationComplete(napi_env env,
 napi_status status, void* data) {
   uploadWriteObj *obj = (uploadWriteObj*)data;
-  WriteResult write_result = obj->write_result;
+  UplinkWriteResult write_result = obj->write_result;
 
   if (write_result.error != NULL) {
-      Error error_result = *(write_result.error);
+      UplinkError error_result = *(write_result.error);
       char* errorMessagePtr = error_result.message;
       char blank[] = "";
       if (errorMessagePtr == NULL) {errorMessagePtr = &blank[0];}
@@ -388,10 +388,10 @@ napi_status status, void* data) {
  */
 void uploadObjectComplete(napi_env env, napi_status status, void* data) {
   uploadobjectObj *obj = (uploadobjectObj*)data;
-  UploadResult upload_result = obj->upload_result;
+  UplinkUploadResult upload_result = obj->upload_result;
   if (upload_result.upload == NULL) {
     if (upload_result.error != NULL) {
-      Error error_result = *(upload_result.error);
+      UplinkError error_result = *(upload_result.error);
       char* errorMessagePtr = error_result.message;
       char blank[] = "";
       if (errorMessagePtr == NULL) {errorMessagePtr = &blank[0];}
@@ -399,7 +399,7 @@ void uploadObjectComplete(napi_env env, napi_status status, void* data) {
       createError(env, error_result.code, errorMessagePtr));
     }
   } else {
-    Upload upload = *(upload_result.upload);
+    UplinkUpload upload = *(upload_result.upload);
     size_t handlevalue = upload._handle;
 
     napi_value uploadResultNAPI = createResult(env, "upload", handlevalue);
@@ -420,23 +420,37 @@ void uploadObjectComplete(napi_env env, napi_status status, void* data) {
   
  */
 void objectOperationComplete(napi_env env, napi_status status, void* data) {
+  napi_value objectNAPI;
   objectOperationObj *obj = (objectOperationObj*)data;
-  ObjectResult object_result = obj->object_result;
-  if (object_result.object == NULL) {
-    if (object_result.error != NULL) {
-      Error error_result = *(object_result.error);
-      char* errorMessagePtr = error_result.message;
-      char blank[] = "";
-      if (errorMessagePtr == NULL) {errorMessagePtr = &blank[0];}
-      status = napi_reject_deferred(env, obj->deferred,
-      createError(env, error_result.code, errorMessagePtr));
-    }
-  } else {
-    napi_value objectNAPI = createObjectResult(env, object_result.object);
-    //
-    status = napi_resolve_deferred(env, obj->deferred, objectNAPI);
-    //
+  UplinkObjectResult object_result = obj->object_result;
+
+  if (object_result.error != NULL) {
+    UplinkError error_result = *(object_result.error);
+    char* errorMessagePtr = error_result.message;
+    char blank[] = "";
+    if (errorMessagePtr == NULL) {errorMessagePtr = &blank[0];}
+    status = napi_reject_deferred(env, obj->deferred,
+    createError(env, error_result.code, errorMessagePtr));
   }
+  else if (object_result.object != NULL) {
+      //
+      objectNAPI = createObjectResult(env, object_result.object);
+      status = napi_resolve_deferred(env, obj->deferred, objectNAPI);
+  }
+  else {
+      //
+      UplinkObject uplinkobject;
+      uplinkobject.key=const_cast<char*>("");
+      uplinkobject.is_prefix=false;
+      uplinkobject.system.created=0;
+      uplinkobject.system.expires=0;
+      uplinkobject.system.content_length=0;
+      uplinkobject.custom.entries=NULL;
+      uplinkobject.custom.count=0;
+      objectNAPI = createObjectResult(env, &uplinkobject);
+      status = napi_resolve_deferred(env, obj->deferred, objectNAPI);
+  }
+  //
   if (status != napi_ok) {
     napi_throw_error(env, NULL, "Failed to return promise");
   }
@@ -450,25 +464,34 @@ void objectOperationComplete(napi_env env, napi_status status, void* data) {
   
  */
 void bucketOperationComplete(napi_env env, napi_status status, void* data) {
+  napi_value bucketNAPI;
   bucketOperationObj *obj = (bucketOperationObj*)data;
-  BucketResult bucket_result = obj->bucket_Result;
-  //if (bucket_result.bucket == NULL) {
-    if (bucket_result.error != NULL) {
-      Error error_result = *(bucket_result.error);
-      char* errorMessagePtr = error_result.message;
-      char blank[] = "";
-      if (errorMessagePtr == NULL) {errorMessagePtr = &blank[0];}
-      status = napi_reject_deferred(env, obj->deferred,
-      createError(env, error_result.code, errorMessagePtr));
-    }
- // } 
-  else {
-    Bucket bucket = *(bucket_result.bucket);
+  UplinkBucketResult bucket_result = obj->bucket_Result;
+  //
+  if (bucket_result.error != NULL) {
+    UplinkError error_result = *(bucket_result.error);
+    char* errorMessagePtr = error_result.message;
+    char blank[] = "";
+    if (errorMessagePtr == NULL) {errorMessagePtr = &blank[0];}
+    status = napi_reject_deferred(env, obj->deferred,
+    createError(env, error_result.code, errorMessagePtr));
+  } 
+  else if (bucket_result.bucket != NULL) {
+    //
+    UplinkBucket bucket = *(bucket_result.bucket);
     char* bucketNamePtr = bucket.name;
     int64_t bucketCreated = bucket.created;
-    napi_value bucketNAPI = createBucketResult(env,
+    bucketNAPI = createBucketResult(env,
     "bucket", bucketCreated, bucketNamePtr);
-
+    status = napi_resolve_deferred(env, obj->deferred, bucketNAPI);
+  }
+  else {
+    //
+    UplinkBucket bucket;
+    bucket.name=const_cast<char*>("");
+    bucket.created=0;
+    bucketNAPI = createBucketResult(env,
+    "bucket", bucket.created, bucket.name);
     status = napi_resolve_deferred(env, obj->deferred, bucketNAPI);
   }
   if (status != napi_ok) {
@@ -485,7 +508,7 @@ void bucketOperationComplete(napi_env env, napi_status status, void* data) {
 void ListBucketsPromiseComplete(napi_env env, napi_status status, void* data) {
   ListBucketsPromiseObj *obj = (ListBucketsPromiseObj*)data;
 
-  BucketIterator *bucket_resultIterator = obj->bucket_resultIterator;
+  UplinkBucketIterator *bucket_resultIterator = obj->bucket_resultIterator;
 
   napi_value BucketList, errorObject, returnObject;
 
@@ -499,8 +522,8 @@ void ListBucketsPromiseComplete(napi_env env, napi_status status, void* data) {
   assert(status == napi_ok);
   
   int count = 0;
-  while (bucket_iterator_next(bucket_resultIterator)) {
-    Bucket *bucket_result = bucket_iterator_item(bucket_resultIterator);
+  while (uplink_bucket_iterator_next(bucket_resultIterator)) {
+    UplinkBucket *bucket_result = uplink_bucket_iterator_item(bucket_resultIterator);
 
     char* bucketNamePtr = bucket_result->name;
 
@@ -514,15 +537,15 @@ void ListBucketsPromiseComplete(napi_env env, napi_status status, void* data) {
       BucketInfoObj);
     assert(status == napi_ok);
 
-    free_bucket(bucket_result);
+    uplink_free_bucket(bucket_result);
     count++;
   }
 
-  Error *err = bucket_iterator_err(bucket_resultIterator);
+  UplinkError *err = uplink_bucket_iterator_err(bucket_resultIterator);
 
   if (err != NULL) {
 //
-    Error error_result = *(err);
+    UplinkError error_result = *(err);
     char* errorMessagePtr = error_result.message;
     char blank[] = "";
       if (errorMessagePtr == NULL) {errorMessagePtr = &blank[0];}
@@ -550,9 +573,9 @@ void ListBucketsPromiseComplete(napi_env env, napi_status status, void* data) {
  */
 void closeProjectPromiseComplete(napi_env env, napi_status status, void* data) {
   closeProjectPromiseObj *obj = (closeProjectPromiseObj*)data;
-  Error* error_result = obj->error_result;
+  UplinkError* error_result = obj->error_result;
   if (error_result != NULL) {
-    Error errorResult = *(error_result);
+    UplinkError errorResult = *(error_result);
     char* errorMessagePtr = errorResult.message;
     char blank[] = "";
       if (errorMessagePtr == NULL) {errorMessagePtr = &blank[0];}
@@ -580,10 +603,10 @@ void closeProjectPromiseComplete(napi_env env, napi_status status, void* data) {
 void configOpenProjectPromiseComplete(napi_env env,
 napi_status status, void* data) {
   configOpenProjectPromiseObj *obj = (configOpenProjectPromiseObj*)data;
-  ProjectResult project_result = obj->project_Result;
+  UplinkProjectResult project_result = obj->project_Result;
   if (project_result.project == NULL) {
     if (project_result.error != NULL) {
-      Error error_result = *(project_result.error);
+      UplinkError error_result = *(project_result.error);
       char* errorMessagePtr = error_result.message;
       char blank[] = "";
       if (errorMessagePtr == NULL) {errorMessagePtr = &blank[0];}
@@ -591,7 +614,7 @@ napi_status status, void* data) {
       createError(env, error_result.code, errorMessagePtr));
     }
   } else {
-    Project project = *(project_result.project);
+    UplinkProject project = *(project_result.project);
     size_t handlevalue = project._handle;
 
     napi_value projectNAPIObj = createResult(env, "project", handlevalue);
@@ -614,10 +637,10 @@ napi_status status, void* data) {
 void ParseAccessPromiseComplete(napi_env env,
     napi_status status, void* data) {
     ParseAccessPromiseObj* obj = (ParseAccessPromiseObj*)data;
-    AccessResult access_Result = obj->access_Result;
+    UplinkAccessResult access_Result = obj->access_Result;
     if (access_Result.access == NULL) {
         if (access_Result.error != NULL) {
-            Error error_result = *(access_Result.error);
+            UplinkError error_result = *(access_Result.error);
             char* errorMessagePtr = error_result.message;
             char blank[] = "";
             if (errorMessagePtr == NULL) {errorMessagePtr = &blank[0];}
@@ -625,7 +648,7 @@ void ParseAccessPromiseComplete(napi_env env,
                 createError(env, error_result.code, errorMessagePtr));
         }
     } else {
-        Access access = *(access_Result.access);
+        UplinkAccess access = *(access_Result.access);
         size_t handlevalue = access._handle;
 
         napi_value AccessNAPIObj = createResult(env, "access", handlevalue);
@@ -646,10 +669,10 @@ void ParseAccessPromiseComplete(napi_env env,
  */
 void ShareAccessPromiseComplete(napi_env env, napi_status status, void* data) {
   AccessSharePromiseObj *obj = (AccessSharePromiseObj*)data;
-  AccessResult access_Result = obj->access_Result;
+  UplinkAccessResult access_Result = obj->access_Result;
   if (access_Result.access == NULL) {
     if (access_Result.error != NULL) {
-      Error error_result = *(access_Result.error);
+      UplinkError error_result = *(access_Result.error);
       char* errorMessagePtr = error_result.message;
       char blank[] = "";
       if (errorMessagePtr == NULL) {errorMessagePtr = &blank[0];}
@@ -657,7 +680,7 @@ void ShareAccessPromiseComplete(napi_env env, napi_status status, void* data) {
       createError(env, error_result.code, errorMessagePtr));
     }
   } else {
-    Access access = *(access_Result.access);
+    UplinkAccess access = *(access_Result.access);
     size_t handlevalue = access._handle;
 
     napi_value AccessNAPIObj = createResult(env, "access", handlevalue);
@@ -678,10 +701,10 @@ void ShareAccessPromiseComplete(napi_env env, napi_status status, void* data) {
 void ConfigRequestAccessWithEncryptionPromiseComplete
 (napi_env env, napi_status status, void* data) {
   ConfigRequestAccessPromiseObj *obj = (ConfigRequestAccessPromiseObj*)data;
-  AccessResult access_Result = obj->access_Result;
+  UplinkAccessResult access_Result = obj->access_Result;
   if (access_Result.access == NULL) {
     if (access_Result.error != NULL) {
-      Error error_result = *(access_Result.error);
+      UplinkError error_result = *(access_Result.error);
       char* errorMessagePtr = error_result.message;
       char blank[] = "";
       if (errorMessagePtr == NULL) {errorMessagePtr = &blank[0];}
@@ -689,7 +712,7 @@ void ConfigRequestAccessWithEncryptionPromiseComplete
       createError(env, error_result.code, errorMessagePtr));
     }
   } else {
-    Access access = *(access_Result.access);
+    UplinkAccess access = *(access_Result.access);
     size_t handlevalue = access._handle;
 
     napi_value AccessNAPIObj = createResult(env, "access", handlevalue);
@@ -713,10 +736,10 @@ void ConfigRequestAccessWithEncryptionPromiseComplete
 void RequestAccessWithEncryptionPromiseComplete
 (napi_env env, napi_status status, void* data) {
   RequestAccessPromiseObj *obj = (RequestAccessPromiseObj*)data;
-  AccessResult access_Result = obj->access_Result;
+  UplinkAccessResult access_Result = obj->access_Result;
   if (access_Result.access == NULL) {
     if (access_Result.error != NULL) {
-      Error error_result = *(access_Result.error);
+      UplinkError error_result = *(access_Result.error);
       char* errorMessagePtr = error_result.message;
       char blank[] = "";
       if (errorMessagePtr == NULL) {errorMessagePtr = &blank[0];}
@@ -724,7 +747,7 @@ void RequestAccessWithEncryptionPromiseComplete
       createError(env, error_result.code, errorMessagePtr));
     }
   } else {
-    Access access = *(access_Result.access);
+    UplinkAccess access = *(access_Result.access);
     size_t handlevalue = access._handle;
 
     napi_value AccessNAPIObj = createResult(env, "access", handlevalue);
@@ -748,10 +771,10 @@ void RequestAccessWithEncryptionPromiseComplete
 void accessSerializePromiseComplete(napi_env env,
 napi_status status, void* data) {
   accessSerializePromiseObj *obj = (accessSerializePromiseObj*)data;
-  StringResult string_result = obj->string_result;
+  UplinkStringResult string_result = obj->string_result;
 
   if (string_result.error != NULL) {
-    Error errorResult = *(string_result.error);
+    UplinkError errorResult = *(string_result.error);
     char* errorMessagePtr = errorResult.message;
     char blank[] = "";
     if (errorMessagePtr == NULL) {errorMessagePtr = &blank[0];}
@@ -766,6 +789,64 @@ napi_status status, void* data) {
     assert(status == napi_ok);
     //
     status = napi_resolve_deferred(env, obj->deferred, stringNAPI);
+  }
+  if (status != napi_ok) {
+    napi_throw_error(env, NULL, "Failed to return promise");
+  }
+  napi_delete_async_work(env, obj->work);
+  free(obj);
+}
+
+void deriveEncrpPromiseComplete(napi_env env,
+napi_status status, void* data) {
+    deriveEncrpPromiseObj* obj = (deriveEncrpPromiseObj*)data;
+    UplinkEncryptionKeyResult encryption_Result = obj->encryptionResult;
+    if (encryption_Result.encryption_key == NULL) {
+        if (encryption_Result.error != NULL) {
+            UplinkError error_result = *(encryption_Result.error);
+            char* errorMessagePtr = error_result.message;
+            char blank[] = "";
+            if (errorMessagePtr == NULL) { errorMessagePtr = &blank[0]; }
+            status = napi_reject_deferred(env, obj->deferred,
+            createError(env, error_result.code, errorMessagePtr));
+        }
+    } else {
+        UplinkEncryptionKey encryption_key = *(encryption_Result.encryption_key);
+        size_t handlevalue = encryption_key._handle;
+
+        napi_value EncryptionNAPIObj = createResult(env, "encryption_key", handlevalue);
+ 
+        status = napi_resolve_deferred(env, obj->deferred, EncryptionNAPIObj
+        
+        );
+    }
+    //
+    if (status != napi_ok) {
+        napi_throw_error(env, NULL, "Failed to return promise");
+    }
+    //
+    napi_delete_async_work(env, obj->work);
+    free(obj);
+}
+
+void accessOverRidePromiseComplete(napi_env env,
+napi_status status, void* data) {
+    accessOverRidePromiseObj *obj = (accessOverRidePromiseObj*)data;
+
+  if (obj->error_result != NULL) {
+      UplinkError error_result = *(obj->error_result);
+      char* errorMessagePtr = error_result.message;
+      char blank[] = "";
+      if (errorMessagePtr == NULL) {errorMessagePtr = &blank[0];}
+      status = napi_reject_deferred(env, obj->deferred,
+      createError(env, error_result.code, errorMessagePtr));
+  } else {
+    //
+    napi_value undefined;
+    status = napi_get_undefined(env, &undefined);
+    assert(status == napi_ok);
+    //
+    status = napi_resolve_deferred(env, obj->deferred, undefined);
   }
   if (status != napi_ok) {
     napi_throw_error(env, NULL, "Failed to return promise");

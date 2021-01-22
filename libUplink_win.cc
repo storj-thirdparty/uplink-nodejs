@@ -202,7 +202,7 @@ napi_value list_objectsc(napi_env env, napi_callback_info info) {
         napi_throw_type_error(env, nullptr, "\nInvalid Object \n");
         return NULL;
     }
-    Project project_result;
+    UplinkProject project_result;
     project_result._handle = getHandleValue(env, args[0]);
     if (project_result._handle == 0) {
         free(obj);
@@ -210,8 +210,8 @@ napi_value list_objectsc(napi_env env, napi_callback_info info) {
         return NULL;
     }
 
-    ListObjectsOptions listObjectsOptions;
-    ObjectIterator* objectIterator = nullptr;
+    UplinkListObjectsOptions listObjectsOptions;
+    UplinkObjectIterator* objectIterator = nullptr;
     if (checktypeofinput == napi_null) {
         obj->listObjectSet = 0;
     } else if (checktypeofinput == napi_object) {
@@ -327,7 +327,7 @@ napi_value list_bucketsc(napi_env env, napi_callback_info info) {
             "\nWrong datatype!! Second argument excepted to be object type or null\n");
         return NULL;
     }
-    ListBucketsOptions listBucketsOptions;
+    UplinkListBucketsOptions listBucketsOptions;
     if (checktypeofinput == napi_null) {
         listBucketsOptions = {};
         obj->listBucketOptionSet = 0;
@@ -373,7 +373,7 @@ napi_value list_bucketsc(napi_env env, napi_callback_info info) {
         return NULL;
     }
 
-    Project project_result;
+    UplinkProject project_result;
     project_result._handle = getHandleValue(env, args[0]);
     if (project_result._handle == 0) {
         free(obj);
@@ -413,14 +413,14 @@ napi_value createBucketResult(napi_env env, string resultType,
 }
 
 napi_value createObjectResult(napi_env env,
-    Object* objectPtr) {
+    UplinkObject* objectPtr) {
     napi_value returnObject, objectNAPI,
     SystemMetadataNAPI, CustomMetadataNAPI, CustomMetadataEntryNAPI;
     napi_status status;
     status = napi_create_object(env, &returnObject);
     assert(status == napi_ok);
     if (objectPtr != NULL) {
-        Object object_result = *(objectPtr);
+        UplinkObject object_result = *(objectPtr);
         status = napi_create_object(env, &objectNAPI);
         assert(status == napi_ok);
         status = napi_create_object(env, &SystemMetadataNAPI);
@@ -442,9 +442,9 @@ napi_value createObjectResult(napi_env env,
             assert(status == napi_ok);
         }
         //
-        SystemMetadata systemMetadata;
-        CustomMetadata customMetadata;
-        CustomMetadataEntry customMetadataEntry;
+        UplinkSystemMetadata systemMetadata;
+        UplinkCustomMetadata customMetadata;
+        UplinkCustomMetadataEntry customMetadataEntry;
         systemMetadata = object_result.system;
         customMetadata = object_result.custom;
         napi_value entriesArray;
@@ -452,7 +452,7 @@ napi_value createObjectResult(napi_env env,
         assert(status == napi_ok);
         char empty[] = "";
         if (customMetadata.count > 0) {
-            CustomMetadataEntry* CustomMetadataEntryListPointer =
+            UplinkCustomMetadataEntry* CustomMetadataEntryListPointer =
                 customMetadata.entries;
             for (uint32_t j = 0; j < customMetadata.count; j++) {
                 customMetadataEntry = *(CustomMetadataEntryListPointer + j);
@@ -670,6 +670,14 @@ napi_property_descriptor delete_object = DECLARE_NAPI_METHOD("delete_object", de
  
   napi_property_descriptor upload_set_custom_metadata = DECLARE_NAPI_METHOD("upload_set_custom_metadata", upload_set_custom_metadatac);
   status = napi_define_properties(env, exports, 1, &upload_set_custom_metadata);
+  assert(status == napi_ok);
+  
+  napi_property_descriptor uplink_derive_encryption_key = DECLARE_NAPI_METHOD("derive_encryption_key", uplink_derive_encryption_keyc);
+  status = napi_define_properties(env, exports, 1, &uplink_derive_encryption_key);
+  assert(status == napi_ok);
+
+  napi_property_descriptor uplink_access_override_encryption_key = DECLARE_NAPI_METHOD("access_override_encryption_key", uplink_access_override_encryption_keyc);
+  status = napi_define_properties(env, exports, 1, &uplink_access_override_encryption_key);
   assert(status == napi_ok);
 
   loaddll();

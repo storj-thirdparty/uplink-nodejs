@@ -1,8 +1,0 @@
-<map id="open_projectc" name="open_projectc">
-<area shape="rect" id="node1" title="open_projectc function is called from the javascript file open_projectc opens the project" alt="" coords="5,56,108,83"/>
-<area shape="rect" id="node2" href="$lib_uplink_8cc.html#af3084e4f8020d09148225eb624a2fed8" title="int64_t getHandleValue handles the value type it returns integer type handlelong" alt="" coords="197,5,310,32"/>
-<area shape="rect" id="node3" href="$promises__complete_8cc.html#abbd7d817a0fbb3730accb682e09951d9" title="openProjectPromiseComplete creates the handle for open_project" alt="" coords="156,56,351,83"/>
-<area shape="rect" id="node6" href="$promises__execute_8cc.html#a2d0a49dcee3edd0c8ab14bedd0bc7000" title="openProjectPromiseExecute function called when async operation get complete and convert c data type i..." alt="" coords="160,107,347,133"/>
-<area shape="rect" id="node4" href="$lib_uplink_8cc.html#a56b88ea420afbcee273bbc41eaae5780" title="napi_value createError creates NAPI type error object it returns the object for which error occurred" alt="" coords="403,31,489,57"/>
-<area shape="rect" id="node5" href="$lib_uplink_8cc.html#ad94789f70f86557aa0075b408f3e4895" title="napi_value createResult create result of new object whether it is generated or not" alt="" coords="399,81,493,108"/>
-</map>

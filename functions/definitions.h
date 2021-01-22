@@ -1,6 +1,8 @@
 #ifndef DEFINITIONS_H
 #define DEFINITIONS_H
 
+#define UPLINK_DISABLE_NAMESPACE_COMPAT NULL
+
 #include <assert.h>
 #include <node_api.h>
 #include <stdio.h>
@@ -18,10 +20,10 @@ using std::swap;
   napi_deferred deferred;
   napi_async_work work;
   napi_value result;
-  Project project_result;
+  UplinkProject project_result;
   char *bucketName;
-  ObjectIterator *objectIterator;
-  ListObjectsOptions list_object_options;
+  UplinkObjectIterator *objectIterator;
+  UplinkListObjectsOptions list_object_options;
   int listObjectSet;
 } listObjectPromiseObj;
 
@@ -31,8 +33,8 @@ using std::swap;
   napi_deferred deferred;
   napi_async_work work;
   napi_value result;
-  Download download_result;
-  ObjectResult object_result;
+  UplinkDownload download_result;
+  UplinkObjectResult object_result;
 } downloadInfoObj;
 
 //
@@ -41,8 +43,8 @@ using std::swap;
   napi_deferred deferred;
   napi_async_work work;
   napi_value result;
-  Download download_result;
-  Error* error_result;
+  UplinkDownload download_result;
+  UplinkError* error_result;
 } downloadCloseObj;
 
 //
@@ -53,8 +55,8 @@ using std::swap;
   napi_value result;
   void *bufferPtr;
   size_t bufferlength;
-  Download download_result;
-  ReadResult read_result;
+  UplinkDownload download_result;
+  UplinkReadResult read_result;
 } downloadReadObj;
 
 //
@@ -65,9 +67,9 @@ using std::swap;
   napi_value result;
   char* bucketname;
   char* objectkey;
-  Project project;
-  DownloadResult download_result;
-  DownloadOptions downloadOption;
+  UplinkProject project;
+  UplinkDownloadResult download_result;
+  UplinkDownloadOptions downloadOption;
   int downloadoptionSet;
 } downloadObjectObj;
 
@@ -77,9 +79,9 @@ using std::swap;
   napi_deferred deferred;
   napi_async_work work;
   napi_value result;
-  Upload upload_result;
-  CustomMetadata customMetadata;
-  Error* error_result;
+  UplinkUpload upload_result;
+  UplinkCustomMetadata customMetadata;
+  UplinkError* error_result;
 } uploadSetMetaObj;
 
 //
@@ -88,8 +90,8 @@ using std::swap;
   napi_deferred deferred;
   napi_async_work work;
   napi_value result;
-  Upload upload_result;
-  Error* error_result;
+  UplinkUpload upload_result;
+  UplinkError* error_result;
 } uploadAbortPromiseObj;
 
 //
@@ -98,8 +100,8 @@ using std::swap;
   napi_deferred deferred;
   napi_async_work work;
   napi_value result;
-  Upload upload_result;
-  ObjectResult object_result;
+  UplinkUpload upload_result;
+  UplinkObjectResult object_result;
 } uploadInfoObj;
 
 //
@@ -108,8 +110,8 @@ using std::swap;
   napi_deferred deferred;
   napi_async_work work;
   napi_value result;
-  Upload upload_result;
-  Error* error_result;
+  UplinkUpload upload_result;
+  UplinkError* error_result;
 } uploadCommitObj;
 
   typedef struct {
@@ -119,8 +121,8 @@ using std::swap;
   napi_value result;
   void *bufferPtr;
   size_t bytesread;
-  Upload upload_result;
-  WriteResult write_result;
+  UplinkUpload upload_result;
+  UplinkWriteResult write_result;
 } uploadWriteObj;
 
   typedef struct {
@@ -130,9 +132,9 @@ using std::swap;
   napi_value result;
   char* bucketname;
   char* objectkey;
-  Project project;
-  UploadResult upload_result;
-  UploadOptions uploadOptions;
+  UplinkProject project;
+  UplinkUploadResult upload_result;
+  UplinkUploadOptions uploadOptions;
   int uploadoptionSet;
 } uploadobjectObj;
 
@@ -143,8 +145,8 @@ typedef struct {
   napi_value result;
   char* bucketname;
   char* objectkey;
-  Project project;
-  ObjectResult object_result;
+  UplinkProject project;
+  UplinkObjectResult object_result;
 } objectOperationObj;
 
 typedef struct {
@@ -153,14 +155,14 @@ typedef struct {
   napi_async_work work;
   napi_value result;
   char* bucketname;
-  Project project;
-  BucketResult bucket_Result;
+  UplinkProject project;
+  UplinkBucketResult bucket_Result;
 } bucketOperationObj;
 
 typedef struct{
-  Project project_result;
-  ListBucketsOptions listBucketsOptions;
-  BucketIterator *bucket_resultIterator;
+  UplinkProject project_result;
+  UplinkListBucketsOptions listBucketsOptions;
+  UplinkBucketIterator *bucket_resultIterator;
   int async_action_status;
   napi_deferred deferred;
   napi_async_work work;
@@ -173,8 +175,8 @@ typedef struct {
   napi_deferred deferred;
   napi_async_work work;
   napi_value result;
-  Project project_result;
-  Error* error_result;
+  UplinkProject project_result;
+  UplinkError* error_result;
 } closeProjectPromiseObj;
 
 typedef struct {
@@ -182,9 +184,9 @@ typedef struct {
   napi_deferred deferred;
   napi_async_work work;
   napi_value result;
-  Access access;
-  ProjectResult project_Result;
-  Config config;
+  UplinkAccess access;
+  UplinkProjectResult project_Result;
+  UplinkConfig config;
 } configOpenProjectPromiseObj;
 
 typedef struct {
@@ -192,8 +194,8 @@ typedef struct {
   napi_deferred deferred;
   napi_async_work work;
   napi_value result;
-  Access access;
-  ProjectResult project_Result;
+  UplinkAccess access;
+  UplinkProjectResult project_Result;
 } openProjectPromiseObj;
 
 typedef struct {
@@ -202,7 +204,7 @@ typedef struct {
   napi_deferred deferred;
   napi_async_work work;
   napi_value result;
-  AccessResult access_Result;
+  UplinkAccessResult access_Result;
 } ParseAccessPromiseObj;
 
 typedef struct {
@@ -213,7 +215,7 @@ typedef struct {
   napi_deferred deferred;
   napi_async_work work;
   napi_value result;
-  AccessResult access_Result;
+  UplinkAccessResult access_Result;
 } RequestAccessPromiseObj;
 
 typedef struct {
@@ -221,11 +223,11 @@ typedef struct {
   napi_deferred deferred;
   napi_async_work work;
   napi_value result;
-  Access access;
-  AccessResult access_Result;
+  UplinkAccess access;
+  UplinkAccessResult access_Result;
   int64_t SharePrefixSize;
-  SharePrefix* SharePrefixListPointer;
-  Permission permission;
+  UplinkSharePrefix* SharePrefixListPointer;
+  UplinkPermission permission;
 } AccessSharePromiseObj;
 
 typedef struct {
@@ -236,8 +238,8 @@ typedef struct {
   napi_deferred deferred;
   napi_async_work work;
   napi_value result;
-  AccessResult access_Result;
-  Config config;
+  UplinkAccessResult access_Result;
+  UplinkConfig config;
 } ConfigRequestAccessPromiseObj;
 
 typedef struct {
@@ -245,8 +247,33 @@ typedef struct {
   napi_deferred deferred;
   napi_async_work work;
   napi_value result;
-  Access access;
-  StringResult string_result;
+  UplinkAccess access;
+  UplinkStringResult string_result;
 } accessSerializePromiseObj;
+
+typedef struct {
+  int async_action_status;
+  napi_deferred deferred;
+  napi_async_work work;
+  napi_value result;
+  UplinkAccess access;
+  char* passphrase;
+  int64_t saltSize;
+  char* saltCharArrayPointer;
+  UplinkEncryptionKeyResult encryptionResult;
+} deriveEncrpPromiseObj;
+
+typedef struct {
+  int async_action_status;
+  napi_deferred deferred;
+  napi_async_work work;
+  napi_value result;
+  UplinkAccess access;
+  char* bucket;
+  char* prefix;
+  UplinkEncryptionKey encryptionKey;
+  UplinkError* error_result;
+} accessOverRidePromiseObj;
+
 
 #endif //DEFINITIONS_H

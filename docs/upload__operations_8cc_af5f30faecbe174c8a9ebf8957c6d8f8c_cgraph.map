@@ -1,8 +1,0 @@
-<map id="upload_objectc" name="upload_objectc">
-<area shape="rect" id="node1" title="upload_objectc function is called from the javascript file upload_objectc starts an upload to the spe..." alt="" coords="5,56,115,83"/>
-<area shape="rect" id="node2" href="$lib_uplink_8cc.html#af3084e4f8020d09148225eb624a2fed8" title="int64_t getHandleValue handles the value type it returns integer type handlelong" alt="" coords="183,5,296,32"/>
-<area shape="rect" id="node3" href="$promises__complete_8cc.html#a12290185e76500738477d7da999d97fe" title="uploadObjectComplete creates the handle for upload_object . it shows null if upload option set contai..." alt="" coords="163,56,316,83"/>
-<area shape="rect" id="node6" href="$promises__execute_8cc.html#ad2bebbe7f71894c563e078de13e3742f" title="uploadObjectExecute used to implement the uplink&#45;c library function uploadObjectExecute uploads the o..." alt="" coords="166,107,313,133"/>
-<area shape="rect" id="node4" href="$lib_uplink_8cc.html#a56b88ea420afbcee273bbc41eaae5780" title="napi_value createError creates NAPI type error object it returns the object for which error occurred" alt="" coords="368,31,455,57"/>
-<area shape="rect" id="node5" href="$lib_uplink_8cc.html#ad94789f70f86557aa0075b408f3e4895" title="napi_value createResult create result of new object whether it is generated or not" alt="" coords="364,81,459,108"/>
-</map>

@@ -1,0 +1,5 @@
+<map id="upload_writec" name="upload_writec">
+<area shape="rect" id="node1" title="upload_writec function is called from the javascript file upload_write uploads len(p) bytes from p to..." alt="" coords="5,31,107,57"/>
+<area shape="rect" id="node2" href="$promises__complete_8cc.html#a8431cb32cc47dc1be926446a49e41ace" title="uploadWriteOperationComplete creates the handle for upload_write" alt="" coords="155,5,357,32"/>
+<area shape="rect" id="node3" href="$promises__execute_8cc.html#a1da2882ef898e3791da3e6fcbbebbdb0" title="uploadWritePromiseExecute used to implement the uplink&#45;c library function uploadWritePromiseExecute w..." alt="" coords="163,56,349,83"/>
+</map>

@@ -1,5 +1,0 @@
-<map id="ConfigRequestAccessWithEncryption" name="ConfigRequestAccessWithEncryption">
-<area shape="rect" id="node1" title="ConfigRequestAccessWithEncryption used to implement the uplink&#45;c library function ConfigRequestAccess..." alt="" coords="295,13,533,39"/>
-<area shape="rect" id="node2" href="$access__operations_8cc.html#ad1ad6e328d17546077efb9cad66351da" title="config_request_access_with_passphrasec function is called from the javascript file config_request_acc..." alt="" coords="92,5,247,47"/>
-<area shape="rect" id="node3" href="$lib_uplink_8cc.html#a2a8628282ff7cc746345d7a7afb2884d" title="This is main function 1) request_access_with_passphrase requests satellite for a new access grant usi..." alt="" coords="5,13,44,39"/>
-</map>

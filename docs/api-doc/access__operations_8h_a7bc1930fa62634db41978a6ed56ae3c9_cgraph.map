@@ -1,0 +1,5 @@
+<map id="parse_accessc" name="parse_accessc">
+<area shape="rect" id="node1" title="parse_accessc function is called from the javascript file parse_access parses serialized access grant..." alt="" coords="5,31,116,57"/>
+<area shape="rect" id="node2" href="$promises__execute_8cc.html#ac7dca0a74754bfcca6bb9c78d5d5117d" title="ParseAccess used to implement the uplink&#45;c library function ParseAccess parses serialized access gran..." alt="" coords="215,5,315,32"/>
+<area shape="rect" id="node3" href="$promises__complete_8cc.html#a551f241ba659821a9690c7e1cc54806c" title="ParseAccessPromiseComplete creates the handle for parse_access." alt="" coords="164,56,367,83"/>
+</map>
