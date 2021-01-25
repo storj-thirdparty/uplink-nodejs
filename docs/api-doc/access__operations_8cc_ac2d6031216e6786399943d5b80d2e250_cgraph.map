@@ -1,0 +1,5 @@
+<map id="access_sharec" name="access_sharec">
+<area shape="rect" id="node1" title="parse_accessc function is called from the javascript file access_share creates new access grant with ..." alt="" coords="5,31,116,57"/>
+<area shape="rect" id="node2" href="$promises__complete_8cc.html#a82c14e41ec15a1d0c58b4352b6d7d3e0" title="ShareAccessPromiseComplete creates the handle for access_share." alt="" coords="164,5,367,32"/>
+<area shape="rect" id="node3" href="$promises__execute_8cc.html#af71038df3a110e4e4e8e20475051e10e" title="ShareAccessPromiseExecute used to implement the uplink&#45;c library function ShareAccessPromiseExecute c..." alt="" coords="167,56,363,83"/>
+</map>

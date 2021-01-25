@@ -1,0 +1,5 @@
+<map id="config_open_projectc" name="config_open_projectc">
+<area shape="rect" id="node1" title="config_open_projectc function is called from the javascript file config_open_project opens project us..." alt="" coords="5,46,149,73"/>
+<area shape="rect" id="node2" href="$promises__complete_8cc.html#a5f37a32796714208333df7d0f34f6a1a" title="configOpenProjectPromiseComplete creates the handle for config_open_project" alt="" coords="197,5,373,47"/>
+<area shape="rect" id="node3" href="$promises__execute_8cc.html#af8c085d7d9f0eb86023aa8540b6442df" title="configOpenProjectPromiseExecute used to implement the uplink&#45;c library function configOpenProjectProm..." alt="" coords="197,71,373,112"/>
+</map>

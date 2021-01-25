@@ -1,5 +1,0 @@
-<map id="downloadReadPromiseExecute" name="downloadReadPromiseExecute">
-<area shape="rect" id="node1" title="downloadReadPromiseExecute used to implement the uplink&#45;c library function downloadReadPromiseExecute..." alt="" coords="255,5,457,32"/>
-<area shape="rect" id="node2" href="$download__operations_8cc.html#a89a532e6b99165dfcd4612b48a75c386" title="download_readc function is called from the javascript file download_readc reads the download ." alt="" coords="92,5,207,32"/>
-<area shape="rect" id="node3" href="$lib_uplink_8cc.html#a2a8628282ff7cc746345d7a7afb2884d" title="This is main function 1) request_access_with_passphrase requests satellite for a new access grant usi..." alt="" coords="5,5,44,32"/>
-</map>

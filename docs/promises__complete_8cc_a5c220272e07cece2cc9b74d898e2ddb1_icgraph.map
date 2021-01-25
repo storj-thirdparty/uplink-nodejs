@@ -1,6 +1,0 @@
-<map id="objectOperationComplete" name="objectOperationComplete">
-<area shape="rect" id="node1" title="objectOperationComplete used to implement the uplink&#45;c library function objectOperationComplete signi..." alt="" coords="247,31,415,57"/>
-<area shape="rect" id="node2" href="$object__operations_8cc.html#a9c1e71e94031da80345fbef666077585" title="delete_objectc function is called from the javascript file delete_objectc deletes an object." alt="" coords="92,5,199,32"/>
-<area shape="rect" id="node4" href="$object__operations_8cc.html#a61f81727705cac1bbaba40e5c57909f1" title="stat_objectc function is called from the javascript file stat_objectc returns information about an ob..." alt="" coords="99,56,192,83"/>
-<area shape="rect" id="node3" href="$lib_uplink_8cc.html#a2a8628282ff7cc746345d7a7afb2884d" title="This is main function 1) request_access_with_passphrase requests satellite for a new access grant usi..." alt="" coords="5,31,44,57"/>
-</map>

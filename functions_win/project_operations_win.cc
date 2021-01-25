@@ -60,7 +60,7 @@ napi_value close_projectc(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  Project project_result;
+  UplinkProject project_result;
   project_result._handle = getHandleValue(env, args[0]);
   if (project_result._handle == 0) {
       free(obj);
@@ -109,7 +109,7 @@ napi_value config_open_projectc(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  Config config;
+  UplinkConfig config;
 
   napi_valuetype checktypeofinput;
   status = napi_typeof(env, args[0], &checktypeofinput);
@@ -253,7 +253,7 @@ napi_value config_open_projectc(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  Access access;
+  UplinkAccess access;
   access._handle = getHandleValue(env, args[1]);
   if (access._handle == 0) {
       free(obj);
@@ -329,7 +329,7 @@ napi_value open_projectc(napi_env env, napi_callback_info info) {
     napi_throw_type_error(env, nullptr, "\nInvalid Object \n");
     return NULL;
   }
-  Access access;
+  UplinkAccess access;
   access._handle = getHandleValue(env, args[0]);
   if (access._handle == 0) {
       free(obj);

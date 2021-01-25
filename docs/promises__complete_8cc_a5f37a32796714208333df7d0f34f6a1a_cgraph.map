@@ -1,5 +1,0 @@
-<map id="configOpenProjectPromiseComplete" name="configOpenProjectPromiseComplete">
-<area shape="rect" id="node1" title="configOpenProjectPromiseComplete creates the handle for config_open_project" alt="" coords="5,23,181,65"/>
-<area shape="rect" id="node2" href="$lib_uplink_8cc.html#a56b88ea420afbcee273bbc41eaae5780" title="napi_value createError creates NAPI type error object it returns the object for which error occurred" alt="" coords="233,5,320,32"/>
-<area shape="rect" id="node3" href="$lib_uplink_8cc.html#ad94789f70f86557aa0075b408f3e4895" title="napi_value createResult create result of new object whether it is generated or not" alt="" coords="229,56,324,83"/>
-</map>

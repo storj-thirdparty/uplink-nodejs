@@ -74,7 +74,7 @@ napi_value upload_set_custom_metadatac(napi_env env, napi_callback_info info) {
     napi_throw_type_error(env, nullptr, "\nInvalid Object \n");
     return NULL;
   }
-  Upload upload_result;
+  UplinkUpload upload_result;
   upload_result._handle = getHandleValue(env, args[0]);
   if (upload_result._handle == 0) {
       free(obj);
@@ -125,13 +125,13 @@ napi_value upload_set_custom_metadatac(napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   int size = static_cast<int>(sizeOfArray);
-  CustomMetadataEntry* CustomMetadataEntryListPointer =
-  new CustomMetadataEntry[size];
-  CustomMetadata customMetadata;
+  UplinkCustomMetadataEntry* CustomMetadataEntryListPointer =
+  new UplinkCustomMetadataEntry[size];
+  UplinkCustomMetadata customMetadata;
   napi_value CustomMetadataEntryObject;
 
   for (int i=0; i < size; i++) {
-    CustomMetadataEntry customMetadataEntry;
+    UplinkCustomMetadataEntry customMetadataEntry;
     status = napi_get_element(
       env, entriesArrayNAPI, i, &CustomMetadataEntryObject);
     assert(status == napi_ok);
@@ -273,7 +273,7 @@ napi_value upload_abortc(napi_env env, napi_callback_info info) {
     napi_throw_type_error(env, nullptr, "\nInvalid Object \n");
     return NULL;
   }
-  Upload upload_result;
+  UplinkUpload upload_result;
   upload_result._handle = getHandleValue(env, args[0]);
 
   obj->upload_result = upload_result;
@@ -348,7 +348,7 @@ napi_value upload_infoc(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  Upload upload_result;
+  UplinkUpload upload_result;
   upload_result._handle = getHandleValue(env, args[0]);
   if (upload_result._handle == 0) {
       free(obj);
@@ -427,7 +427,7 @@ napi_value upload_commitc(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  Upload upload_result;
+  UplinkUpload upload_result;
   upload_result._handle = getHandleValue(env, args[0]);
   if (upload_result._handle == 0) {
       free(obj);
@@ -526,7 +526,7 @@ napi_value upload_writec(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  Upload upload_resultRef;
+  UplinkUpload upload_resultRef;
   upload_resultRef._handle = getHandleValue(env, args[0]);
   if (upload_resultRef._handle == 0) {
       free(obj);
@@ -656,7 +656,7 @@ napi_value upload_objectc(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  Project project_result;
+  UplinkProject project_result;
   project_result._handle = getHandleValue(env, args[0]);
   if (project_result._handle == 0) {
       free(obj);
@@ -689,7 +689,7 @@ napi_value upload_objectc(napi_env env, napi_callback_info info) {
       if (checktypeofinput == napi_null) {
           obj->uploadoptionSet = 0;
       } else {
-        UploadOptions uploadOptions;
+        UplinkUploadOptions uploadOptions;
         napi_value expiresNAPI;
         obj->uploadoptionSet = 1;
         status = napi_get_named_property(env, args[3], "expires",

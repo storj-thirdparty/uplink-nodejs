@@ -7,13 +7,16 @@ GOGET=$(GOCMD) get
 # Uplink-c
 GIT_REPO=https://github.com/storj/uplink-c
 UPLINKC_NAME=uplink-c
-UPLINKC_VERSION=v1.0.5
+UPLINKC_VERSION=v1.2.0
 #Library Name
 LIBRARY_NAME_LINUX=libuplinkc.so
 LIBRARY_NAME_DARWIN=libuplinkc.dylib
 LIBRARY_NAME_WIN=libuplinkc.dll
-LIBRARY_UPLINK=uplink_definitions.h
+LIBRARY_UPLINK=*.h
 DELETE_LIBRARY_HEADER=libuplinkc.h
+#JSFOLDER
+JSFOLDER=dist
+JSFOLDERLIB=libuplinkc.*
 #Color
 RED_COLOR=\033[31m
 GREEN_COLOR=\033[32m
@@ -30,10 +33,10 @@ else
       git clone -b $(UPLINKC_VERSION) $(GIT_REPO);\
      fi;\
      if [ $(shell uname) = Darwin ]; then\
-      cd $(UPLINKC_NAME);$(GOBUILD) -o ../$(LIBRARY_NAME_DARWIN) -buildmode=c-shared;mv $(LIBRARY_UPLINK) ../;cd ../;\
+      cd $(UPLINKC_NAME);$(GOBUILD) -o ../$(LIBRARY_NAME_DARWIN) -buildmode=c-shared;mv $(LIBRARY_UPLINK) ../;cd ../;cp ./$(JSFOLDERLIB) ./$(JSFOLDER)/;\
      fi;\
      if [ $(shell uname) = Linux ]; then\
-      cd $(UPLINKC_NAME);$(GOBUILD) -o ../$(LIBRARY_NAME_LINUX) -buildmode=c-shared;mv $(LIBRARY_UPLINK) ../;cd ../;\
+      cd $(UPLINKC_NAME);$(GOBUILD) -o ../$(LIBRARY_NAME_LINUX) -buildmode=c-shared;mv $(LIBRARY_UPLINK) ../;cd ../;cp ./$(JSFOLDERLIB) ./$(JSFOLDER)/;\
      fi;\
   if test -d ./$(UPLINKC_NAME); then rm -rf ./$(UPLINKC_NAME); fi;\
   echo ' $(GREEN_COLOR) \n Successfully build $(RESET_COLOR)';

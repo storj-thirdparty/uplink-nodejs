@@ -79,7 +79,7 @@ napi_value stat_objectc(napi_env env, napi_callback_info info) {
     return NULL;
   }
 
-  Project project_result;
+  UplinkProject project_result;
   project_result._handle = getHandleValue(env, args[0]);
   if (project_result._handle == 0) {
       free(obj);
@@ -197,8 +197,8 @@ napi_value delete_objectc(napi_env env, napi_callback_info info) {
     napi_throw_type_error(env, nullptr, "\nInvalid Object \n");
     return NULL;
   }
-
-  Project project_result;
+  
+  UplinkProject project_result;
   project_result._handle = getHandleValue(env, args[0]);
   if (project_result._handle == 0) {
       free(obj);
@@ -233,7 +233,7 @@ napi_value delete_objectc(napi_env env, napi_callback_info info) {
   obj->objectkey = objectKey;
   napi_value resource_name;
   napi_create_string_utf8(env, "deleteObject",
-  NAPI_AUTO_LENGTH, &resource_name);
+      NAPI_AUTO_LENGTH, &resource_name);
   napi_create_async_work(env, NULL, resource_name, deleteObjectPromiseExecute,
   objectOperationComplete, obj, &obj->work);
   napi_queue_async_work(env, obj->work);

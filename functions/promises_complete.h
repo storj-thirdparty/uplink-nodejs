@@ -48,3 +48,7 @@ void ConfigRequestAccessWithEncryptionPromiseComplete(napi_env env, napi_status 
 void RequestAccessWithEncryptionPromiseComplete(napi_env env, napi_status status, void* data);
 
 void accessSerializePromiseComplete(napi_env env, napi_status status, void* data);
+
+void deriveEncrpPromiseComplete(napi_env env, napi_status status, void* data);
+
+void accessOverRidePromiseComplete(napi_env env, napi_status status, void* data);

@@ -10,3 +10,7 @@ napi_value config_request_access_with_passphrasec(napi_env env, napi_callback_in
 napi_value request_access_with_passphrasec(napi_env env, napi_callback_info info);
 
 napi_value access_serializec(napi_env env, napi_callback_info info);
+//
+napi_value uplink_derive_encryption_keyc(napi_env env, napi_callback_info info);
+//
+napi_value uplink_access_override_encryption_keyc(napi_env env, napi_callback_info info);

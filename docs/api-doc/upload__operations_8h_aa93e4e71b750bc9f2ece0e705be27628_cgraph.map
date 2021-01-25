@@ -1,0 +1,5 @@
+<map id="upload_set_custom_metadatac" name="upload_set_custom_metadatac">
+<area shape="rect" id="node1" title="upload_set_custom_metadatac function is called from the javascript file there are restrictions on wha..." alt="" coords="5,31,208,57"/>
+<area shape="rect" id="node2" href="$promises__complete_8cc.html#ada21d0b3a98f66fcc91cd7f3a1f7ce00" title="uploadSetMetaPromiseComplete creates the handle for upload_set_custom_metadata" alt="" coords="256,5,468,32"/>
+<area shape="rect" id="node3" href="$promises__execute_8cc.html#a4f314684cd49d9c9a16d504a154a600e" title="uploadSetMetaPromiseExecute used to implement the uplink&#45;c library function uploadSetMetaPromiseExecu..." alt="" coords="259,56,465,83"/>
+</map>

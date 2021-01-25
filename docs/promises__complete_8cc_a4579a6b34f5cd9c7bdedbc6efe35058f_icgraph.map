@@ -1,5 +1,0 @@
-<map id="uploadCommitOperationComplete" name="uploadCommitOperationComplete">
-<area shape="rect" id="node1" title="uploadCommitOperationComplete creates the handle for upload_commit" alt="" coords="257,5,473,32"/>
-<area shape="rect" id="node2" href="$upload__operations_8cc.html#ab5167c4273b9e19024e9d401de4f3605" title="upload_commitc function is called from the javascript file upload_commitc commits the uploaded data." alt="" coords="92,5,209,32"/>
-<area shape="rect" id="node3" href="$lib_uplink_8cc.html#a2a8628282ff7cc746345d7a7afb2884d" title="This is main function 1) request_access_with_passphrase requests satellite for a new access grant usi..." alt="" coords="5,5,44,32"/>
-</map>

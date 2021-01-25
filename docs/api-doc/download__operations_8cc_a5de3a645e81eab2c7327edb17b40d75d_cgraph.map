@@ -1,0 +1,5 @@
+<map id="download_infoc" name="download_infoc">
+<area shape="rect" id="node1" title="download_infoc function is called from the javascript file download_info returns information about th..." alt="" coords="5,31,116,57"/>
+<area shape="rect" id="node2" href="$promises__complete_8cc.html#ad52fea7bfbcffe648cf30608542fcced" title="downloadInfoOperationComplete creates the handle for download_info" alt="" coords="164,5,371,32"/>
+<area shape="rect" id="node3" href="$promises__execute_8cc.html#afc99b20e4849149451ed79a924b2c8f2" title="downloadInfoPromiseExecute used to implement the uplink&#45;c library function downloadInfoPromiseExecute..." alt="" coords="171,56,363,83"/>
+</map>

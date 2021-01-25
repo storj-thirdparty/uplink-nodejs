@@ -1,0 +1,5 @@
+<map id="stat_objectc" name="stat_objectc">
+<area shape="rect" id="node1" title="stat_objectc function is called from the javascript file stat_objectc returns information about an ob..." alt="" coords="5,31,99,57"/>
+<area shape="rect" id="node2" href="$promises__complete_8cc.html#a5c220272e07cece2cc9b74d898e2ddb1" title="objectOperationComplete used to implement the uplink&#45;c library function objectOperationComplete signi..." alt="" coords="155,5,323,32"/>
+<area shape="rect" id="node3" href="$promises__execute_8cc.html#a082b97a70d9517662c657b0e19e99031" title="stateObjectPromiseExecute creates the handle for stat_object" alt="" coords="147,56,332,83"/>
+</map>

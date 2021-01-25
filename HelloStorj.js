@@ -59,7 +59,7 @@ function getDateTime(unixTimestamp) {
 }
 //
 async function accessshare(uplink,access){
-    var permission = new storj.Permission(true,true,true,false,0,0);
+    var permission = new storj.Permission(false,false,false,true,0,0);
     var sharePrefix = storj.SharePrefix;
     var sharePrefixListArray = [];
     sharePrefix.bucket = "change-me-to-desired-bucket-name";
@@ -73,8 +73,23 @@ async function accessshare(uplink,access){
             console.log("Parsing access share...");
             await uplink.parseAccess(stringResult).then(async (parsedSharedAccess) => {
                 //
+                console.log("\nDeriving encryption key");
+                //
+                var encryption = await libUplink.uplinkDeriveEncryptionKey("test",[4,5,6]).catch((error) => {
+                    console.log("Failed to derive encryption key");
+                    console.log(error);
+                });
+                //
+                console.log("Over riding encryption key");
+                //
+                await parsedSharedAccess.overrideEncryptionKey(sharePrefix.bucket,sharePrefix.prefix,encryption["encryption_key"]).catch((err) => {
+                    console.log("Failed to over write encryption key");
+                    console.log(err);
+                });
+                //
                 console.log("Opening project using paresed shared access");
                 await parsedSharedAccess.openProject().then(async (project) => {
+                    //
                     //
                     console.log("\nOpened Project using share access");
                     await project.deleteObject(storjConfig.bucketName,storjConfig.uploadPath).then((objectInfo) => {

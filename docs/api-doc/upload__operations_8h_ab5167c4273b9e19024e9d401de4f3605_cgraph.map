@@ -1,0 +1,5 @@
+<map id="upload_commitc" name="upload_commitc">
+<area shape="rect" id="node1" title="upload_commitc function is called from the javascript file upload_commitc commits the uploaded data." alt="" coords="5,31,123,57"/>
+<area shape="rect" id="node2" href="$promises__complete_8cc.html#a4579a6b34f5cd9c7bdedbc6efe35058f" title="uploadCommitOperationComplete creates the handle for upload_commit" alt="" coords="171,5,387,32"/>
+<area shape="rect" id="node3" href="$promises__execute_8cc.html#ab4b5bcf8bb3a3ce4e8b38c80bb2ab638" title="uploadCommitPromiseExecute used to implement the uplink&#45;c library function uploadCommitPromiseExecute..." alt="" coords="178,56,379,83"/>
+</map>

@@ -1,5 +1,0 @@
-<map id="createObjectResult" name="createObjectResult">
-<area shape="rect" id="node1" title="createObjectResult create object&#39;s result whether it is generated or not" alt="" coords="5,5,139,32"/>
-<area shape="rect" id="node2" href="$lib_uplink_8cc.html#a43573809ece24e1ad0b00af289693cd5" title="itoa function negative numbers are handled only with base 10. Otherwise numbers are considered unsign..." alt="" coords="187,5,229,32"/>
-<area shape="rect" id="node3" href="$lib_uplink_8cc.html#af2c0f95bdedc4d81b85aefdbf5dfce19" title="A utility function to reverse a string." alt="" coords="277,5,340,32"/>
-</map>

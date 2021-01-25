@@ -1,0 +1,5 @@
+<map id="download_objectc" name="download_objectc">
+<area shape="rect" id="node1" title="download_objectc function is called from the javascript file download_objectc starts download to the ..." alt="" coords="5,31,131,57"/>
+<area shape="rect" id="node2" href="$promises__complete_8cc.html#a3587d100127fa8569f0809fccd917eeb" title="downloadobjectOperationComplete creates the handle for download_object it shows null if download has ..." alt="" coords="179,5,404,32"/>
+<area shape="rect" id="node3" href="$promises__execute_8cc.html#afa39b1469b741ca47bbe184afc5bbb0b" title="downloadObjectPromiseExecute used to implement the uplink&#45;c library function downloadClosePromiseExec..." alt="" coords="186,56,397,83"/>
+</map>

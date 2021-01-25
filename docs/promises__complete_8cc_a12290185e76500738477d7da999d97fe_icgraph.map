@@ -1,5 +1,0 @@
-<map id="uploadObjectComplete" name="uploadObjectComplete">
-<area shape="rect" id="node1" title="uploadObjectComplete creates the handle for upload_object . it shows null if upload option set contai..." alt="" coords="249,5,403,32"/>
-<area shape="rect" id="node2" href="$upload__operations_8cc.html#af5f30faecbe174c8a9ebf8957c6d8f8c" title="upload_objectc function is called from the javascript file upload_objectc starts an upload to the spe..." alt="" coords="92,5,201,32"/>
-<area shape="rect" id="node3" href="$lib_uplink_8cc.html#a2a8628282ff7cc746345d7a7afb2884d" title="This is main function 1) request_access_with_passphrase requests satellite for a new access grant usi..." alt="" coords="5,5,44,32"/>
-</map>

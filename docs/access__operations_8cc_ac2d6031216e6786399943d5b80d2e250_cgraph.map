@@ -1,8 +1,0 @@
-<map id="access_sharec" name="access_sharec">
-<area shape="rect" id="node1" title="parse_accessc function is called from the javascript file access_share creates new access grant with ..." alt="" coords="5,56,116,83"/>
-<area shape="rect" id="node2" href="$lib_uplink_8cc.html#af3084e4f8020d09148225eb624a2fed8" title="int64_t getHandleValue handles the value type it returns integer type handlelong" alt="" coords="209,5,322,32"/>
-<area shape="rect" id="node3" href="$promises__complete_8cc.html#a82c14e41ec15a1d0c58b4352b6d7d3e0" title="ShareAccessPromiseComplete creates the handle for access_share." alt="" coords="164,56,367,83"/>
-<area shape="rect" id="node6" href="$promises__execute_8cc.html#af71038df3a110e4e4e8e20475051e10e" title="ShareAccessPromiseExecute used to implement the uplink&#45;c library function ShareAccessPromiseExecute c..." alt="" coords="167,107,363,133"/>
-<area shape="rect" id="node4" href="$lib_uplink_8cc.html#a56b88ea420afbcee273bbc41eaae5780" title="napi_value createError creates NAPI type error object it returns the object for which error occurred" alt="" coords="419,31,505,57"/>
-<area shape="rect" id="node5" href="$lib_uplink_8cc.html#ad94789f70f86557aa0075b408f3e4895" title="napi_value createResult create result of new object whether it is generated or not" alt="" coords="415,81,509,108"/>
-</map>
