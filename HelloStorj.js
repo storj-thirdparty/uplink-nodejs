@@ -8,7 +8,7 @@ const libUplink = new storj.Uplink();
 const uplinkError = storj.errorhandle;
 //
 var BUFFER_SIZE = 80000;
-//
+
 //demo Storj (V3) configuration
 var storjConfig = {
     apiKey    : "change-me-to-the-api-key-created-in-satellite-gui",
