@@ -11,7 +11,7 @@ const fs = require("fs"),
      */
     storjConfig = {
         "apiKey": "",
-        "satelliteURL": "us-central-1.tardigrade.io:7777",
+        "satelliteURL": "12EayRS2V1kEsWESU9QMRseFhdxYxKicsiFmxrsLZHeLUtdps3S@us-central-1.tardigrade.io:7777",
         "encryptionPassphrase": "test",
         "bucketName": "uplinknodejstesttypescript",
         "uploadPath": "filepath/sample.txt"
