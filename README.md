@@ -10,21 +10,13 @@
 
 ## <b>Initial Set-up (Important)</b>
 
->NOTE: For Golang
+>For Golang
+   * Make sure your `PATH` includes the `$GOPATH/bin` directory, so that your commands can be easily used [Refer: Install the Go Tools](https://golang.org/doc/install):
+        ```
+        export PATH=$PATH:$GOPATH/bin
+        ```
 
-Make sure your `PATH` includes the `$GOPATH/bin` directory, so that your commands can be easily used [Refer: Install the Go Tools](https://golang.org/doc/install):
-```
-export PATH=$PATH:$GOPATH/bin
-```
 
->NOTE: For Nodejs 
-
-* Please ensure Node.js with version 10 or higher is [installed](https://nodejs.org/en/download/)
-
-* Check its version
-```
-$ node -v
-```
 * Install node-gyp globally
 ```
 $ npm install -g node-gyp
@@ -34,11 +26,15 @@ $ npm install -g node-gyp
 $ npm install uplink-nodejs
 ```
 
-NOTE:  please ensure *make* is already installed.
-
-NOTE:  please ensure *node-gyp* dependencies is already installed.
-
-NOTE: please ensure *@types/node* dependencies is installed for running module in typescript.
+>For NodeJS
+ * Please ensure Node.js with version 10 or higher is [installed](https://nodejs.org/en/download/)
+   * Check Node.js version
+        ```
+        $ node -v
+        ```
+ * please ensure *make* is already installed.
+ * please ensure *node-gyp* dependencies is already installed.
+ * please ensure *@types/node* dependencies is installed for running module in typescript.
 
 ## <b>Run Unit Test Cases on Local</b>
 

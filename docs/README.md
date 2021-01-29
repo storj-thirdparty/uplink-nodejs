@@ -1,5 +1,5 @@
 # <b>uplink-nodejs binding</b>
-#### *Developed using v1.0.5 storj/uplink-c*
+#### *Developed using v1.2.0 storj/uplink-c*
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/6acbf8b6d3dc42e98a30df0324334ca2)](https://app.codacy.com/gh/storj-thirdparty/uplink-nodejs?utm_source=github.com&utm_medium=referral&utm_content=storj-thirdparty/uplink-nodejs&utm_campaign=Badge_Grade_Dashboard)
 
@@ -7,21 +7,13 @@
 
 ## <b>Initial Set-up (Important)</b>
 
-> NOTE: For Golang
+>For Golang
+   * Make sure your `PATH` includes the `$GOPATH/bin` directory, so that your commands can be easily used [Refer: Install the Go Tools](https://golang.org/doc/install):
+        ```
+        export PATH=$PATH:$GOPATH/bin
+        ```
 
-Make sure your `PATH` includes the `$GOPATH/bin` directory, so that your commands can be easily used [Refer: Install the Go Tools](https://golang.org/doc/install):
-```
-export PATH=$PATH:$GOPATH/bin
-```
 
-> NOTE: For Nodejs 
-
-* Please ensure Node.js with version 10 or higher is [installed](https://nodejs.org/en/download/)
-
-* Check its version
-```
-$ node -v
-```
 * Install node-gyp globally
 ```
 $ npm install -g node-gyp
@@ -31,10 +23,15 @@ $ npm install -g node-gyp
 $ npm install uplink-nodejs
 ```
 
-> NOTE: Please ensure *make* is already installed.
-
-> NOTE: Please ensure *node-gyp* dependencies is already installed.
-
+>For NodeJS
+ * Please ensure Node.js with version 10 or higher is [installed](https://nodejs.org/en/download/)
+   * Check Node.js version
+        ```
+        $ node -v
+        ```
+ * please ensure *make* is already installed.
+ * please ensure *node-gyp* dependencies is already installed.
+ * please ensure *@types/node* dependencies is installed for running module in typescript.
 
 
 ## <b>Flow Diagram</b>
