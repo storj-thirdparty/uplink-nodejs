@@ -1,5 +1,10 @@
 # Storj-Nodejs Changelog
 
+## [1.2.0]-29-01-2021
+* Updated HelloStorj.js
+* Updated package.json
+* Updated documentation
+
 ## [1.0.9] - 27-11-2020
 * Merged PR
 
