@@ -31,7 +31,7 @@ const BUFFER_SIZE = 80000,
         "apiKey": "change-me-to-the-api-key-created-in-satellite-gui",
         "bucketName": "change-me-to-desired-bucket-name",
         "encryptionPassphrase": "you'll never guess this",
-        "satelliteURL": "us-central-1.tardigrade.io:7777",
+        "satelliteURL": "change-me-to-desired-satellite-url",
         "uploadPath": "optionalpath/requiredfilename"
     },
     //

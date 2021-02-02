@@ -5,7 +5,7 @@ const uplink = bindings("uplink");
 import {ProjectResultStruct} from "./project.js";
 const errorhandle = require("./error.js");
 
-//
+
 export class AccessResultStruct {
 
     access: any;

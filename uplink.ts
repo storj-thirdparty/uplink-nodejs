@@ -2,13 +2,11 @@
 import process from "process";
 process.chdir(__dirname);
 import {AccessResultStruct} from "./access.js";
-//
+
 import bindings = require("bindings");
 const uplink = bindings("uplink"),
-    //
-
     defaultValue = 0;
-//
+
 
 const errorhandle = require("./error.js");
 
