@@ -1,5 +1,8 @@
 # Storj-Nodejs Changelog
 
+## [1.2.2]-10-02-2021
+* Tagged uplink-c v1.2.2
+
 ## [1.2.0]-29-01-2021
 * Updated HelloStorj.js
 * Updated package.json

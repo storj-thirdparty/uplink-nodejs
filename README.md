@@ -2,9 +2,7 @@
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/6acbf8b6d3dc42e98a30df0324334ca2)](https://app.codacy.com/gh/storj-thirdparty/uplink-nodejs?utm_source=github.com&utm_medium=referral&utm_content=storj-thirdparty/uplink-nodejs&utm_campaign=Badge_Grade_Dashboard)
 
-#### *Developed using v1.2.0 storj/uplink-c*
-
-#### Binding is tagged to uplink-c v1.2.0.
+#### *Developed using v1.2.2 storj/uplink-c*
 
 [API documentation and tutorial](https://storj-thirdparty.github.io/uplink-nodejs/#/)
 
