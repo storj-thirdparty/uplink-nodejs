@@ -4,6 +4,7 @@ FROM node:14.5.0
 RUN apt-get -y update
 RUN apt-get -y install build-essential
 RUN apt-get install -y git
+RUN apt-get install -y python3.6
 
 # Installing golang
 RUN curl -O https://dl.google.com/go/go1.14.6.linux-amd64.tar.gz
