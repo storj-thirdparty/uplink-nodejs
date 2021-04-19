@@ -1,6 +1,4 @@
 /* eslint-disable */
-import process from "process";
-process.chdir(__dirname);
 import {AccessResultStruct} from "./access.js";
 
 import bindings = require("bindings");

@@ -2,6 +2,7 @@
 // Copyright 2020 Storj Storj
 
 #include "libUplink_win.h"
+#include "libuplinkcversion.h"
 #include <string>
 #include <utility>
 /* A utility function to reverse a string  */
@@ -48,7 +49,7 @@ char* itoa(int num, char* str, int base) {
 }
 // HINSTANCE hGetProcIDDLL;
 void loaddll() {
-  hGetProcIDDLL = LoadLibrary("libuplinkc.dll");
+  hGetProcIDDLL = LoadLibrary(UPLINKCWINDOWSHOMEDLL);
 }
 // function creates NAPI type error object
 napi_value createError(napi_env env, int64_t accessError,

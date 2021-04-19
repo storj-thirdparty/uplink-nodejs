@@ -1,5 +1,9 @@
 # Storj-Nodejs Changelog
 
+## [1.2.4]-19-04-2021
+* Added version with libuplinkc filename
+* Changed default path of libiplinkc for MacOS
+
 ## [1.2.3]-10-02-2021
 * Tagged uplink-c v1.2.2
 * Updated documentation

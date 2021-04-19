@@ -9,14 +9,16 @@ GIT_REPO=https://github.com/storj/uplink-c
 UPLINKC_NAME=uplink-c
 UPLINKC_VERSION=v1.2.2
 #Library Name
-LIBRARY_NAME_LINUX=libuplinkc.so
-LIBRARY_NAME_DARWIN=libuplinkc.dylib
-LIBRARY_NAME_WIN=libuplinkc.dll
+LIBRARY_NAME_LINUX=libuplinkcv1.2.4.so
+LIBRARY_NAME_DARWIN=libuplinkcv1.2.4.dylib
+LIBRARY_NAME_WIN=libuplinkcv1.2.4.dll
 LIBRARY_UPLINK=*.h
-DELETE_LIBRARY_HEADER=libuplinkc.h
+DELETE_LIBRARY_HEADER=libuplinkcv1.2.4.h
+#Library Path
+MACOS_DYLIB_DEFAULT_PAYH=/usr/local/lib
 #JSFOLDER
 JSFOLDER=dist
-JSFOLDERLIB=libuplinkc.*
+JSFOLDERLIB=libuplinkcv1.2.4.*
 #Color
 RED_COLOR=\033[31m
 GREEN_COLOR=\033[32m
@@ -33,7 +35,7 @@ else
       git clone -b $(UPLINKC_VERSION) $(GIT_REPO);\
      fi;\
      if [ $(shell uname) = Darwin ]; then\
-      cd $(UPLINKC_NAME);$(GOBUILD) -o ../$(LIBRARY_NAME_DARWIN) -buildmode=c-shared;mv $(LIBRARY_UPLINK) ../;cd ../;cp ./$(JSFOLDERLIB) ./$(JSFOLDER)/;\
+      cd $(UPLINKC_NAME);$(GOBUILD) -o ../$(LIBRARY_NAME_DARWIN) -buildmode=c-shared;mv $(LIBRARY_UPLINK) ../;cd ../;cp ./$(JSFOLDERLIB) ./$(JSFOLDER)/;sudo cp ./$(JSFOLDERLIB) $(MACOS_DYLIB_DEFAULT_PAYH);\
      fi;\
      if [ $(shell uname) = Linux ]; then\
       cd $(UPLINKC_NAME);$(GOBUILD) -o ../$(LIBRARY_NAME_LINUX) -buildmode=c-shared;mv $(LIBRARY_UPLINK) ../;cd ../;cp ./$(JSFOLDERLIB) ./$(JSFOLDER)/;\
