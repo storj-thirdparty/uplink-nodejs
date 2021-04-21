@@ -6,10 +6,12 @@ steps:
   - name: gcr.io/cloud-builders/gcloud
     entrypoint: 'bash'
     args: ["-c","gcloud secrets versions access latest --secret=StorjAPIKey >>./dist/secret.txt" ]
+timeout: 1200s
 # running npm install command
   - name: 'gcr.io/${PROJECT_ID}/npm'
     entrypoint: 'npm'
     args: ["install"]
+timeout: 1200s
 # building module using node-gyp module
   - name: 'gcr.io/${PROJECT_ID}/npm'
     entrypoint: 'bash'
