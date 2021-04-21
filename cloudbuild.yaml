@@ -24,6 +24,7 @@ steps:
   - name: 'gcr.io/${PROJECT_ID}/npm'
     entrypoint: 'npm'
     args: ["test"]
+timeout: '2100s'
 tags: ['cloud-builders-community']
 images: ['gcr.io/$PROJECT_ID/npm']
 tags: ['cloud-builders-community']
