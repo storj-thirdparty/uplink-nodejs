@@ -14,9 +14,5 @@ RUN mv go /usr/local
 ENV PATH=$PATH:/usr/local/go/bin
 
 # Installing node-gyp
-RUN npm install -g node-gyp
-RUN apt update
-RUN apt -y install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev libsqlite3-dev wget libbz2-dev
-RUN wget https://www.python.org/ftp/python/3.9.1/Python-3.9.1.tgz
-RUN tar -xf Python-3.9.1.tgz
-RUN cd Python-3.9.1 && ./configure --enable-optimizations && make -j 12 && make altinstall
+RUN npm install -g node-gyp@7.1.2
+RUN node-gyp -v
