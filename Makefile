@@ -35,7 +35,7 @@ else
       git clone -b $(UPLINKC_VERSION) $(GIT_REPO);\
      fi;\
      if [ $(shell uname) = Darwin ]; then\
-      cd $(UPLINKC_NAME);$(GOBUILD) -o ../$(LIBRARY_NAME_DARWIN) -buildmode=c-shared;mv $(LIBRARY_UPLINK) ../;cd ../;cp ./$(JSFOLDERLIB) ./$(JSFOLDER)/;sudo cp ./$(JSFOLDERLIB) $(MACOS_DYLIB_DEFAULT_PAYH);\
+      cd $(UPLINKC_NAME);$(GOBUILD) -o ../$(LIBRARY_NAME_DARWIN) -buildmode=c-shared;mv $(LIBRARY_UPLINK) ../;cd ../;cp ./$(JSFOLDERLIB) ./$(JSFOLDER)/;\
      fi;\
      if [ $(shell uname) = Linux ]; then\
       cd $(UPLINKC_NAME);$(GOBUILD) -o ../$(LIBRARY_NAME_LINUX) -buildmode=c-shared;mv $(LIBRARY_UPLINK) ../;cd ../;cp ./$(JSFOLDERLIB) ./$(JSFOLDER)/;\
