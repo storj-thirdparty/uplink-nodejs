@@ -23,18 +23,18 @@ $ npm install -g node-gyp
 ```
 $ npm install uplink-nodejs
 ```
-    * MacOS users need to set DYLD_LIBRARY_PATH enviroment varaible
-        1. Open ~/.profile or ~/.bash_profile using any text editor
-        2. Add the following content in the file and save file
-            ```
-            export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:Change-To-Project-Directory/node_modules/uplink-nodejs/
-            ```
-        3. Run following command
-            ```
-            source ~/.profile
-            OR
-            source ~/.bashrc
-            ```
+ * MacOS users need to set DYLD_LIBRARY_PATH enviroment varaible
+   1. Open ~/.profile or ~/.bash_profile using any text editor
+   2. Add the following content in the file and save file
+      ```
+       export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:Change-To-Project-Directory/node_modules/uplink-nodejs/
+      ```
+   3. Run following command
+      ```
+       source ~/.profile
+       OR
+       source ~/.bashrc
+       ```
 
 >For NodeJS
  * Please ensure Node.js with version 10 or higher is [installed](https://nodejs.org/en/download/)
