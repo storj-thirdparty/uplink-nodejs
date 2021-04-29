@@ -1,6 +1,6 @@
 {
   "name": "uplink-nodejs",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "description": "Storj-NodeJS bindings package",
   "main": "dist/uplink.js",
   "scripts": {

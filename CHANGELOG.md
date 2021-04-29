@@ -1,5 +1,8 @@
 # Storj-Nodejs Changelog
 
+## [1.2.5]-29-04-2021
+* Updated ReadMe.md
+
 ## [1.2.5]-28-04-2021
 * Updated ReadMe.md
 
