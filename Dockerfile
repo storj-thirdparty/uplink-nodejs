@@ -14,4 +14,5 @@ RUN mv go /usr/local
 ENV PATH=$PATH:/usr/local/go/bin
 
 # Installing node-gyp
-RUN npm install -g node-gyp
+RUN npm install -g node-gyp@7.1.2
+RUN node-gyp -v

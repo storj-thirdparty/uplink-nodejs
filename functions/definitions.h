@@ -10,7 +10,8 @@
 #include <string.h>
 #include <iostream>
 #include "../uplink_definitions.h"
-#include "../libuplinkc.h"
+#include "../libuplinkcversion.h"
+#include UPLINKCHEADER
 using std::string;
 using std::swap;
 

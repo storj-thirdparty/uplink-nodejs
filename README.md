@@ -23,6 +23,18 @@ $ npm install -g node-gyp
 ```
 $ npm install uplink-nodejs
 ```
+* Set Environment variable
+  * MacOS
+    * Set DYLD_LIBRARY_PATH  environment variable
+      * Run following command inside root directory of your project
+        ```
+        export  DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:$PWD/node_modules/uplink-nodejs/
+        ```
+      OR
+    * Copy libuplinkc*.* files from $PROJECTROOT/node_modules/uplink-nodejs/ to /usr/local/lib
+   * Windows
+     * Set Path environment variable to libuplinkc*.* which is  $PROJECTROOT/node_modules/uplink-nodejs
+
 
 >For NodeJS
  * Please ensure Node.js with version 10 or higher is [installed](https://nodejs.org/en/download/)
