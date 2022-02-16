@@ -231,6 +231,15 @@ void closeProjectPromiseExecute(napi_env env, void* data) {
   obj->error_result = uplink_close_project(&(obj->project_result));
 }
 /*!
+ \fn void revokeAccessPromiseExecute(napi_env env, void* data) 
+ \brief revokeAccessPromiseExecute used to implement the uplink-c library function
+      revokeAccessPromiseExecute revoke access using promise
+ */
+void revokeAccessPromiseExecute(napi_env env, void* data) {
+  revokeAccessPromiseObj *obj = (revokeAccessPromiseObj*)data;
+  obj->error_result = uplink_revoke_access(&(obj->project_result), &(obj->access));
+}
+/*!
  \fn void configOpenProjectPromiseExecute(napi_env env, void* data) 
  \brief configOpenProjectPromiseExecute used to implement the uplink-c library function
       configOpenProjectPromiseExecute opens project using access grant 

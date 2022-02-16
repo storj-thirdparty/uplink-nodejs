@@ -37,6 +37,8 @@ void ListBucketsPromiseComplete(napi_env env, napi_status status, void* data);
 
 void closeProjectPromiseComplete(napi_env env, napi_status status, void* data);
 
+void revokeAccessPromiseComplete(napi_env env, napi_status status, void* data);
+
 void configOpenProjectPromiseComplete(napi_env env, napi_status status, void* data);
 
 void ParseAccessPromiseComplete(napi_env env, napi_status status, void* data);

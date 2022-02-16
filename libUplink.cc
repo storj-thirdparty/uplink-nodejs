@@ -735,6 +735,10 @@ napi_value Init(napi_env env, napi_value exports) {
   status = napi_define_properties(env, exports, 1, &close_project);
   assert(status == napi_ok);
 
+  napi_property_descriptor revoke_access = DECLARE_NAPI_METHOD("revoke_access", revoke_accessc);
+  status = napi_define_properties(env, exports, 1, &revoke_access);
+  assert(status == napi_ok);
+
   napi_property_descriptor stat_bucket = DECLARE_NAPI_METHOD("stat_bucket", stat_bucketc);
   status = napi_define_properties(env, exports, 1, &stat_bucket);
   assert(status == napi_ok);
