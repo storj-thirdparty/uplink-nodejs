@@ -6,7 +6,7 @@
           "target_name": "uplink",
           "include_dirs": ["./functions"],
           "sources":["./libUplink.cc", "./functions/promises_execute.cc", "./functions/promises_complete.cc", "./functions/project_operations.cc", "./functions/download_operations.cc", "./functions/upload_operations.cc", "./functions/access_operations.cc", "./functions/bucket_operations.cc", "./functions/object_operations.cc" ],
-          "libraries":["<(module_root_dir)/libuplinkcv1.2.4.so"],
+          "libraries":["-L/<(module_root_dir)", "-luplinkcv1.2.4"],
           "ldflags": ["-Wl,-rpath,'$$ORIGIN'"],
           "cflags_cc": ["-fexceptions","-fPIC","-Wno-unknown-pragmas"]
         }
