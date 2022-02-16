@@ -538,6 +538,31 @@ void closeProjectPromiseComplete(napi_env env, napi_status status, void* data) {
   free(obj);
 }
 
+void revokeAccessPromiseComplete(napi_env env, napi_status status, void* data) {
+  revokeAccessPromiseObj *obj = (revokeAccessPromiseObj*)data;
+  UplinkError* error_result = obj->error_result;
+  if (error_result != NULL) {
+    UplinkError errorResult = *(error_result);
+    char* errorMessagePtr = errorResult.message;
+    char blank[] = "";
+      if (errorMessagePtr == NULL) {errorMessagePtr = &blank[0];}
+    status = napi_reject_deferred(env, obj->deferred,
+    createError(env, errorResult.code, errorMessagePtr));
+  } else {
+    //
+    napi_value undefined;
+    status = napi_get_undefined(env, &undefined);
+    assert(status == napi_ok);
+    //
+    status = napi_resolve_deferred(env, obj->deferred, undefined);
+  }
+  if (status != napi_ok) {
+    napi_throw_error(env, NULL, "Failed to return promise");
+  }
+  napi_delete_async_work(env, obj->work);
+  free(obj);
+}
+
 void configOpenProjectPromiseComplete(napi_env env,
 napi_status status, void* data) {
   configOpenProjectPromiseObj *obj = (configOpenProjectPromiseObj*)data;

@@ -191,6 +191,16 @@ typedef struct {
 } openProjectPromiseObj;
 
 typedef struct {
+  int async_action_status;
+  napi_deferred deferred;
+  napi_async_work work;
+  napi_value result;
+  UplinkProject project_result;
+  UplinkAccess access;
+  UplinkError* error_result;
+} revokeAccessPromiseObj;
+
+typedef struct {
   char *accessString;
   int async_action_status;
   napi_deferred deferred;
