@@ -32,6 +32,14 @@ $ npm install uplink-nodejs
         ```
       OR
     * Copy libuplinkc*.* files from $PROJECTROOT/node_modules/uplink-nodejs/ to /usr/local/lib
+  * Linux
+    * Set LD_LIBRARY_PATH  environment variable
+      * Run following command inside root directory of your project
+        ```
+        export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD/node_modules/uplink-nodejs/
+        ```
+      OR
+    * Copy libuplinkc*.* files from $PROJECTROOT/node_modules/uplink-nodejs/ to /usr/lib
    * Windows
      * Set Path environment variable to libuplinkc*.* which is  $PROJECTROOT/node_modules/uplink-nodejs
 
