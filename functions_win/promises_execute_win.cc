@@ -444,6 +444,31 @@ void closeProjectPromiseExecute(napi_env env, void* data) {
     }
 }
 
+/*!
+ \fn void revokeAccessPromiseExecute(napi_env env, void* data) 
+ \brief revokeAccessPromiseExecute used to implement the uplink-c library function
+      revokeAccessPromiseExecute revoke access using promise
+ */
+void revokeAccessPromiseExecute(napi_env env, void* data) {
+  revokeAccessPromiseObj* obj = reinterpret_cast
+    <revokeAccessPromiseObj*>(data);
+    if (!hGetProcIDDLL) {
+        free(obj);
+        napi_throw_type_error(env, nullptr, "\nLibrary not found\n");
+    } else {
+        FARPROC fn = GetProcAddress(HMODULE(hGetProcIDDLL), "uplink_revoke_access");
+        if (!fn) {
+            free(obj);
+            napi_throw_type_error(env, nullptr, "\nFunction not found\n");
+        } else {
+            typedef UplinkError* (__stdcall* pICError)(UplinkProject*, UplinkAccess*);
+            pICError revoke_access;
+            revoke_access = pICError(fn);
+            obj->error_result = revoke_access(&(obj->project_result), &(obj->access));
+        }
+    }
+}
+
 void configOpenProjectPromiseExecute(napi_env env, void* data) {
     configOpenProjectPromiseObj* obj = reinterpret_cast
     <configOpenProjectPromiseObj *>(data);

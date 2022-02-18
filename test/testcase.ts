@@ -1,5 +1,6 @@
 // Requiring modules
 const {expect} = require("chai");
+const chaiAsPromised = require("chai-as-promised");
 const chai = require("chai");
 const storj = require("../dist/uplink.js"),
     libUplink = new storj.Uplink();
@@ -16,6 +17,7 @@ const fs = require("fs"),
         "bucketName": "uplinknodejstesttypescript",
         "uploadPath": "filepath/sample.txt"
     };
+chai.use(chaiAsPromised);
 
 /*
  *
@@ -1448,6 +1450,11 @@ function openProject (accessResult) {
                             accessResult
                         );
                         //
+                        revokeAccess(
+                            project, 
+                            accessResult
+                        );
+                        //
                         resolve(true);
 
                     }).
@@ -1594,3 +1601,69 @@ describe(
     }
 );
 
+
+// Revoke access testcases
+function revokeAccess (project, access) {
+
+    async function testAccessAvailability(access, expectAvailable) {
+        const project = await access.openProject();
+        const uploadOptions = new storj.UploadOptions();
+        const upload = await project.uploadObject(
+            storjConfig.bucketName,
+            storjConfig.uploadPath,
+            uploadOptions
+        );
+
+        const buf = Buffer.from(
+            str,
+            "utf-8"
+        ),
+        bytesRead = buf.write(
+            str,
+            0,
+            buf.length,
+            "utf-8"
+        );
+
+        await upload.write(buf, bytesRead);
+
+        if(expectAvailable){
+            await upload.commit().should.be.fulfilled;
+            await project.deleteObject(storjConfig.bucketName, storjConfig.uploadPath);
+        } else {
+            await upload.commit().should.be.rejectedWith(Error, "internal error");
+        }
+    }
+
+
+    const permission = new storj.Permission(
+            true,
+            true,
+            true,
+            true,
+            0,
+            0
+        ), 
+        sharePrefix = new storj.SharePrefix(
+            storjConfig.bucketName,
+            "filepath/"
+        ),
+        sharePrefixListArray = [sharePrefix];
+        
+    describe(
+        "Revoke access",
+        async () => { 
+           it("should revoke access without any issues", async () => {
+                const derivedAccess = await access.share(
+                    permission,
+                    sharePrefixListArray,
+                    sharePrefixListArray.length
+                );
+                await testAccessAvailability(derivedAccess, true);
+                await project.revokeAccess(derivedAccess);
+                await testAccessAvailability(derivedAccess, false);
+           });
+        }
+    );
+
+}

@@ -6,6 +6,120 @@
 #include "project_operations.h"
 #include <string>
 /*!
+ \fn napi_value revoke_accessc(napi_env env, napi_callback_info info) 
+ \brief revoke_accessc function is called from the javascript file 
+ revoke_accessc revokes the API key embedded in the provided access grant
+  
+ */
+//
+napi_value revoke_accessc(napi_env env, napi_callback_info info) {
+  napi_status status;
+  napi_value promise;
+
+  size_t argc = 2;
+  napi_value args[2];
+
+  revokeAccessPromiseObj *obj = (revokeAccessPromiseObj *)
+  malloc(sizeof(revokeAccessPromiseObj));
+
+  if (obj == NULL) {
+      free(obj);
+    napi_throw_error(env, NULL, "Memory allocation error");
+    return NULL;
+  }
+  obj->async_action_status = 1;
+  status = napi_get_cb_info(env, info, &argc, args, nullptr , nullptr);
+  assert(status == napi_ok);
+
+  status = napi_create_promise(env, &obj->deferred, &promise);
+  if (status != napi_ok) {
+      free(obj);
+    napi_throw_error(env, NULL, "Unable to create promise");
+    return NULL;
+  }
+
+  if (argc < 2) {
+      free(obj);
+    napi_throw_type_error(env, nullptr,
+      "\nWrong number of arguments!! excepted 2 arguments\n");
+    return NULL;
+  }
+
+  // Parse project
+
+  napi_valuetype checktypeofinput;
+  status = napi_typeof(env, args[0], &checktypeofinput);
+  assert(status == napi_ok);
+
+  if (checktypeofinput != napi_object) {
+      free(obj);
+    napi_throw_type_error(env, nullptr,
+      "\nWrong datatype !! First argument expected to be object type\n");
+    return NULL;
+  }
+  bool propertyexists = false;
+  napi_value ObjectkeyNAPI;
+  string handle = "_handle";
+  status = napi_create_string_utf8(env,
+    const_cast<char* > (handle.c_str()), NAPI_AUTO_LENGTH , &ObjectkeyNAPI);
+  assert(status == napi_ok);
+
+  status = napi_has_property(env, args[0], ObjectkeyNAPI, &propertyexists);
+  assert(status == napi_ok);
+  if (!propertyexists) {
+      free(obj);
+    napi_throw_type_error(env, nullptr, "\nFirst argument is invalid object \n");
+    return NULL;
+  }
+
+  UplinkProject project_result;
+  project_result._handle = getHandleValue(env, args[0]);
+  if (project_result._handle == 0) {
+    return NULL;
+  }
+
+  // Parse access
+
+  status = napi_typeof(env, args[1], &checktypeofinput);
+  assert(status == napi_ok);
+
+  if (checktypeofinput != napi_object) {
+      free(obj);
+    napi_throw_type_error(env, nullptr,
+      "\nWrong datatype !! Second argument excepted to be object type\n");
+    return NULL;
+  }
+  propertyexists = false;
+  handle = "_handle";
+  status = napi_create_string_utf8(env,
+    const_cast<char* > (handle.c_str()), NAPI_AUTO_LENGTH , &ObjectkeyNAPI);
+  assert(status == napi_ok);
+
+  status = napi_has_property(env, args[1], ObjectkeyNAPI, &propertyexists);
+  assert(status == napi_ok);
+  if (!propertyexists) {
+      free(obj);
+    napi_throw_type_error(env, nullptr, "\nSecond argument is invalid object \n");
+    return NULL;
+  }
+
+  UplinkAccess access;
+  access._handle = getHandleValue(env, args[1]);
+  if (access._handle == 0) {
+    return NULL;
+  }
+
+  obj->project_result = project_result;
+  obj->access = access;
+
+  napi_value resource_name;
+  napi_create_string_utf8(env, "RevokeAccess", NAPI_AUTO_LENGTH, &resource_name);
+  napi_create_async_work(env, NULL, resource_name, revokeAccessPromiseExecute,
+  revokeAccessPromiseComplete, obj, &obj->work);
+  napi_queue_async_work(env, obj->work);
+  return promise;
+}
+/*!
  \fn napi_value close_projectc(napi_env env, napi_callback_info info) 
  \brief close_projectc function is called from the javascript file 
  close_projectc closes the project 

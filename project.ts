@@ -9,6 +9,7 @@ import {DownloadResultStruct} from "./download.js";
 const errorhandle = require("./error.js");
 
 import {UploadResultStruct} from "./upload.js";
+import {AccessResultStruct} from "./access.js";
 //
 //
 export class ProjectResultStruct {
@@ -288,6 +289,27 @@ export class ProjectResultStruct {
 
 
         return bucketInfo;
+
+    }
+
+    /*
+     * Function revokes the API key embedded in the provided access grant.
+     * Input : Access (Object)
+     * Output : None
+     */
+    async revokeAccess (access: AccessResultStruct): Promise<void> {
+
+        await uplink.revoke_access(
+            this.project,
+            access.access,
+        ).catch((error: any) => {
+
+            errorhandle.storjException(
+                error.error.code,
+                error.error.message
+            );
+
+        });
 
     }
 
