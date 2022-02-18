@@ -7,7 +7,7 @@ GOGET=$(GOCMD) get
 # Uplink-c
 GIT_REPO=https://github.com/storj/uplink-c
 UPLINKC_NAME=uplink-c
-UPLINKC_VERSION=v1.5.2
+UPLINKC_VERSION=v1.6.0
 #Library Name
 LIBRARY_NAME_LINUX=libuplinkcv1.2.4.so
 LIBRARY_NAME_DARWIN=libuplinkcv1.2.4.dylib
