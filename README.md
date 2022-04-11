@@ -12,30 +12,24 @@
   <ol>
     <li>
       <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
     </li>
     <li>
       <a href="#getting-started">Getting Started</a>
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
+        <li><a href="#building-the-package">Building the Package</a></li>
+        <li><a href="#testing">Testing</a></li>
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
+    <li><a href="#documentation">Documentation</a></li>
   </ol>
 </details>
 
 
 
 <!-- ABOUT THE PROJECT -->
-## <b> About The Project </b>
+## About The Project
 
 [Storj](https://storj.io) is one of the most popular Cloud Storage which is  Decentralized, Secure, Private, Reliable, Affordable
 
@@ -48,7 +42,7 @@ How it works:
 This project is built with C/C++ and the building result is binding libraries of uplink in nodejs.
 
 
-## <b> Getting Started </b>
+## Getting Started
 
 ### Prerequisites
  * please ensure *make* is already installed.
@@ -76,7 +70,7 @@ This project is built with C/C++ and the building result is binding libraries of
   $ npm preinstall
   ```
 
-### Testing the Results
+### Testing
 The source project includes testing script to test it locally.
 * need to build and release the binaries to root directory of the project
   ```
@@ -89,7 +83,7 @@ The source project includes testing script to test it locally.
   $ npm test
   ```
 
-## <b> Usage </b>
+## Usage
 * Install the storj-nodejs Node.js package
   ```
   $ npm install uplink-nodejs
@@ -117,7 +111,7 @@ The source project includes testing script to test it locally.
   const libUplink = new storj.Uplink();
   ```
 
-## <b>Documentation</b>
+## Documentation
 For more information on function definations and diagrams, check out the [Detail](https://github.com/storj-thirdparty/uplink-nodejs/wiki/Home) or jump to:
 * [Uplink-nodejs Binding Functions](https://github.com/storj-thirdparty/uplink-nodejs/wiki/#binding-functions)
 * [Flow Diagram](https://github.com/storj-thirdparty/uplink-nodejs/wiki/#flow-diagram)
