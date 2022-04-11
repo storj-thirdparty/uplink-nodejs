@@ -45,7 +45,7 @@ How it works:
 * Object pieces are globally distributed.
 * Objects are retrieved when you need them.
 
-This project is built with C/C++ and the building result is libraries of uplink.
+This project is built with C/C++ and the building result is binding libraries of uplink in nodejs.
 
 
 ## <b> Getting Started </b>
@@ -55,15 +55,15 @@ This project is built with C/C++ and the building result is libraries of uplink.
  * proper C/C++ compiler toolchain, like *GCC*
  * please ensure Node.js with version 10 or higher is [installed](https://nodejs.org/en/download/)
     ```
-      $ node -v
+    $ node -v
     ```
  * please ensure *node-gyp* dependencies is already installed.
     ```
-      $ npm install -g node-gyp
+    $ npm install -g node-gyp
     ```
   * Make sure your `PATH` includes the `$GOPATH/bin` directory, so that your commands can be easily used [Refer: Install the Go Tools](https://golang.org/doc/install):
     ```
-    export PATH=$PATH:$GOPATH/bin
+    $ export PATH=$PATH:$GOPATH/bin
     ```
 
 ### Building the Package
@@ -76,13 +76,14 @@ This project is built with C/C++ and the building result is libraries of uplink.
   $ npm preinstall
   ```
 
-### Testing the Binary
+### Testing the Results
 The source project includes testing script to test it locally.
 * need to build and release the binaries to root directory of the project
   ```
   $ npm install
   ```
-* creat *secret.txt* in root directory of project and input api key getting from access panel in [storj.io](https://storj.io)
+* creat *secret.txt* in root directory of project and input api key getting from access panel whiling creating Access Grant in [storj.io](https://storj.io)
+* In */test/testcase.js*, change the *satelliteURL* with the information getting from access panel whiling creating Access Grant in [storj.io](https://storj.io)
 * run the test
   ```
   $ npm test
@@ -97,24 +98,24 @@ The source project includes testing script to test it locally.
   * MacOS
     * Set DYLD_LIBRARY_PATH  environment variable
       ```
-      export  DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:$PWD/node_modules/uplink-nodejs/
+      $ export  DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:$PWD/node_modules/uplink-nodejs/
       ```
       OR
     * Copy libuplinkc*.* files from $PROJECTROOT/node_modules/uplink-nodejs/ to /usr/local/lib
   * Linux
     * Set LD_LIBRARY_PATH  environment variable
       ```
-      export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD/node_modules/uplink-nodejs/
+      $ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD/node_modules/uplink-nodejs/
       ```
       OR
     * Copy libuplinkc*.* files from $PROJECTROOT/node_modules/uplink-nodejs/ to /usr/lib
    * Windows
      * Set Path environment variable to libuplinkc*.* which is  $PROJECTROOT/node_modules/uplink-nodejs
 * In node application, import the package and call functions
- ```
-    const storj = require("uplink-nodejs");
-    const libUplink = new storj.Uplink();
- ```
+  ```
+  const storj = require("uplink-nodejs");
+  const libUplink = new storj.Uplink();
+  ```
 
 ## <b>Documentation</b>
 For more information on function definations and diagrams, check out the [Detail](https://github.com/storj-thirdparty/uplink-nodejs/wiki/Home) or jump to:
