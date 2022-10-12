@@ -30,11 +30,10 @@ else
 endif
 
 uplink-c:
-	git clone -b $(UPLINKC_VERSION) $(GIT_REPO)
+	git clone --depth 1 -b $(UPLINKC_VERSION) $(GIT_REPO)
 
 .PHONY: build
 build: uplink-c
-	if [ ! -d $(UPLINKC) ]; then git clone --depth 1 -b $(UPLINKC_VERSION) $(GIT_REPO); fi;
 	cd $(UPLINKC);$(GOBUILD) -o ../$(LIBRARY_NAME) -buildmode=c-shared;cd ../;
 	$(CP) $(wildcard $(UPLINKC)/*.h) .
 	$(CP) ./$(LIBRARY_NAME_BASE).* ./$(JSFOLDER)/;
