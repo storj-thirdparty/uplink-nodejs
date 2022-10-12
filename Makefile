@@ -1,60 +1,55 @@
 # Go parameters
-GOCMD=go
-GOBUILD=$(GOCMD) build
-GOCLEAN=$(GOCMD) clean
-GOTEST=$(GOCMD) test
-GOGET=$(GOCMD) get
+GOBUILD=go build
 # Uplink-c
 GIT_REPO=https://github.com/storj/uplink-c
-UPLINKC_NAME=uplink-c
-UPLINKC_VERSION=v1.2.2
+UPLINKC=uplink-c
+UPLINKC_VERSION=v1.7.0
 #Library Name
-LIBRARY_NAME_LINUX=libuplinkcv1.2.4.so
-LIBRARY_NAME_DARWIN=libuplinkcv1.2.4.dylib
-LIBRARY_NAME_WIN=libuplinkcv1.2.4.dll
-LIBRARY_UPLINK=*.h
-DELETE_LIBRARY_HEADER=libuplinkcv1.2.4.h
-#Library Path
-MACOS_DYLIB_DEFAULT_PAYH=/usr/local/lib
+LIBRARY_NAME_BASE=libuplinkc$(UPLINKC_VERSION)
+LIBRARY_HEADER=$(LIBRARY_NAME_BASE).h
 #JSFOLDER
 JSFOLDER=dist
-JSFOLDERLIB=libuplinkcv1.2.4.*
 #Color
-RED_COLOR=\033[31m
 GREEN_COLOR=\033[32m
 RESET_COLOR=\033[0m
-#
-build:
-ifdef OS
-	git clone -b ${UPLINKC_VERSION} ${GIT_REPO}
-	(cd ${UPLINKC_NAME}) && (${GOBUILD} -o ../${LIBRARY_NAME_WIN} -buildmode=c-shared) && (move ${LIBRARY_UPLINK} ../)
-	rmdir /s ${UPLINKC_NAME}
+# Install
+DESTDIR=/usr/local
+# OS specific variables
+ifeq ($(OS),Windows_NT)
+	LIBRARY_NAME = $(LIBRARY_NAME_BASE).dll
+	RM := del
+	CP := copy
 else
-	echo "$(shell uname)";\
-     if [ ! -d $(UPLINKC_NAME) ]; then\
-      git clone -b $(UPLINKC_VERSION) $(GIT_REPO);\
-     fi;\
-     if [ $(shell uname) = Darwin ]; then\
-      cd $(UPLINKC_NAME);$(GOBUILD) -o ../$(LIBRARY_NAME_DARWIN) -buildmode=c-shared;mv $(LIBRARY_UPLINK) ../;cd ../;cp ./$(JSFOLDERLIB) ./$(JSFOLDER)/;\
-     fi;\
-     if [ $(shell uname) = Linux ]; then\
-      cd $(UPLINKC_NAME);$(GOBUILD) -o ../$(LIBRARY_NAME_LINUX) -buildmode=c-shared;mv $(LIBRARY_UPLINK) ../;cd ../;cp ./$(JSFOLDERLIB) ./$(JSFOLDER)/;\
-     fi;\
-  if test -d ./$(UPLINKC_NAME); then rm -rf ./$(UPLINKC_NAME); fi;\
-  echo ' $(GREEN_COLOR) \n Successfully build $(RESET_COLOR)';
+	ifeq ($(shell uname -s),Darwin)
+		LIBRARY_NAME = $(LIBRARY_NAME_BASE).dylib
+	else
+		LIBRARY_NAME = $(LIBRARY_NAME_BASE).so
+	endif
+	RM := rm -rf
+	CP := cp
 endif
+
+uplink-c:
+	git clone -b $(UPLINKC_VERSION) $(GIT_REPO)
+
+.PHONY: build
+build: uplink-c
+	if [ ! -d $(UPLINKC) ]; then git clone --depth 1 -b $(UPLINKC_VERSION) $(GIT_REPO); fi;
+	cd $(UPLINKC);$(GOBUILD) -o ../$(LIBRARY_NAME) -buildmode=c-shared;cd ../;
+	$(CP) $(wildcard $(UPLINKC)/*.h) .
+	$(CP) ./$(LIBRARY_NAME_BASE).* ./$(JSFOLDER)/;
+	@echo ' $(GREEN_COLOR) \n Successfully build $(RESET_COLOR)';
+
+.PHONY: clean
 clean:
-ifdef OS
-	(IF EXIST ${LIBRARY_UPLINK}; (del "${LIBRARY_UPLINK}")) && (IF EXIST ${DELETE_LIBRARY_HEADER}; (del "${DELETE_LIBRARY_HEADER}")) && (IF EXIST ${LIBRARY_NAME_WIN}; (del "${LIBRARY_NAME_WIN}")) && (IF EXIST ${UPLINKC_NAME}; (rmdir /s "${UPLINKC_NAME}"))
-else
-	if test -d $(UPLINKC_NAME); then rm -rf $(UPLINKC_NAME); fi
-	if test -f ./$(LIBRARY_UPLINK); then rm ./$(LIBRARY_UPLINK); fi;\
-  if test -f ./$(DELETE_LIBRARY_HEADER); then rm ./$(DELETE_LIBRARY_HEADER); fi;\
-    if [ $(shell uname) = Darwin ]; then\
-      if test -f ./$(LIBRARY_NAME_DARWIN); then rm ./$(LIBRARY_NAME_DARWIN); fi;\
-     fi;\
-     if [ $(shell uname) = Linux ]; then\
-      if test -f $(LIBRARY_NAME_LINUX); then rm $(LIBRARY_NAME_LINUX); fi;\
-     fi;
-endif
+	$(RM) $(notdir $(wildcard $(UPLINKC)/*.h));
+	$(RM) $(UPLINKC);
+	$(RM) ./$(LIBRARY_HEADER);
+	$(RM) ./$(LIBRARY_NAME);
 	@echo ' $(GREEN_COLOR) \n Successfully cleaned $(RESET_COLOR)';
+
+# Note that as of 10/2022, uplink-c's Makefile doesn't run well on Darwin.
+# I'd be nice to $(MAKE) -C $(UPLINKC) -f Makefile install.
+.PHONY: install
+install: build
+	install $(LIBRARY_NAME) ${DESTDIR}/lib

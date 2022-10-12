@@ -1,0 +1,10 @@
+uplink-c/
+dist/
+
+*.dll
+*.so
+*.dylib
+
+libuplinkcv?.?.?.h
+uplink_compat.h
+uplink_definitions.h
