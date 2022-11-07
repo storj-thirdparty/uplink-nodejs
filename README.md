@@ -73,7 +73,7 @@ This project is built with C/C++ and the building result is binding libraries of
     ```
 * after changing the source code, build it
   ```
-  $ npm preinstall
+  $ npm run preinstall
   ```
 
 ### Testing the Results
